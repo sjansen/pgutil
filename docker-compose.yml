@@ -1,0 +1,23 @@
+version: '2'
+services:
+  go:
+    build:
+      context: ./docker/go
+    command: ./scripts/run-all-tests
+    environment:
+      GO111MODULE: "on"
+      PGHOST:     "pg"
+      PGDATABASE: "pgutil"
+      PGUSER:     "docker"
+      PGPASSWORD: ""
+    links:
+     - pg
+    volumes:
+     - .:/go/src/github.com/sjansen/pgutil
+    working_dir: /go/src/github.com/sjansen/pgutil
+  pg:
+    image: 'postgres:9.6-alpine'
+    environment:
+      POSTGRES_DB:   "pgutil"
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: ""
