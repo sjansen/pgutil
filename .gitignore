@@ -6,6 +6,7 @@
 /TODO
 .DS_Store
 c.out
+coverage.txt
 
 # Patterns
 .*.sw[op]
