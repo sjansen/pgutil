@@ -5,7 +5,6 @@
 /pgutil
 /TODO
 .DS_Store
-c.out
 coverage.txt
 
 # Patterns
