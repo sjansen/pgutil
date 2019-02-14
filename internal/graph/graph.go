@@ -1,29 +1,46 @@
 package graph
 
+import "sort"
+
 type DependencyGraph struct {
-	nodes map[string][]string
+	nodes  []string
+	edges  map[string][]string
+	sorted bool
 }
 
 func NewDependencyGraph(g map[string][]string) (*DependencyGraph, error) {
+	nodes := make([]string, 0, len(g))
+	edges := make(map[string][]string, len(g))
 	for n := range g {
+		nodes = append(nodes, n)
+		edges[n] = make([]string, 0, len(g[n]))
 		for _, m := range g[n] {
+			edges[n] = append(edges[n], m)
 			if _, ok := g[m]; !ok {
 				err := &InvalidEdgeError{Node: n, Edge: m}
 				return nil, err
 			}
 		}
 	}
-	return &DependencyGraph{nodes: g}, nil
+	return &DependencyGraph{nodes: nodes, edges: edges}, nil
 }
 
-func (g *DependencyGraph) TSort() (sorted, cycle []string) {
+func (g *DependencyGraph) TSort() (nodes, cycle []string) {
+	if !g.sorted {
+		sort.Strings(g.nodes)
+		for _, n := range g.nodes {
+			sort.Strings(g.edges[n])
+		}
+		g.sorted = true
+	}
+
 	v := &visitor{
-		graph:    g.nodes,
+		graph:    g.edges,
 		sorted:   make([]string, 0, len(g.nodes)),
 		visited:  map[string]struct{}{},
 		visiting: map[string]struct{}{},
 	}
-	for n := range g.nodes {
+	for _, n := range g.nodes {
 		if _, ok := v.visited[n]; ok {
 			continue
 		}
@@ -32,6 +49,7 @@ func (g *DependencyGraph) TSort() (sorted, cycle []string) {
 			return nil, v.cycle
 		}
 	}
+
 	return v.sorted, nil
 }
 

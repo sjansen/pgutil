@@ -56,6 +56,22 @@ var reversed = map[string][]string{
 	"u": {"a", "b"},
 }
 
+var unpredictable = map[string][]string{
+	"a": {},
+	"b": {},
+	"c": {"h", "j"},
+	"d": {},
+	"e": {"k"},
+	"f": {},
+	"g": {"k", "h"},
+	"h": {"i"},
+	"i": {},
+	"j": {},
+	"k": {"b", "i", "j"},
+	"l": {},
+	"m": {},
+}
+
 func TestNewDependencyGraph(t *testing.T) {
 	require := require.New(t)
 
@@ -83,6 +99,13 @@ func TestTSort(t *testing.T) {
 
 	expected = []string{"g", "n", "i", "k", "a", "m", "e", "l", "b", "u", "o", "r", "t"}
 	g, err = graph.NewDependencyGraph(reversed)
+	require.NoError(err)
+	actual, cycle = g.TSort()
+	require.Equal(expected, actual)
+	require.Empty(cycle)
+
+	expected = []string{"a", "b", "i", "h", "j", "c", "d", "k", "e", "f", "g", "l", "m"}
+	g, err = graph.NewDependencyGraph(unpredictable)
 	require.NoError(err)
 	actual, cycle = g.TSort()
 	require.Equal(expected, actual)
