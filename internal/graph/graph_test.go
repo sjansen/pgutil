@@ -56,7 +56,7 @@ var reversed = map[string][]string{
 	"u": {"a", "b"},
 }
 
-func TestNewDirectedGraph(t *testing.T) {
+func TestNewDependencyGraph(t *testing.T) {
 	require := require.New(t)
 
 	expected := &graph.InvalidEdgeError{Node: "baz", Edge: "qux"}
@@ -65,7 +65,7 @@ func TestNewDirectedGraph(t *testing.T) {
 		"bar": {"baz"},
 		"baz": {"qux"},
 	}
-	g, err := graph.NewDirectedGraph(nodes)
+	g, err := graph.NewDependencyGraph(nodes)
 	require.Nil(g)
 	require.Equal(expected, err)
 	require.NotEmpty(err.Error())
@@ -75,20 +75,20 @@ func TestTSort(t *testing.T) {
 	require := require.New(t)
 
 	expected := []string{"t", "r", "o", "u", "b", "l", "e", "m", "a", "k", "i", "n", "g"}
-	g, err := graph.NewDirectedGraph(acyclic)
+	g, err := graph.NewDependencyGraph(acyclic)
 	require.NoError(err)
 	actual, cycle := g.TSort()
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	expected = []string{"g", "n", "i", "k", "a", "m", "e", "l", "b", "u", "o", "r", "t"}
-	g, err = graph.NewDirectedGraph(reversed)
+	g, err = graph.NewDependencyGraph(reversed)
 	require.NoError(err)
 	actual, cycle = g.TSort()
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
-	g, err = graph.NewDirectedGraph(cyclic)
+	g, err = graph.NewDependencyGraph(cyclic)
 	require.NoError(err)
 	actual, cycle = g.TSort()
 	require.Empty(actual)

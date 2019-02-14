@@ -1,10 +1,10 @@
 package graph
 
-type DirectedGraph struct {
+type DependencyGraph struct {
 	nodes map[string][]string
 }
 
-func NewDirectedGraph(g map[string][]string) (*DirectedGraph, error) {
+func NewDependencyGraph(g map[string][]string) (*DependencyGraph, error) {
 	for n := range g {
 		for _, m := range g[n] {
 			if _, ok := g[m]; !ok {
@@ -13,10 +13,10 @@ func NewDirectedGraph(g map[string][]string) (*DirectedGraph, error) {
 			}
 		}
 	}
-	return &DirectedGraph{nodes: g}, nil
+	return &DependencyGraph{nodes: g}, nil
 }
 
-func (g *DirectedGraph) TSort() (sorted, cycle []string) {
+func (g *DependencyGraph) TSort() (sorted, cycle []string) {
 	v := &visitor{
 		graph:    g.nodes,
 		sorted:   make([]string, 0, len(g.nodes)),
