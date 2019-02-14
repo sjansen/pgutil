@@ -21,25 +21,43 @@ func TestLoad(t *testing.T) {
 	require := require.New(t)
 
 	expected := &taskset.Config{
-		Databases: map[string]map[string]string{
+		Databases: map[string]*taskset.Database{
 			"default": {
-				"host":     "localhost",
-				"dbname":   "tmp",
-				"username": "AzureDiamond",
-				"password": "hunter2",
+				Host:     "localhost",
+				DBName:   "tmp",
+				Username: "AzureDiamond",
+				Password: "hunter2",
 			},
 		},
-		Tasks: map[string]map[string]string{
+		Tasks: map[string]*taskset.Task{
+			"create-dir": {
+				TaskExec: &taskset.TaskExec{
+					Args: []string{"mkdir", "/tmp/pgutil-simple-example"},
+				},
+			},
+			"remove-dir": {
+				After: []string{"delete-old-measurements", "insert-new-measurements"},
+				TaskExec: &taskset.TaskExec{
+					Args: []string{"rmdir", "/tmp/pgutil-simple-example"},
+				},
+			},
 			"create-table": {
-				"sql": readfile("testdata/create.sql"),
+				After: []string{"create-dir"},
+				TaskSQL: &taskset.TaskSQL{
+					SQL: readfile("testdata/create.sql"),
+				},
 			},
 			"delete-old-measurements": {
-				"after": "create-table",
-				"sql":   readfile("testdata/delete.sql"),
+				After: []string{"create-table"},
+				TaskSQL: &taskset.TaskSQL{
+					SQL: readfile("testdata/delete.sql"),
+				},
 			},
 			"insert-new-measurements": {
-				"after": "create-table",
-				"sql":   readfile("testdata/insert.sql"),
+				After: []string{"create-table"},
+				TaskSQL: &taskset.TaskSQL{
+					SQL: readfile("testdata/insert.sql"),
+				},
 			},
 		},
 	}
@@ -53,6 +71,10 @@ func TestLoad(t *testing.T) {
 	require.Error(err)
 
 	actual, err = taskset.Load("testdata", "invalid-import.jsonnet")
+	require.Nil(actual)
+	require.Error(err)
+
+	actual, err = taskset.Load("testdata", "invalid-task-field.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
 }

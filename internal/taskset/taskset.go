@@ -10,8 +10,30 @@ import (
 )
 
 type Config struct {
-	Databases map[string]map[string]string
-	Tasks     map[string]map[string]string
+	Databases map[string]*Database
+	Tasks     map[string]*Task
+}
+
+type Database struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	DBName   string `json:"dbname"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type Task struct {
+	After []string `json:"after"`
+	*TaskExec
+	*TaskSQL
+}
+
+type TaskExec struct {
+	Args []string `json:"exec"`
+}
+
+type TaskSQL struct {
+	SQL string `json:"sql"`
 }
 
 func Load(directory, filename string) (*Config, error) {
@@ -34,8 +56,12 @@ func Load(directory, filename string) (*Config, error) {
 
 	dec := json.NewDecoder(strings.NewReader(evaluated))
 	dec.DisallowUnknownFields()
+
 	cfg := &Config{}
-	dec.Decode(cfg)
+	err = dec.Decode(cfg)
+	if err != nil {
+		return nil, err
+	}
 
 	return cfg, nil
 }
