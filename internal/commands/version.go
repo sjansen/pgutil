@@ -1,21 +1,13 @@
 package commands
 
-import (
-	"fmt"
+import "fmt"
 
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
-)
-
-type versionCmd struct {
-	version string
+type VersionCmd struct {
+	App   string
+	Build string
 }
 
-func (v *versionCmd) register(app *kingpin.Application, version string) {
-	v.version = version
-	app.Command("version", "Print pgutil's version").Action(v.run)
-}
-
-func (v *versionCmd) run(pc *kingpin.ParseContext) error {
-	fmt.Println("pgutil", v.version)
+func (c *VersionCmd) Run() error {
+	fmt.Println(c.App, c.Build)
 	return nil
 }

@@ -1,29 +1,29 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
-
-	"github.com/sjansen/pgutil/internal/commands"
+	"github.com/sjansen/pgutil/internal/cli"
 )
 
 var build string // set by goreleaser
 
 func main() {
-	app := kingpin.
-		New("pgutil", "Tools for PostgreSQL").
-		UsageTemplate(kingpin.CompactUsageTemplate)
-	if build != "" {
-		commands.Register(app, build)
-	} else {
-		commands.Register(app, version)
+	if build == "" {
+		build = version
 	}
+	parser := cli.RegisterCommands(build)
 
-	if len(os.Args) == 1 {
-		app.Usage(os.Args[1:])
+	cmd, err := parser.Parse(os.Args[1:])
+	if err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	kingpin.MustParse(app.Parse(os.Args[1:]))
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
