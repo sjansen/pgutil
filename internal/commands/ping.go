@@ -18,9 +18,9 @@ type pingCmd struct {
 
 func (c *pingCmd) register(app *kingpin.Application) {
 	cmd := app.Command("ping", "Create a test connection to a database").Action(c.run)
-	cmd.Flag("host", "database server host or socket directory").Short('h').StringVar(&c.host)
-	cmd.Flag("port", "database server port").Short('p').StringVar(&c.port)
-	cmd.Flag("dbname", "database server port").Short('d').StringVar(&c.dbname)
+	cmd.Flag("host", "server hostname or socket directory").Short('h').StringVar(&c.host)
+	cmd.Flag("port", "server port number").Short('p').StringVar(&c.port)
+	cmd.Flag("dbname", "database name").Short('d').StringVar(&c.dbname)
 	cmd.Flag("username", "connect as username").Short('U').StringVar(&c.username)
 }
 
