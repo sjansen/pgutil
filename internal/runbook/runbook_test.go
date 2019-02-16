@@ -1,4 +1,4 @@
-package taskset_test
+package runbook_test
 
 import (
 	"io/ioutil"
@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/taskset"
+	"github.com/sjansen/pgutil/internal/runbook"
 )
 
 func readfile(filename string) string {
@@ -20,8 +20,8 @@ func readfile(filename string) string {
 func TestLoad(t *testing.T) {
 	require := require.New(t)
 
-	expected := &taskset.Config{
-		Databases: map[string]*taskset.Database{
+	expected := &runbook.Config{
+		Databases: map[string]*runbook.Database{
 			"default": {
 				Host:     "localhost",
 				DBName:   "tmp",
@@ -29,52 +29,52 @@ func TestLoad(t *testing.T) {
 				Password: "hunter2",
 			},
 		},
-		Tasks: map[string]*taskset.Task{
+		Tasks: map[string]*runbook.Task{
 			"create-dir": {
-				TaskExec: &taskset.TaskExec{
+				TaskExec: &runbook.TaskExec{
 					Args: []string{"mkdir", "/tmp/pgutil-simple-example"},
 				},
 			},
 			"remove-dir": {
 				After: []string{"delete-old-measurements", "insert-new-measurements"},
-				TaskExec: &taskset.TaskExec{
+				TaskExec: &runbook.TaskExec{
 					Args: []string{"rmdir", "/tmp/pgutil-simple-example"},
 				},
 			},
 			"create-table": {
 				After: []string{"create-dir"},
-				TaskSQL: &taskset.TaskSQL{
+				TaskSQL: &runbook.TaskSQL{
 					SQL: readfile("testdata/create.sql"),
 				},
 			},
 			"delete-old-measurements": {
 				After: []string{"create-table"},
-				TaskSQL: &taskset.TaskSQL{
+				TaskSQL: &runbook.TaskSQL{
 					SQL: readfile("testdata/delete.sql"),
 				},
 			},
 			"insert-new-measurements": {
 				After: []string{"create-table"},
-				TaskSQL: &taskset.TaskSQL{
+				TaskSQL: &runbook.TaskSQL{
 					SQL: readfile("testdata/insert.sql"),
 				},
 			},
 		},
 	}
 
-	actual, err := taskset.Load("testdata", "simple.jsonnet")
+	actual, err := runbook.Load("testdata", "simple.jsonnet")
 	require.NoError(err)
 	require.Equal(expected, actual)
 
-	actual, err = taskset.Load("testdata", "invalid-filename")
+	actual, err = runbook.Load("testdata", "invalid-filename")
 	require.Nil(actual)
 	require.Error(err)
 
-	actual, err = taskset.Load("testdata", "invalid-import.jsonnet")
+	actual, err = runbook.Load("testdata", "invalid-import.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
 
-	actual, err = taskset.Load("testdata", "invalid-task-field.jsonnet")
+	actual, err = runbook.Load("testdata", "invalid-task-field.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
 }
