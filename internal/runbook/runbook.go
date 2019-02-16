@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	jsonnet "github.com/google/go-jsonnet"
+
+	"github.com/sjansen/pgutil/internal/runbook/tasks"
 )
 
 type Config struct {
@@ -24,16 +26,8 @@ type Database struct {
 
 type Task struct {
 	After []string `json:"after"`
-	*TaskExec
-	*TaskSQL
-}
-
-type TaskExec struct {
-	Args []string `json:"exec"`
-}
-
-type TaskSQL struct {
-	SQL string `json:"sql"`
+	*tasks.Exec
+	*tasks.SQL
 }
 
 func Load(directory, filename string) (*Config, error) {

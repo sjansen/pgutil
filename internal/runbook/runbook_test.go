@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/runbook"
+	"github.com/sjansen/pgutil/internal/runbook/tasks"
 )
 
 func readfile(filename string) string {
@@ -31,31 +32,31 @@ func TestLoad(t *testing.T) {
 		},
 		Tasks: map[string]*runbook.Task{
 			"create-dir": {
-				TaskExec: &runbook.TaskExec{
+				Exec: &tasks.Exec{
 					Args: []string{"mkdir", "/tmp/pgutil-simple-example"},
 				},
 			},
 			"remove-dir": {
 				After: []string{"delete-old-measurements", "insert-new-measurements"},
-				TaskExec: &runbook.TaskExec{
+				Exec: &tasks.Exec{
 					Args: []string{"rmdir", "/tmp/pgutil-simple-example"},
 				},
 			},
 			"create-table": {
 				After: []string{"create-dir"},
-				TaskSQL: &runbook.TaskSQL{
+				SQL: &tasks.SQL{
 					SQL: readfile("testdata/create.sql"),
 				},
 			},
 			"delete-old-measurements": {
 				After: []string{"create-table"},
-				TaskSQL: &runbook.TaskSQL{
+				SQL: &tasks.SQL{
 					SQL: readfile("testdata/delete.sql"),
 				},
 			},
 			"insert-new-measurements": {
 				After: []string{"create-table"},
-				TaskSQL: &runbook.TaskSQL{
+				SQL: &tasks.SQL{
 					SQL: readfile("testdata/insert.sql"),
 				},
 			},
