@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/sjansen/pgutil/internal/db"
 )
@@ -13,7 +14,20 @@ type PingCmd struct {
 	Username string
 }
 
-func (c *PingCmd) Run() error {
+func (c *PingCmd) Run(stdout, stderr io.Writer) error {
+	db, err := db.New(c.dbOptions())
+	if err != nil {
+		return err
+	}
+
+	version, err := db.ServerVersion()
+	if err == nil {
+		fmt.Fprintln(stdout, version)
+	}
+	return err
+}
+
+func (c *PingCmd) dbOptions() map[string]string {
 	options := map[string]string{}
 
 	if c.Host != "" {
@@ -30,14 +44,5 @@ func (c *PingCmd) Run() error {
 		options["user"] = c.Username
 	}
 
-	db, err := db.New(options)
-	if err != nil {
-		return err
-	}
-
-	version, err := db.ServerVersion()
-	if err == nil {
-		fmt.Println(version)
-	}
-	return err
+	return options
 }

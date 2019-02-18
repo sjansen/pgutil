@@ -21,7 +21,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = cmd.Run()
+	err = cmd.Run(os.Stdout, os.Stderr)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

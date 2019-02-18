@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"io"
+
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -10,7 +12,7 @@ type ArgParser struct {
 }
 
 type Command interface {
-	Run() error
+	Run(stdout, stderr io.Writer) error
 }
 
 func RegisterCommands(version string) *ArgParser {

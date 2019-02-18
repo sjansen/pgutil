@@ -1,6 +1,9 @@
 package commands
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
 type RunBookListCmd struct {
 	File string
@@ -15,12 +18,12 @@ type RunBookRunCmd struct {
 	//Tasks       []string
 }
 
-func (c *RunBookRunCmd) Run() error {
-	fmt.Println("run:", c.File)
+func (c *RunBookRunCmd) Run(stdout, stderr io.Writer) error {
+	fmt.Fprintln(stdout, "run:", c.File)
 	return nil
 }
 
-func (c *RunBookListCmd) Run() error {
-	fmt.Println("list:", c.File)
+func (c *RunBookListCmd) Run(stdout, stderr io.Writer) error {
+	fmt.Fprintln(stdout, "list:", c.File)
 	return nil
 }
