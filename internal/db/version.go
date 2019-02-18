@@ -2,9 +2,9 @@ package db
 
 import "github.com/go-pg/pg"
 
-func (c *Connection) ServerVersion() (string, error) {
+func (db *DB) ServerVersion() (string, error) {
 	var version string
-	_, err := c.db.Query(pg.Scan(&version), "SELECT VERSION()")
+	_, err := db.pool.Query(pg.Scan(&version), "SELECT VERSION()")
 	if err != nil {
 		return "", err
 	}

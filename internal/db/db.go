@@ -7,23 +7,23 @@ import (
 	"github.com/go-pg/pg"
 )
 
-type Connection struct {
-	db *pg.DB
+type DB struct {
+	pool *pg.DB
 }
 
-func New(options map[string]string) (*Connection, error) {
+func New(options map[string]string) (*DB, error) {
 	merged, err := mergeOptions(options)
 	if err != nil {
 		return nil, err
 	}
-	c := &Connection{
-		db: pg.Connect(merged),
+	db := &DB{
+		pool: pg.Connect(merged),
 	}
-	return c, nil
+	return db, nil
 }
 
-func (c *Connection) Close() error {
-	return c.db.Close()
+func (db *DB) Close() error {
+	return db.pool.Close()
 }
 
 func mergeOptions(options map[string]string) (*pg.Options, error) {
