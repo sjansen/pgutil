@@ -57,6 +57,13 @@ func TestArgParser(t *testing.T) {
 		},
 	}, {
 		args: []string{
+			"runbook", "list", "testdata/foo",
+		},
+		expected: &commands.RunBookListCmd{
+			File: "testdata/foo",
+		},
+	}, {
+		args: []string{
 			"runbook", "ls", "testdata/foo",
 		},
 		expected: &commands.RunBookListCmd{

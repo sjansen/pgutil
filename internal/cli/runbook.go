@@ -12,10 +12,11 @@ func registerRunbook(p *ArgParser) {
 	parent := p.addParent("runbook")
 
 	// == ls ==
-	ls := &commands.RunBookListCmd{}
-	cmd := p.addSubCommand(parent, ls, "ls", "List all tasks in a run book.")
+	list := &commands.RunBookListCmd{}
+	cmd := p.addSubCommand(parent, list, "list", "List all tasks in a run book.").
+		Alias("ls")
 	cmd.Arg("FILE", "A run book filename").Required().
-		ExistingFileVar(&ls.File)
+		ExistingFileVar(&list.File)
 
 	// == run ==
 	run := &commands.RunBookRunCmd{}

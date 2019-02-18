@@ -63,19 +63,19 @@ func TestLoad(t *testing.T) {
 		},
 	}
 
-	actual, err := runbook.Load("testdata", "simple.jsonnet")
+	actual, err := runbook.Load("testdata/simple.jsonnet")
 	require.NoError(err)
 	require.Equal(expected, actual)
 
-	actual, err = runbook.Load("testdata", "invalid-filename")
+	actual, err = runbook.Load("testdata/invalid-filename")
 	require.Nil(actual)
 	require.Error(err)
 
-	actual, err = runbook.Load("testdata", "invalid-import.jsonnet")
+	actual, err = runbook.Load("testdata/invalid-import.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
 
-	actual, err = runbook.Load("testdata", "invalid-task-field.jsonnet")
+	actual, err = runbook.Load("testdata/invalid-task-field.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
 }

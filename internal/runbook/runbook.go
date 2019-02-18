@@ -30,9 +30,9 @@ type Task struct {
 	*tasks.SQL
 }
 
-func Load(directory, filename string) (*Config, error) {
-	pathname := filepath.Join(directory, filename)
-	bytes, err := ioutil.ReadFile(pathname)
+func Load(filename string) (*Config, error) {
+	directory := filepath.Dir(filename)
+	bytes, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
