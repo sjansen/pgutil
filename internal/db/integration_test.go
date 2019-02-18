@@ -33,3 +33,35 @@ func TestConnectAndQuery(t *testing.T) {
 	require.NoError(err)
 	require.NotEmpty(version)
 }
+
+func TestExec(t *testing.T) {
+	require := require.New(t)
+
+	c, err := connect()
+	require.NoError(err)
+	defer c.Close()
+
+	query := `
+CREATE TABLE IF NOT EXISTS measurements (
+    id BIGSERIAL NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    value DOUBLE PRECISION NOT NULL
+)
+;
+DELETE FROM measurements
+WHERE timestamp < now() - interval '5 minutes'
+;
+INSERT INTO measurements
+    (timestamp, value)
+VALUES
+    (now(), random())
+;
+INSERT INTO measurements
+    (timestamp, value)
+VALUES
+    (now(), random())
+;
+`
+	err = c.Exec(query)
+	require.NoError(err)
+}

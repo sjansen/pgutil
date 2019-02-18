@@ -23,6 +23,11 @@ func (db *DB) Close() error {
 	return db.pool.Close()
 }
 
+func (db *DB) Exec(query string) error {
+	_, err := db.pool.Exec(query)
+	return err
+}
+
 func (db *DB) ServerVersion() (string, error) {
 	var version string
 	_, err := db.pool.Query(pg.Scan(&version), "SELECT VERSION()")

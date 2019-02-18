@@ -7,11 +7,16 @@ type DB struct {
 }
 
 func (db *DB) Close() error {
-	args := db.Called()
-	return args.Error(0)
+	result := db.Called()
+	return result.Error(0)
+}
+
+func (db *DB) Exec(query string) error {
+	result := db.Called(query)
+	return result.Error(0)
 }
 
 func (db *DB) ServerVersion() (string, error) {
-	args := db.Called()
-	return args.String(0), args.Error(1)
+	result := db.Called()
+	return result.String(0), result.Error(1)
 }
