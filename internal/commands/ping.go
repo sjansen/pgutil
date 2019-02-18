@@ -3,8 +3,6 @@ package commands
 import (
 	"fmt"
 	"io"
-
-	"github.com/sjansen/pgutil/internal/db"
 )
 
 type PingCmd struct {
@@ -14,11 +12,12 @@ type PingCmd struct {
 	Username string
 }
 
-func (c *PingCmd) Run(stdout, stderr io.Writer) error {
-	db, err := db.New(c.dbOptions())
+func (c *PingCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
+	db, err := deps.DB(c.dbOptions())
 	if err != nil {
 		return err
 	}
+	defer db.Close()
 
 	version, err := db.ServerVersion()
 	if err == nil {

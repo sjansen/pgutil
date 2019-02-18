@@ -18,12 +18,12 @@ type RunBookRunCmd struct {
 	//Tasks       []string
 }
 
-func (c *RunBookRunCmd) Run(stdout, stderr io.Writer) error {
+func (c *RunBookRunCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
 	fmt.Fprintln(stdout, "run:", c.File)
 	return nil
 }
 
-func (c *RunBookListCmd) Run(stdout, stderr io.Writer) error {
+func (c *RunBookListCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
 	fmt.Fprintln(stdout, "list:", c.File)
 	return nil
 }

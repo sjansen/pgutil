@@ -10,7 +10,7 @@ type VersionCmd struct {
 	Build string
 }
 
-func (c *VersionCmd) Run(stdout, stderr io.Writer) error {
+func (c *VersionCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
 	fmt.Fprintln(stdout, c.App, c.Build)
 	return nil
 }

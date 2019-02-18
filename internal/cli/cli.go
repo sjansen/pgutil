@@ -4,6 +4,8 @@ import (
 	"io"
 
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/sjansen/pgutil/internal/commands"
 )
 
 type ArgParser struct {
@@ -12,7 +14,7 @@ type ArgParser struct {
 }
 
 type Command interface {
-	Run(stdout, stderr io.Writer) error
+	Run(stdout, stderr io.Writer, deps *commands.Dependencies) error
 }
 
 func RegisterCommands(version string) *ArgParser {
