@@ -7,15 +7,16 @@ import (
 	"strings"
 )
 
-type Command struct {
-	Args []string
-
-	Stdout io.Writer
-	Stderr io.Writer
+type Process struct {
+	args []string
 }
 
-func (c *Command) Run() error {
-	arg0 := c.Args[0]
+func Create(args []string) *Process {
+	return &Process{args: args}
+}
+
+func (p *Process) Run(stdout, stderr io.Writer) error {
+	arg0 := p.args[0]
 	err := validateArg0(arg0)
 	if err != nil {
 		return err
@@ -28,10 +29,10 @@ func (c *Command) Run() error {
 
 	cmd := &exec.Cmd{
 		Path: command,
-		Args: c.Args,
+		Args: p.args,
 
-		Stdout: c.Stdout,
-		Stderr: c.Stderr,
+		Stdout: stdout,
+		Stderr: stderr,
 	}
 	return cmd.Run()
 }

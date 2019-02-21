@@ -14,29 +14,27 @@ func TestRun(t *testing.T) {
 
 	expected := "Kilroy was here.\n"
 	var stdout, stderr bytes.Buffer
-	c := process.Command{
-		Args: []string{"echo", "Kilroy", "was", "here."},
-
-		Stdout: &stdout,
-		Stderr: &stderr,
-	}
-	err := c.Run()
+	args := []string{"echo", "Kilroy", "was", "here."}
+	err := process.Create(args).
+		Run(&stdout, &stderr)
 	require.NoError(err)
 	require.Equal(expected, stdout.String())
 	require.Empty(stderr.String())
 
-	c.Args = []string{"non-existent-command"}
 	stdout.Reset()
 	stderr.Reset()
-	err = c.Run()
+	args = []string{"non-existent-command"}
+	err = process.Create(args).
+		Run(&stdout, &stderr)
 	require.Error(err)
 	require.Empty(stdout.String())
 	require.Empty(stderr.String())
 
-	c.Args = []string{"scripts/non-existent-command"}
 	stdout.Reset()
 	stderr.Reset()
-	err = c.Run()
+	args = []string{"scripts/non-existent-command"}
+	err = process.Create(args).
+		Run(&stdout, &stderr)
 	require.Error(err)
 	require.Empty(stdout.String())
 	require.Empty(stderr.String())
