@@ -7,14 +7,14 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/commands"
-	"github.com/sjansen/pgutil/internal/db/dbmock"
+	"github.com/sjansen/pgutil/internal/mocks"
 )
 
 func TestPing(t *testing.T) {
 	require := require.New(t)
 
 	version := "PostgreSQL 9.6 compatible, mock"
-	db := new(dbmock.DB)
+	db := new(mocks.DB)
 	db.On("Close").Return(nil)
 	db.On("ServerVersion").Return(version, nil)
 	deps := &commands.Dependencies{
