@@ -32,9 +32,23 @@ func (g *DirectedGraph) AddEdge(node, edge string) {
 	}
 }
 
-func (g *DirectedGraph) DelEdge(node, edge string) {
+func (g *DirectedGraph) HasNode(node string) bool {
+	nodes := *g
+	_, ok := nodes[node]
+	return ok
+}
+
+func (g *DirectedGraph) RemoveEdge(node, edge string) {
 	nodes := *g
 	delete(nodes[node], edge)
+}
+
+func (g *DirectedGraph) RemoveNode(node string) {
+	nodes := *g
+	for n := range nodes {
+		g.RemoveEdge(n, node)
+	}
+	delete(nodes, node)
 }
 
 func (g *DirectedGraph) OutDegree(node string) int {

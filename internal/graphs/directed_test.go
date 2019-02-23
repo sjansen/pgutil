@@ -42,16 +42,32 @@ func TestDirectedGraph(t *testing.T) {
 	require.Equal(2, g.OutDegree("foo"))
 
 	// remove all edges
-	g.DelEdge("bar", "baz")
+	g.RemoveEdge("bar", "baz")
 	require.Equal(0, g.OutDegree("bar"))
+	require.True(g.HasNode("bar"))
 
 	// add new nodes
 	g.AddEdge("qux", "quux")
 	require.Equal(1, g.OutDegree("qux"))
 	require.Equal(0, g.OutDegree("quux"))
+	require.True(g.HasNode("quux"))
+
+	// remove nodes
+	g.RemoveNode("baz")
+	require.Equal(1, g.OutDegree("foo"))
+	require.False(g.HasNode("baz"))
+	g.RemoveNode("quux")
+	require.Equal(0, g.OutDegree("qux"))
+	require.Equal(0, g.OutDegree("quux"))
+	require.False(g.HasNode("quux"))
 
 	// remove non-existent nodes
-	g.DelEdge("corge", "grault")
+	g.RemoveEdge("corge", "grault")
 	require.Equal(0, g.OutDegree("corge"))
 	require.Equal(0, g.OutDegree("grault"))
+	require.False(g.HasNode("corge"))
+	require.False(g.HasNode("grault"))
+	g.RemoveNode("garply")
+	require.Equal(0, g.OutDegree("garply"))
+	require.False(g.HasNode("garply"))
 }
