@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/sjansen/pgutil/internal/graph"
+	"github.com/sjansen/pgutil/internal/graphs"
 	"github.com/sjansen/pgutil/internal/runbook"
 )
 
@@ -58,7 +58,9 @@ func foo(filename string) (cfg *runbook.Config, taskOrder []string, err error) {
 		nodes[name] = node.After
 	}
 
-	g, err := graph.NewDependencyGraph(nodes)
+	g, err := graphs.NewDependencyGraph(
+		graphs.NewDirectedGraph(nodes),
+	)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -1,20 +1,21 @@
-package graph
+package graphs
 
 import "sort"
 
 type DependencyGraph struct {
-	nodes  []string
 	edges  map[string][]string
+	nodes  []string
 	sorted bool
 }
 
-func NewDependencyGraph(g map[string][]string) (*DependencyGraph, error) {
+func NewDependencyGraph(digraph *DirectedGraph) (*DependencyGraph, error) {
+	g := *digraph
 	nodes := make([]string, 0, len(g))
 	edges := make(map[string][]string, len(g))
 	for n := range g {
 		nodes = append(nodes, n)
 		edges[n] = make([]string, 0, len(g[n]))
-		for _, m := range g[n] {
+		for m := range g[n] {
 			edges[n] = append(edges[n], m)
 			if _, ok := g[m]; !ok {
 				err := &InvalidEdgeError{Node: n, Edge: m}

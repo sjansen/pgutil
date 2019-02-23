@@ -1,11 +1,11 @@
-package graph_test
+package graphs_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/graph"
+	"github.com/sjansen/pgutil/internal/graphs"
 )
 
 var acyclic = map[string][]string{
@@ -75,13 +75,15 @@ var unpredictable = map[string][]string{
 func TestNewDependencyGraph(t *testing.T) {
 	require := require.New(t)
 
-	expected := &graph.InvalidEdgeError{Node: "baz", Edge: "qux"}
+	expected := &graphs.InvalidEdgeError{Node: "baz", Edge: "qux"}
 	nodes := map[string][]string{
 		"foo": {"bar", "baz"},
 		"bar": {"baz"},
 		"baz": {"qux"},
 	}
-	g, err := graph.NewDependencyGraph(nodes)
+	g, err := graphs.NewDependencyGraph(
+		graphs.NewDirectedGraph(nodes),
+	)
 	require.Nil(g)
 	require.Equal(expected, err)
 	require.NotEmpty(err.Error())
@@ -91,27 +93,35 @@ func TestTSort(t *testing.T) {
 	require := require.New(t)
 
 	expected := []string{"t", "r", "o", "u", "b", "l", "e", "m", "a", "k", "i", "n", "g"}
-	g, err := graph.NewDependencyGraph(acyclic)
+	g, err := graphs.NewDependencyGraph(
+		graphs.NewDirectedGraph(acyclic),
+	)
 	require.NoError(err)
 	actual, cycle := g.TSort()
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	expected = []string{"g", "n", "i", "k", "a", "m", "e", "l", "b", "u", "o", "r", "t"}
-	g, err = graph.NewDependencyGraph(reversed)
+	g, err = graphs.NewDependencyGraph(
+		graphs.NewDirectedGraph(reversed),
+	)
 	require.NoError(err)
 	actual, cycle = g.TSort()
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	expected = []string{"a", "b", "i", "h", "j", "c", "d", "k", "e", "f", "g", "l", "m"}
-	g, err = graph.NewDependencyGraph(unpredictable)
+	g, err = graphs.NewDependencyGraph(
+		graphs.NewDirectedGraph(unpredictable),
+	)
 	require.NoError(err)
 	actual, cycle = g.TSort()
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
-	g, err = graph.NewDependencyGraph(cyclic)
+	g, err = graphs.NewDependencyGraph(
+		graphs.NewDirectedGraph(cyclic),
+	)
 	require.NoError(err)
 	actual, cycle = g.TSort()
 	require.Empty(actual)
