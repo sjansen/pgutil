@@ -76,14 +76,12 @@ func TestNewDependencyGraph(t *testing.T) {
 	require := require.New(t)
 
 	expected := &graphs.InvalidEdgeError{Node: "baz", Edge: "qux"}
-	nodes := map[string][]string{
-		"foo": {"bar", "baz"},
-		"bar": {"baz"},
-		"baz": {"qux"},
+	digraph := &graphs.DirectedGraph{
+		"foo": {"bar": struct{}{}, "baz": struct{}{}},
+		"bar": {"baz": struct{}{}},
+		"baz": {"qux": struct{}{}},
 	}
-	g, err := graphs.NewDependencyGraph(
-		graphs.NewDirectedGraph(nodes),
-	)
+	g, err := graphs.NewDependencyGraph(digraph)
 	require.Nil(g)
 	require.Equal(expected, err)
 	require.NotEmpty(err.Error())
@@ -92,37 +90,49 @@ func TestNewDependencyGraph(t *testing.T) {
 func TestTSort(t *testing.T) {
 	require := require.New(t)
 
+	// acyclic
 	expected := []string{"t", "r", "o", "u", "b", "l", "e", "m", "a", "k", "i", "n", "g"}
-	g, err := graphs.NewDependencyGraph(
-		graphs.NewDirectedGraph(acyclic),
-	)
+	digraph, err := graphs.NewDirectedGraph(acyclic)
 	require.NoError(err)
+
+	g, err := graphs.NewDependencyGraph(digraph)
+	require.NoError(err)
+
 	actual, cycle := g.TSort()
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
+	// reversed
 	expected = []string{"g", "n", "i", "k", "a", "m", "e", "l", "b", "u", "o", "r", "t"}
-	g, err = graphs.NewDependencyGraph(
-		graphs.NewDirectedGraph(reversed),
-	)
+	digraph, err = graphs.NewDirectedGraph(reversed)
 	require.NoError(err)
+
+	g, err = graphs.NewDependencyGraph(digraph)
+	require.NoError(err)
+
 	actual, cycle = g.TSort()
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
+	// unpredictable
 	expected = []string{"a", "b", "i", "h", "j", "c", "d", "k", "e", "f", "g", "l", "m"}
-	g, err = graphs.NewDependencyGraph(
-		graphs.NewDirectedGraph(unpredictable),
-	)
+	digraph, err = graphs.NewDirectedGraph(unpredictable)
 	require.NoError(err)
+
+	g, err = graphs.NewDependencyGraph(digraph)
+	require.NoError(err)
+
 	actual, cycle = g.TSort()
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
-	g, err = graphs.NewDependencyGraph(
-		graphs.NewDirectedGraph(cyclic),
-	)
+	// cyclic
+	digraph, err = graphs.NewDirectedGraph(cyclic)
 	require.NoError(err)
+
+	g, err = graphs.NewDependencyGraph(digraph)
+	require.NoError(err)
+
 	actual, cycle = g.TSort()
 	require.Empty(actual)
 	for _, n := range []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"} {
