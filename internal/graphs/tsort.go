@@ -2,46 +2,29 @@ package graphs
 
 import "sort"
 
-type DependencyGraph struct {
-	edges  map[string][]string
-	nodes  []string
-	sorted bool
-}
+func TSort(g *DirectedGraph) (result, cycle []string) {
+	digraph := *g
+	nodes := make([]string, 0, len(digraph))
+	edges := make(map[string][]string, len(digraph))
 
-func NewDependencyGraph(digraph *DirectedGraph) (*DependencyGraph, error) {
-	g := *digraph
-	nodes := make([]string, 0, len(g))
-	edges := make(map[string][]string, len(g))
-	for n := range g {
+	for n, nodeSet := range digraph {
 		nodes = append(nodes, n)
-		edges[n] = make([]string, 0, len(g[n]))
-		for m := range g[n] {
-			edges[n] = append(edges[n], m)
-			if _, ok := g[m]; !ok {
-				err := &InvalidEdgeError{Node: n, Edge: m}
-				return nil, err
-			}
+		tmp := make([]string, 0, len(nodeSet))
+		for m := range nodeSet {
+			tmp = append(tmp, m)
 		}
+		sort.Strings(tmp)
+		edges[n] = tmp
 	}
-	return &DependencyGraph{nodes: nodes, edges: edges}, nil
-}
-
-func (g *DependencyGraph) TSort() (nodes, cycle []string) {
-	if !g.sorted {
-		sort.Strings(g.nodes)
-		for _, n := range g.nodes {
-			sort.Strings(g.edges[n])
-		}
-		g.sorted = true
-	}
+	sort.Strings(nodes)
 
 	v := &visitor{
-		graph:    g.edges,
-		sorted:   make([]string, 0, len(g.nodes)),
+		graph:    edges,
+		sorted:   make([]string, 0, len(nodes)),
 		visited:  map[string]struct{}{},
 		visiting: map[string]struct{}{},
 	}
-	for _, n := range g.nodes {
+	for _, n := range nodes {
 		if _, ok := v.visited[n]; ok {
 			continue
 		}

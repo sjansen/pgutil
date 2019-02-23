@@ -58,17 +58,12 @@ func foo(filename string) (cfg *runbook.Config, taskOrder []string, err error) {
 		nodes[name] = node.After
 	}
 
-	digraph, err := graphs.NewDirectedGraph(nodes)
+	g, err := graphs.NewDirectedGraph(nodes)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	depgraph, err := graphs.NewDependencyGraph(digraph)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	taskOrder, cycle := depgraph.TSort()
+	taskOrder, cycle := graphs.TSort(g)
 	if cycle != nil {
 		err = fmt.Errorf("cycle detected: %v", cycle)
 		return nil, nil, err

@@ -72,68 +72,41 @@ var unpredictable = map[string][]string{
 	"m": {},
 }
 
-func TestNewDependencyGraph(t *testing.T) {
-	require := require.New(t)
-
-	expected := &graphs.InvalidEdgeError{Node: "baz", Edge: "qux"}
-	digraph := &graphs.DirectedGraph{
-		"foo": {"bar": struct{}{}, "baz": struct{}{}},
-		"bar": {"baz": struct{}{}},
-		"baz": {"qux": struct{}{}},
-	}
-	g, err := graphs.NewDependencyGraph(digraph)
-	require.Nil(g)
-	require.Equal(expected, err)
-	require.NotEmpty(err.Error())
-}
-
 func TestTSort(t *testing.T) {
 	require := require.New(t)
 
 	// acyclic
 	expected := []string{"t", "r", "o", "u", "b", "l", "e", "m", "a", "k", "i", "n", "g"}
-	digraph, err := graphs.NewDirectedGraph(acyclic)
+	g, err := graphs.NewDirectedGraph(acyclic)
 	require.NoError(err)
 
-	g, err := graphs.NewDependencyGraph(digraph)
-	require.NoError(err)
-
-	actual, cycle := g.TSort()
+	actual, cycle := graphs.TSort(g)
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	// reversed
 	expected = []string{"g", "n", "i", "k", "a", "m", "e", "l", "b", "u", "o", "r", "t"}
-	digraph, err = graphs.NewDirectedGraph(reversed)
+	g, err = graphs.NewDirectedGraph(reversed)
 	require.NoError(err)
 
-	g, err = graphs.NewDependencyGraph(digraph)
-	require.NoError(err)
-
-	actual, cycle = g.TSort()
+	actual, cycle = graphs.TSort(g)
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	// unpredictable
 	expected = []string{"a", "b", "i", "h", "j", "c", "d", "k", "e", "f", "g", "l", "m"}
-	digraph, err = graphs.NewDirectedGraph(unpredictable)
+	g, err = graphs.NewDirectedGraph(unpredictable)
 	require.NoError(err)
 
-	g, err = graphs.NewDependencyGraph(digraph)
-	require.NoError(err)
-
-	actual, cycle = g.TSort()
+	actual, cycle = graphs.TSort(g)
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	// cyclic
-	digraph, err = graphs.NewDirectedGraph(cyclic)
+	g, err = graphs.NewDirectedGraph(cyclic)
 	require.NoError(err)
 
-	g, err = graphs.NewDependencyGraph(digraph)
-	require.NoError(err)
-
-	actual, cycle = g.TSort()
+	actual, cycle = graphs.TSort(g)
 	require.Empty(actual)
 	for _, n := range []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"} {
 		require.Contains(cycle, n)
