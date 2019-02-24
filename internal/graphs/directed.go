@@ -32,6 +32,12 @@ func (g *DirectedGraph) AddEdge(node, edge string) {
 	}
 }
 
+func (g *DirectedGraph) AddEdges(node string, edges []string) {
+	for _, edge := range edges {
+		g.AddEdge(node, edge)
+	}
+}
+
 func (g *DirectedGraph) HasNode(node string) bool {
 	nodes := *g
 	_, ok := nodes[node]

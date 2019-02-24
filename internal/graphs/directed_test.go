@@ -26,12 +26,24 @@ func TestNewDirectedGraph(t *testing.T) {
 func TestDirectedGraph(t *testing.T) {
 	require := require.New(t)
 
+	// nil constructor
+	g, err := graphs.NewDirectedGraph(nil)
+	require.NoError(err)
+	g.AddEdges("foo", []string{"bar", "baz"})
+	require.True(g.HasNode("foo"))
+	require.True(g.HasNode("bar"))
+	require.True(g.HasNode("bar"))
+	require.Equal(2, g.OutDegree("foo"))
+	require.Equal(0, g.OutDegree("bar"))
+	require.Equal(0, g.OutDegree("baz"))
+
+	// non-nil constructor
 	nodes := map[string][]string{
 		"foo": {"baz"},
 		"bar": {},
 		"baz": {"foo", "bar"},
 	}
-	g, err := graphs.NewDirectedGraph(nodes)
+	g, err = graphs.NewDirectedGraph(nodes)
 	require.NoError(err)
 	require.Equal(1, g.OutDegree("foo"))
 	require.Equal(0, g.OutDegree("bar"))
