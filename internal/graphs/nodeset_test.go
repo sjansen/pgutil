@@ -11,7 +11,12 @@ import (
 func TestNodeSet(t *testing.T) {
 	require := require.New(t)
 
-	set := graphs.NodeSet{}
+	var set graphs.NodeSet
+	require.Equal(0, set.Size())
+	require.False(set.Contains("foo"))
+	set.Remove("bar")
+
+	set = graphs.NodeSet{}
 	require.Equal(0, set.Size())
 	set.Add("foo")
 	set.Add("bar")

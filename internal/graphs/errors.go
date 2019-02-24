@@ -2,6 +2,14 @@ package graphs
 
 import "fmt"
 
+type CircularDependencyError struct {
+	Cycle []string
+}
+
+func (e *CircularDependencyError) Error() string {
+	return fmt.Sprintf("circular dependency detected: %q", e.Cycle)
+}
+
 type InvalidEdgeError struct {
 	Node string
 	Edge string
