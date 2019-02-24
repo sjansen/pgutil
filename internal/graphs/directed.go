@@ -2,30 +2,28 @@ package graphs
 
 type DirectedGraph map[string]NodeSet
 
-type NodeSet map[string]struct{}
-
 func NewDirectedGraph(nodes map[string][]string) (*DirectedGraph, error) {
 	g := DirectedGraph{}
 	for n := range nodes {
-		h := NodeSet{}
+		set := NodeSet{}
 		for _, m := range nodes[n] {
 			if _, ok := nodes[m]; !ok {
 				err := &InvalidEdgeError{Node: n, Edge: m}
 				return nil, err
 			}
-			h[m] = struct{}{}
+			set.Add(m)
 		}
-		g[n] = h
+		g[n] = set
 	}
 	return &g, nil
 }
 
 func (g *DirectedGraph) AddEdge(node, edge string) {
 	nodes := *g
-	if _, ok := nodes[node]; !ok {
-		nodes[node] = NodeSet{edge: struct{}{}}
+	if set, ok := nodes[node]; ok {
+		set.Add(edge)
 	} else {
-		nodes[node][edge] = struct{}{}
+		nodes[node] = NodeSet{edge: struct{}{}}
 	}
 	if _, ok := nodes[edge]; !ok {
 		nodes[edge] = NodeSet{}
