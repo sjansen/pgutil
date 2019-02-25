@@ -68,13 +68,11 @@ func (g *DependencyGraph) Next(completed string) []string {
 	}
 	g.pending = head
 
-	if g.pending != nil {
-		for head = g.pending; head.next != nil; head = head.next {
-			p := head.next
-			if g.dependencies[p.id].Size() < 1 {
-				ready = append(ready, p.id)
-				head.next = p.next
-			}
+	for head = g.pending; head != nil && head.next != nil; head = head.next {
+		p := head.next
+		if g.dependencies[p.id].Size() < 1 {
+			ready = append(ready, p.id)
+			head.next = p.next
 		}
 	}
 	return ready
