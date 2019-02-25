@@ -5,6 +5,7 @@ require (
 	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc // indirect
 	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/fortytw2/leaktest v1.3.0
 	github.com/go-pg/pg v7.1.6+incompatible
 	github.com/google/go-jsonnet v0.12.1
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
