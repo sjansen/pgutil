@@ -52,10 +52,9 @@ func TestDispatcher(t *testing.T) {
 		next: config,
 	}
 	tasksByID := map[string]tasks.Task{}
-	for id, deps := range config {
+	for id := range config {
 		if id != "" {
-			m := &mocks.Task{Deps: deps}
-			tasksByID[id] = m
+			tasksByID[id] = &mocks.Task{}
 		}
 	}
 

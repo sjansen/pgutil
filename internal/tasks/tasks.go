@@ -3,7 +3,6 @@ package tasks
 import "context"
 
 type Task interface {
-	Dependencies() []string
 	Run(ctx context.Context, id string) *Status
 }
 

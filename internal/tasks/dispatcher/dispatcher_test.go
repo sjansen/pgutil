@@ -11,33 +11,42 @@ import (
 	"github.com/sjansen/pgutil/internal/tasks/mocks"
 )
 
+func buildDispatcher(config map[string][]string) *dispatcher.Dispatcher {
+	tasks := map[string]tasks.Task{}
+	for id := range config {
+		tasks[id] = &mocks.Task{}
+	}
+	return &dispatcher.Dispatcher{
+		Workers: 2,
+		Deps:    config,
+		Tasks:   tasks,
+	}
+}
+
 func TestDispatcher(t *testing.T) {
 	require := require.New(t)
 
 	ctx := context.Background()
-	tasksByID := map[string]tasks.Task{
-		"foo": &mocks.Task{Deps: []string{"bar"}},
-		"bar": &mocks.Task{Deps: []string{"foo"}},
+	config := map[string][]string{
+		"foo": {"bar"},
+		"bar": {"foo"},
 	}
-	statuses, err := dispatcher.Dispatch(ctx, tasksByID, 2)
+	d := buildDispatcher(config)
+	statuses, err := d.Dispatch(ctx)
 	require.Nil(statuses)
 	require.Error(err)
 
-	config := map[string][]string{
+	config = map[string][]string{
 		"a": {},
 		"b": {"c"},
 		"c": {},
 		"d": {"a", "b"},
 		"e": {},
 	}
-	tasksByID = map[string]tasks.Task{}
-	for id, deps := range config {
-		m := &mocks.Task{Deps: deps}
-		tasksByID[id] = m
-	}
-	statuses, err = dispatcher.Dispatch(ctx, tasksByID, 2)
+	d = buildDispatcher(config)
+	statuses, err = d.Dispatch(ctx)
 	require.NoError(err)
-	for id, task := range tasksByID {
+	for id, task := range d.Tasks {
 		m := task.(*mocks.Task)
 		require.Equal(1, m.RunCount)
 		require.Contains(

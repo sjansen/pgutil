@@ -7,45 +7,38 @@ import (
 	"github.com/sjansen/pgutil/internal/tasks"
 )
 
-func Dispatch(ctx context.Context, tasksByID map[string]tasks.Task, workers int) ([]*tasks.Status, error) {
-	graph, err := plan(tasksByID)
+type Dispatcher struct {
+	Workers int
+
+	Deps  map[string][]string
+	Tasks map[string]tasks.Task
+}
+
+func (d *Dispatcher) Dispatch(ctx context.Context) ([]*tasks.Status, error) {
+	graph, err := graphs.NewDependencyGraph(d.Deps)
 	if err != nil {
 		return nil, err
 	}
 
-	start := make(chan *readyTask, workers)
+	start := make(chan *readyTask, d.Workers)
 	status := make(chan *tasks.Status)
-	startWorkers(ctx, start, status, workers)
+	startWorkers(ctx, start, status, d.Workers)
 
-	d := &dispatcher{
+	tmp := &dispatcher{
 		ctx:         ctx,
 		graph:       graph,
 		start:       start,
 		status:      status,
-		tasks:       tasksByID,
+		tasks:       d.Tasks,
 		terminating: false,
 	}
 
-	return d.dispatch()
+	return tmp.dispatch()
 }
 
 type readyTask struct {
 	id   string
 	task tasks.Task
-}
-
-func plan(tasksByID map[string]tasks.Task) (*graphs.DependencyGraph, error) {
-	nodes := map[string][]string{}
-	for id, t := range tasksByID {
-		nodes[id] = t.Dependencies()
-	}
-
-	g, err := graphs.NewDependencyGraph(nodes)
-	if err != nil {
-		return nil, err
-	}
-
-	return g, nil
 }
 
 func startWorkers(ctx context.Context, start <-chan *readyTask, status chan<- *tasks.Status, workers int) {
