@@ -17,17 +17,6 @@ type Command interface {
 	Run(stdout, stderr io.Writer, deps *commands.Dependencies) error
 }
 
-func RegisterCommands(version string) *ArgParser {
-	app := kingpin.
-		New("pgutil", "Tools for PostgreSQL").
-		UsageTemplate(kingpin.CompactUsageTemplate)
-	parser := &ArgParser{app: app}
-	registerPing(parser)
-	registerRunbook(parser)
-	registerVersion(parser, version)
-	return parser
-}
-
 func (p *ArgParser) Parse(args []string) (Command, error) {
 	_, err := p.app.Parse(args)
 	if err != nil {

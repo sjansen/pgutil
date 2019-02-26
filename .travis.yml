@@ -10,7 +10,10 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
-script: docker-compose up --abort-on-container-exit --exit-code-from=go --force-recreate
+script:
+  - docker-compose --version
+  - docker-compose build --pull go
+  - docker-compose up --abort-on-container-exit --exit-code-from=go --force-recreate
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

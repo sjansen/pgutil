@@ -1,11 +1,23 @@
+// +build go1.12
+
 package cli
 
-import "github.com/sjansen/pgutil/internal/commands"
+import (
+	"runtime/debug"
 
-func registerVersion(p *ArgParser, build string) {
+	"github.com/sjansen/pgutil/internal/commands"
+)
+
+func registerVersion(p *ArgParser, build string, info *debug.BuildInfo) {
 	c := &commands.VersionCmd{
 		App:   "pgutil",
 		Build: build,
+
+		BuildInfo: info,
+		Verbose:   false,
 	}
-	p.addCommand(c, "version", "Print pgutil's version")
+	cmd := p.addCommand(c, "version", "Print pgutil's version")
+	if info != nil {
+		cmd.Flag("verbose", "include build details").Short('v').BoolVar(&c.Verbose)
+	}
 }

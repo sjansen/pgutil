@@ -81,14 +81,6 @@ func TestArgParser(t *testing.T) {
 			"runbook", "run", "testdata/nonexistent",
 		},
 		expectError: true,
-	}, {
-		args: []string{
-			"version",
-		},
-		expected: &commands.VersionCmd{
-			App:   "pgutil",
-			Build: "test",
-		},
 	}} {
 		actual, err := parser.Parse(tc.args)
 		if tc.expectError {
