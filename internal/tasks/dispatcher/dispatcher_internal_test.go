@@ -51,18 +51,16 @@ func TestDispatcher(t *testing.T) {
 		seen: graphs.NodeSet{},
 		next: config,
 	}
-	mockTasks := []*mocks.Task{}
-	taskByID := map[string]tasks.Task{}
+	tasksByID := map[string]tasks.Task{}
 	for id, deps := range config {
 		if id != "" {
-			m := &mocks.Task{Ident: id, Deps: deps}
-			mockTasks = append(mockTasks, m)
-			taskByID[id] = m
+			m := &mocks.Task{Deps: deps}
+			tasksByID[id] = m
 		}
 	}
 
-	start := make(chan tasks.Task, workers)
-	status := make(chan *tasks.TaskStatus)
+	start := make(chan *readyTask, workers)
+	status := make(chan *tasks.Status)
 	startWorkers(ctx, start, status, workers)
 
 	d := &dispatcher{
@@ -70,14 +68,15 @@ func TestDispatcher(t *testing.T) {
 		graph:       graph,
 		start:       start,
 		status:      status,
-		taskByID:    taskByID,
+		tasks:       tasksByID,
 		terminating: false,
 	}
 
 	statuses, err := d.dispatch()
 	require.NoError(err)
-	for _, m := range mockTasks {
+	for id, task := range tasksByID {
+		m := task.(*mocks.Task)
 		require.Equal(1, m.RunCount)
-		require.Contains(statuses, &tasks.TaskStatus{ID: m.ID()})
+		require.Contains(statuses, &tasks.Status{ID: id})
 	}
 }

@@ -15,11 +15,11 @@ func TestDispatcher(t *testing.T) {
 	require := require.New(t)
 
 	ctx := context.Background()
-	taskList := []tasks.Task{
-		&mocks.Task{Ident: "foo", Deps: []string{"bar"}},
-		&mocks.Task{Ident: "bar", Deps: []string{"foo"}},
+	tasksByID := map[string]tasks.Task{
+		"foo": &mocks.Task{Deps: []string{"bar"}},
+		"bar": &mocks.Task{Deps: []string{"foo"}},
 	}
-	statuses, err := dispatcher.Dispatch(ctx, taskList, 2)
+	statuses, err := dispatcher.Dispatch(ctx, tasksByID, 2)
 	require.Nil(statuses)
 	require.Error(err)
 
@@ -30,20 +30,19 @@ func TestDispatcher(t *testing.T) {
 		"d": {"a", "b"},
 		"e": {},
 	}
-	taskList = []tasks.Task{}
-	mockTasks := []*mocks.Task{}
+	tasksByID = map[string]tasks.Task{}
 	for id, deps := range config {
-		m := &mocks.Task{Ident: id, Deps: deps}
-		taskList = append(taskList, m)
-		mockTasks = append(mockTasks, m)
+		m := &mocks.Task{Deps: deps}
+		tasksByID[id] = m
 	}
-	statuses, err = dispatcher.Dispatch(ctx, taskList, 2)
+	statuses, err = dispatcher.Dispatch(ctx, tasksByID, 2)
 	require.NoError(err)
-	for _, m := range mockTasks {
+	for id, task := range tasksByID {
+		m := task.(*mocks.Task)
 		require.Equal(1, m.RunCount)
 		require.Contains(
 			statuses,
-			&tasks.TaskStatus{ID: m.ID()},
+			&tasks.Status{ID: id},
 		)
 	}
 }

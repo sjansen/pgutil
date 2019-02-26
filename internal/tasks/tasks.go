@@ -3,13 +3,12 @@ package tasks
 import "context"
 
 type Task interface {
-	ID() string
 	Dependencies() []string
-	Run(ctx context.Context) *TaskStatus
+	Run(ctx context.Context, id string) *Status
 }
 
-type TaskStatus struct {
-	ID     string
-	Status string
-	Error  error
+type Status struct {
+	ID    string
+	Desc  string
+	Error error
 }

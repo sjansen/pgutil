@@ -7,22 +7,17 @@ import (
 )
 
 type Task struct {
-	Ident    string
 	Deps     []string
 	RunCount int
-}
-
-func (t *Task) ID() string {
-	return t.Ident
 }
 
 func (t *Task) Dependencies() []string {
 	return t.Deps
 }
 
-func (t *Task) Run(ctx context.Context) *tasks.TaskStatus {
+func (t *Task) Run(ctx context.Context, id string) *tasks.Status {
 	t.RunCount++
-	return &tasks.TaskStatus{
-		ID: t.Ident,
+	return &tasks.Status{
+		ID: id,
 	}
 }
