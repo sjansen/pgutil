@@ -7,9 +7,9 @@ import (
 	"github.com/fortytw2/leaktest"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/dispatcher/mocks"
-	"github.com/sjansen/pgutil/internal/dtos"
 	"github.com/sjansen/pgutil/internal/graphs"
+	"github.com/sjansen/pgutil/internal/tasks"
+	"github.com/sjansen/pgutil/internal/tasks/mocks"
 )
 
 type mockGraph struct {
@@ -52,7 +52,7 @@ func TestDispatcher(t *testing.T) {
 		next: config,
 	}
 	mockTasks := []*mocks.Task{}
-	taskByID := map[string]Task{}
+	taskByID := map[string]tasks.Task{}
 	for id, deps := range config {
 		if id != "" {
 			m := &mocks.Task{Ident: id, Deps: deps}
@@ -61,8 +61,8 @@ func TestDispatcher(t *testing.T) {
 		}
 	}
 
-	start := make(chan Task, workers)
-	status := make(chan *dtos.TaskStatus)
+	start := make(chan tasks.Task, workers)
+	status := make(chan *tasks.TaskStatus)
 	startWorkers(ctx, start, status, workers)
 
 	d := &dispatcher{
@@ -78,6 +78,6 @@ func TestDispatcher(t *testing.T) {
 	require.NoError(err)
 	for _, m := range mockTasks {
 		require.Equal(1, m.RunCount)
-		require.Contains(statuses, &dtos.TaskStatus{ID: m.ID()})
+		require.Contains(statuses, &tasks.TaskStatus{ID: m.ID()})
 	}
 }

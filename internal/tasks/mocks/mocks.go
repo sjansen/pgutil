@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/sjansen/pgutil/internal/dtos"
+	"github.com/sjansen/pgutil/internal/tasks"
 )
 
 type Task struct {
@@ -20,9 +20,9 @@ func (t *Task) Dependencies() []string {
 	return t.Deps
 }
 
-func (t *Task) Run(ctx context.Context) *dtos.TaskStatus {
+func (t *Task) Run(ctx context.Context) *tasks.TaskStatus {
 	t.RunCount++
-	return &dtos.TaskStatus{
+	return &tasks.TaskStatus{
 		ID: t.Ident,
 	}
 }

@@ -3,18 +3,18 @@ package dispatcher
 import (
 	"context"
 
-	"github.com/sjansen/pgutil/internal/dtos"
 	"github.com/sjansen/pgutil/internal/graphs"
+	t "github.com/sjansen/pgutil/internal/tasks"
 )
 
-func Dispatch(ctx context.Context, tasks []Task, workers int) ([]*dtos.TaskStatus, error) {
+func Dispatch(ctx context.Context, tasks []t.Task, workers int) ([]*t.TaskStatus, error) {
 	graph, taskByID, err := plan(tasks)
 	if err != nil {
 		return nil, err
 	}
 
-	start := make(chan Task, workers)
-	status := make(chan *dtos.TaskStatus)
+	start := make(chan t.Task, workers)
+	status := make(chan *t.TaskStatus)
 	startWorkers(ctx, start, status, workers)
 
 	d := &dispatcher{
@@ -29,8 +29,8 @@ func Dispatch(ctx context.Context, tasks []Task, workers int) ([]*dtos.TaskStatu
 	return d.dispatch()
 }
 
-func plan(tasks []Task) (*graphs.DependencyGraph, map[string]Task, error) {
-	taskByID := map[string]Task{}
+func plan(tasks []t.Task) (*graphs.DependencyGraph, map[string]t.Task, error) {
+	taskByID := map[string]t.Task{}
 	nodes := map[string][]string{}
 	for _, t := range tasks {
 		id := t.ID()
@@ -46,9 +46,9 @@ func plan(tasks []Task) (*graphs.DependencyGraph, map[string]Task, error) {
 	return g, taskByID, nil
 }
 
-func startWorkers(ctx context.Context, start <-chan Task, status chan<- *dtos.TaskStatus, workers int) {
+func startWorkers(ctx context.Context, start <-chan t.Task, status chan<- *t.TaskStatus, workers int) {
 	for i := 0; i < workers; i++ {
-		go func(start <-chan Task, status chan<- *dtos.TaskStatus) {
+		go func(start <-chan t.Task, status chan<- *t.TaskStatus) {
 			for {
 				if task, ok := <-start; ok {
 					status <- task.Run(ctx)
@@ -68,16 +68,16 @@ type depgraph interface {
 type dispatcher struct {
 	ctx         context.Context
 	graph       depgraph
-	ready       []Task
-	start       chan<- Task
-	status      <-chan *dtos.TaskStatus
-	statuses    []*dtos.TaskStatus
-	taskByID    map[string]Task
+	ready       []t.Task
+	start       chan<- t.Task
+	status      <-chan *t.TaskStatus
+	statuses    []*t.TaskStatus
+	taskByID    map[string]t.Task
 	terminating bool
 }
 
-func (d *dispatcher) dispatch() ([]*dtos.TaskStatus, error) {
-	d.statuses = make([]*dtos.TaskStatus, 0, len(d.taskByID))
+func (d *dispatcher) dispatch() ([]*t.TaskStatus, error) {
+	d.statuses = make([]*t.TaskStatus, 0, len(d.taskByID))
 	for _, id := range d.graph.Next("") {
 		d.ready = append(d.ready, d.taskByID[id])
 	}
