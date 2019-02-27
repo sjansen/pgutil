@@ -46,7 +46,11 @@ func startWorkers(ctx context.Context, start <-chan *readyTask, status chan<- *t
 		go func(start <-chan *readyTask, status chan<- *tasks.Status) {
 			for {
 				if x, ok := <-start; ok {
-					status <- x.task.Run(ctx, x.id)
+					err := x.task.Start(ctx)
+					status <- &tasks.Status{
+						ID:    x.id,
+						Error: err,
+					}
 				} else {
 					break
 				}
