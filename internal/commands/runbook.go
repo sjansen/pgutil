@@ -4,9 +4,9 @@ import (
 	"context"
 	"io"
 
+	"github.com/sjansen/pgutil/internal/dispatcher"
 	"github.com/sjansen/pgutil/internal/runbook"
 	"github.com/sjansen/pgutil/internal/tasks"
-	"github.com/sjansen/pgutil/internal/tasks/dispatcher"
 	"github.com/sjansen/pgutil/internal/tasks/exec"
 	"github.com/sjansen/pgutil/internal/tasks/sql"
 )

@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/sjansen/pgutil/internal/dispatcher"
 	"github.com/sjansen/pgutil/internal/tasks"
-	"github.com/sjansen/pgutil/internal/tasks/dispatcher"
 	"github.com/sjansen/pgutil/internal/tasks/mocks"
 )
 
