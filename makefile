@@ -23,3 +23,8 @@ test-docker:
 	docker-compose --version
 	docker-compose build --pull go
 	docker-compose up --abort-on-container-exit --exit-code-from=go --force-recreate
+
+test-release:
+	git stash -u -k
+	goreleaser release --skip-publish --rm-dist
+	git stash pop
