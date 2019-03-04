@@ -1,40 +1,43 @@
-package process_test
+package exec_test
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/process"
+	"github.com/sjansen/pgutil/internal/tasks/exec"
 )
 
 func TestRun(t *testing.T) {
 	require := require.New(t)
 
-	expected := "Kilroy was here.\n"
+	ctx := context.Background()
 	var stdout, stderr bytes.Buffer
-	args := []string{"echo", "Kilroy", "was", "here."}
-	err := process.Create(args).
-		Run(&stdout, &stderr)
+	task := &exec.Task{
+		Args:   []string{"echo", "Kilroy", "was", "here."},
+		Stdout: &stdout,
+		Stderr: &stderr,
+	}
+	err := task.Start(ctx)
 	require.NoError(err)
+	expected := "Kilroy was here.\n"
 	require.Equal(expected, stdout.String())
 	require.Empty(stderr.String())
 
 	stdout.Reset()
 	stderr.Reset()
-	args = []string{"non-existent-command"}
-	err = process.Create(args).
-		Run(&stdout, &stderr)
+	task.Args = []string{"non-existent-command"}
+	err = task.Start(ctx)
 	require.Error(err)
 	require.Empty(stdout.String())
 	require.Empty(stderr.String())
 
 	stdout.Reset()
 	stderr.Reset()
-	args = []string{"scripts/non-existent-command"}
-	err = process.Create(args).
-		Run(&stdout, &stderr)
+	task.Args = []string{"scripts/non-existent-command"}
+	err = task.Start(ctx)
 	require.Error(err)
 	require.Empty(stdout.String())
 	require.Empty(stderr.String())

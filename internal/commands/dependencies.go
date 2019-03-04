@@ -1,14 +1,7 @@
 package commands
 
-import "io"
-
 type Dependencies struct {
-	DB      func(map[string]string) (DB, error)
-	Process func([]string) Process
-}
-
-type Process interface {
-	Run(stdout, stderr io.Writer) error
+	DB func(map[string]string) (DB, error)
 }
 
 type DB interface {

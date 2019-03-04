@@ -1,22 +1,21 @@
-package process
+package exec
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os/exec"
 	"strings"
 )
 
-type Process struct {
-	args []string
+type Task struct {
+	Args   []string
+	Stdout io.Writer
+	Stderr io.Writer
 }
 
-func Create(args []string) *Process {
-	return &Process{args: args}
-}
-
-func (p *Process) Run(stdout, stderr io.Writer) error {
-	arg0 := p.args[0]
+func (t *Task) Start(ctx context.Context) error {
+	arg0 := t.Args[0]
 	err := validateArg0(arg0)
 	if err != nil {
 		return err
@@ -28,11 +27,10 @@ func (p *Process) Run(stdout, stderr io.Writer) error {
 	}
 
 	cmd := &exec.Cmd{
-		Path: command,
-		Args: p.args,
-
-		Stdout: stdout,
-		Stderr: stderr,
+		Path:   command,
+		Args:   t.Args,
+		Stdout: t.Stdout,
+		Stderr: t.Stderr,
 	}
 	return cmd.Run()
 }

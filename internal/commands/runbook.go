@@ -1,11 +1,14 @@
 package commands
 
 import (
-	"fmt"
+	"context"
 	"io"
 
-	"github.com/sjansen/pgutil/internal/graphs"
 	"github.com/sjansen/pgutil/internal/runbook"
+	"github.com/sjansen/pgutil/internal/tasks"
+	"github.com/sjansen/pgutil/internal/tasks/dispatcher"
+	"github.com/sjansen/pgutil/internal/tasks/exec"
+	"github.com/sjansen/pgutil/internal/tasks/sql"
 )
 
 type RunBookRunCmd struct {
@@ -17,57 +20,47 @@ type RunBookRunCmd struct {
 	//Tasks       []string
 }
 
-func (c *RunBookRunCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
-	cfg, taskOrder, err := foo(c.File)
+func (c *RunBookRunCmd) Run(stdout, stderr io.Writer, impl *Dependencies) error {
+	cfg, err := runbook.Load(c.File)
 	if err != nil {
 		return err
 	}
 
-	db, err := deps.DB(nil)
+	db, err := impl.DB(nil)
 	if err != nil {
 		return err
 	}
 	defer db.Close()
 
-	tasks := cfg.Tasks
-	for _, name := range taskOrder {
-		fmt.Fprintf(stdout, "begin: %s\n", name)
-		task := tasks[name]
+	deps := make(map[string][]string, len(cfg.Tasks))
+	for id, task := range cfg.Tasks {
+		deps[id] = task.After
+	}
+
+	tasks := map[string]tasks.Task{}
+	for id, task := range cfg.Tasks {
 		switch {
 		case task.Exec != nil:
-			p := deps.Process(task.Exec.Args)
-			p.Run(stdout, stderr)
+			tasks[id] = &exec.Task{
+				Args:   task.Exec.Args,
+				Stdout: stdout,
+				Stderr: stderr,
+			}
 		case task.SQL != nil:
-			db.Exec(task.SQL.SQL)
+			tasks[id] = &sql.Task{
+				C:   db,
+				SQL: task.SQL.SQL,
+			}
 		}
-		fmt.Fprintf(stdout, "end: %s\n", name)
 	}
 
-	return nil
-}
-
-func foo(filename string) (cfg *runbook.Config, taskOrder []string, err error) {
-	cfg, err = runbook.Load(filename)
-	if err != nil {
-		return nil, nil, err
+	dispatcher := &dispatcher.Dispatcher{
+		Workers: 2,
+		Deps:    deps,
+		Tasks:   tasks,
 	}
 
-	tasks := cfg.Tasks
-	nodes := make(map[string][]string, len(tasks))
-	for name, node := range tasks {
-		nodes[name] = node.After
-	}
-
-	g, err := graphs.NewDirectedGraph(nodes)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	taskOrder, cycle := graphs.TSort(g)
-	if cycle != nil {
-		err = fmt.Errorf("cycle detected: %v", cycle)
-		return nil, nil, err
-	}
-
-	return cfg, taskOrder, nil
+	ctx := context.Background()
+	_, err = dispatcher.Dispatch(ctx)
+	return err
 }

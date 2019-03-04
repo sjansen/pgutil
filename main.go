@@ -7,7 +7,6 @@ import (
 	"github.com/sjansen/pgutil/internal/cli"
 	"github.com/sjansen/pgutil/internal/commands"
 	"github.com/sjansen/pgutil/internal/db"
-	"github.com/sjansen/pgutil/internal/process"
 )
 
 var build string // set by goreleaser
@@ -27,9 +26,6 @@ func main() {
 	err = cmd.Run(os.Stdout, os.Stderr, &commands.Dependencies{
 		DB: func(opts map[string]string) (commands.DB, error) {
 			return db.New(opts)
-		},
-		Process: func(args []string) commands.Process {
-			return process.Create(args)
 		},
 	})
 	if err != nil {
