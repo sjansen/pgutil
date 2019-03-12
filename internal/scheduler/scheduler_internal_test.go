@@ -1,4 +1,4 @@
-package dispatcher
+package scheduler
 
 import (
 	"context"
@@ -29,7 +29,7 @@ func (m *mockGraph) Next(id string) []string {
 	return m.next[id]
 }
 
-func TestDispatcher(t *testing.T) {
+func TestScheduler(t *testing.T) {
 	require := require.New(t)
 	defer leaktest.Check(t)()
 
@@ -62,7 +62,7 @@ func TestDispatcher(t *testing.T) {
 	status := make(chan *tasks.Status)
 	startWorkers(ctx, start, status, workers)
 
-	d := &dispatcher{
+	s := &scheduler{
 		ctx:         ctx,
 		graph:       graph,
 		start:       start,
@@ -71,7 +71,7 @@ func TestDispatcher(t *testing.T) {
 		terminating: false,
 	}
 
-	statuses, err := d.dispatch()
+	statuses, err := s.schedule()
 	require.NoError(err)
 	for id, task := range tasksByID {
 		m := task.(*mocks.Task)

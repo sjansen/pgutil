@@ -1,4 +1,4 @@
-package dispatcher_test
+package scheduler_test
 
 import (
 	"context"
@@ -6,24 +6,24 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/dispatcher"
+	"github.com/sjansen/pgutil/internal/scheduler"
 	"github.com/sjansen/pgutil/internal/tasks"
 	"github.com/sjansen/pgutil/internal/tasks/mocks"
 )
 
-func buildDispatcher(config map[string][]string) *dispatcher.Dispatcher {
+func buildScheduler(config map[string][]string) *scheduler.Scheduler {
 	tasks := map[string]tasks.Task{}
 	for id := range config {
 		tasks[id] = &mocks.Task{}
 	}
-	return &dispatcher.Dispatcher{
+	return &scheduler.Scheduler{
 		Workers: 2,
 		Deps:    config,
 		Tasks:   tasks,
 	}
 }
 
-func TestDispatcher(t *testing.T) {
+func TestScheduler(t *testing.T) {
 	require := require.New(t)
 
 	ctx := context.Background()
@@ -31,8 +31,8 @@ func TestDispatcher(t *testing.T) {
 		"foo": {"bar"},
 		"bar": {"foo"},
 	}
-	d := buildDispatcher(config)
-	statuses, err := d.Dispatch(ctx)
+	s := buildScheduler(config)
+	statuses, err := s.Schedule(ctx)
 	require.Nil(statuses)
 	require.Error(err)
 
@@ -43,10 +43,10 @@ func TestDispatcher(t *testing.T) {
 		"d": {"a", "b"},
 		"e": {},
 	}
-	d = buildDispatcher(config)
-	statuses, err = d.Dispatch(ctx)
+	s = buildScheduler(config)
+	statuses, err = s.Schedule(ctx)
 	require.NoError(err)
-	for id, task := range d.Tasks {
+	for id, task := range s.Tasks {
 		m := task.(*mocks.Task)
 		require.Equal(1, m.RunCount)
 		require.Contains(

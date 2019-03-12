@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/sjansen/pgutil/internal/commands"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sjansen/pgutil/internal/commands"
 )
 
 func TestRunBookList(t *testing.T) {
