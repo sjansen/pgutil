@@ -1,4 +1,4 @@
-package scheduler_test
+package oldscheduler_test
 
 import (
 	"context"
@@ -6,17 +6,17 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/scheduler"
+	"github.com/sjansen/pgutil/internal/oldscheduler"
 	"github.com/sjansen/pgutil/internal/tasks"
 	"github.com/sjansen/pgutil/internal/tasks/mocks"
 )
 
-func buildScheduler(config map[string][]string) *scheduler.Scheduler {
+func buildScheduler(config map[string][]string) *oldscheduler.Scheduler {
 	tasks := map[string]tasks.Task{}
 	for id := range config {
 		tasks[id] = &mocks.Task{}
 	}
-	return &scheduler.Scheduler{
+	return &oldscheduler.Scheduler{
 		Workers: 2,
 		Deps:    config,
 		Tasks:   tasks,

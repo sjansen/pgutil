@@ -4,8 +4,8 @@ import (
 	"context"
 	"io"
 
+	"github.com/sjansen/pgutil/internal/oldscheduler"
 	"github.com/sjansen/pgutil/internal/runbook"
-	"github.com/sjansen/pgutil/internal/scheduler"
 	"github.com/sjansen/pgutil/internal/tasks"
 	"github.com/sjansen/pgutil/internal/tasks/exec"
 	"github.com/sjansen/pgutil/internal/tasks/sql"
@@ -54,7 +54,7 @@ func (c *RunBookRunCmd) Run(stdout, stderr io.Writer, impl *Dependencies) error 
 		}
 	}
 
-	scheduler := &scheduler.Scheduler{
+	scheduler := &oldscheduler.Scheduler{
 		Workers: 2,
 		Deps:    deps,
 		Tasks:   tasks,
