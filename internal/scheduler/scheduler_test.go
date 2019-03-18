@@ -39,57 +39,76 @@ func TestScheduler(t *testing.T) {
 	}
 
 	tasks := map[string]scheduler.Task{
-		"t1": &task{"q1", nil},
-		"t2": &task{"q1", nil},
-		"t3": &task{"q1", nil},
-		"t4": &task{"q2", nil},
-		"t5": &task{"q2", nil},
-		"t6": &task{"q2", nil},
-		"t7": &task{"q3", []string{"t1", "t2"}},
-		"t8": &task{"q3", []string{"t3", "t4", "t7"}},
+		"t01": &task{"q1", nil},
+		"t02": &task{"q1", nil},
+		"t03": &task{"q1", nil},
+		"t04": &task{"q2", nil},
+		"t05": &task{"q2", nil},
+		"t06": &task{"q2", nil},
+		"t07": &task{"q3", []string{"t01", "t02"}},
+		"t08": &task{"q3", []string{"t03", "t04", "t07"}},
+		"t09": &task{"q1", []string{"t07"}},
+		"t10": &task{"q2", []string{"t07"}},
+		"t11": &task{"q3", []string{"t05", "t07"}},
+		"t12": &task{"q3", []string{"t06", "t07"}},
+		"t13": &task{"q2", []string{"t07"}},
 	}
 
 	expected := map[string][]string{
-		"q1": {"t1"},
-		"q2": {"t4", "t5"},
+		"q1": {"t01"},
+		"q2": {"t04", "t05"},
 	}
 
 	s, ready, err := scheduler.Start(queues, tasks)
-	require.NoError(err)
-	require.NotNil(s)
-	require.Equal(expected, ready)
+	require.NoError(err, "start")
+	require.NotNil(s, "start")
+	require.Equal(expected, ready, "start")
 
 	for _, x := range []struct {
 		task     string
 		expected map[string][]string
 		err      error
 	}{{
-		"t1", map[string][]string{
-			"q1": {"t2"},
+		"t01", map[string][]string{
+			"q1": {"t02"},
 		}, nil,
 	}, {
-		"t2", map[string][]string{
-			"q1": {"t3"},
-			"q3": {"t7"},
+		"t02", map[string][]string{
+			"q1": {"t03"},
+			"q3": {"t07"},
 		}, nil,
 	}, {
-		"t3", map[string][]string{}, nil,
+		"t03", map[string][]string{}, nil,
 	}, {
-		"t4", map[string][]string{
-			"q2": {"t6"},
+		"t04", map[string][]string{
+			"q2": {"t06"},
 		}, nil,
 	}, {
-		"t5", map[string][]string{}, nil,
+		"t05", map[string][]string{}, nil,
 	}, {
-		"t6", map[string][]string{}, nil,
+		"t06", map[string][]string{}, nil,
 	}, {
-		"t7", map[string][]string{
-			"q3": {"t8"},
+		"t07", map[string][]string{
+			"q1": {"t09"},
+			"q2": {"t10", "t13"},
+			"q3": {"t08", "t11"},
 		}, nil,
 	}, {
-		"t8", nil, scheduler.ErrNoTasks,
+		"t08", map[string][]string{
+			"q3": {"t12"},
+		}, nil,
+	}, {
+		"t09", nil, scheduler.ErrNoPendingTasks,
+	}, {
+		"t10", nil, scheduler.ErrNoPendingTasks,
+	}, {
+		"t11", nil, scheduler.ErrNoPendingTasks,
+	}, {
+		"t12", nil, scheduler.ErrNoPendingTasks,
+	}, {
+		"t13", nil, scheduler.ErrNoPendingTasks,
 	}} {
-		actual, err := s.Finish(x.task)
+		actual, err := s.Next(x.task)
 		if x.err == nil {
 			require.NoError(err, x.task)
 			require.Equal(x.expected, actual, x.task)
@@ -108,8 +127,8 @@ func TestDependencyCycle(t *testing.T) {
 	}
 
 	tasks := map[string]scheduler.Task{
-		"t1": &task{"q1", []string{"t1"}},
-		"t2": &task{"q1", []string{"t2"}},
+		"t1": &task{"q1", []string{"t2"}},
+		"t2": &task{"q1", []string{"t1"}},
 	}
 
 	s, ready, err := scheduler.Start(queues, tasks)

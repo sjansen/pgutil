@@ -56,16 +56,16 @@ func Start(queues map[string]Queue, tasks map[string]Task) (s *Scheduler, ready 
 	return s, s.buildReady(), nil
 }
 
-func (s *Scheduler) Finish(task string) (ready map[string][]string, err error) {
-	if !s.deps.HasPending() {
-		return nil, ErrNoTasks
+func (s *Scheduler) Next(completed string) (ready map[string][]string, err error) {
+	if s.noPendingTasks() {
+		return nil, ErrNoPendingTasks
 	}
 
-	tid := taskID(task)
+	tid := taskID(completed)
 	qid := s.tasks[tid]
 	s.queueLen[qid]--
 
-	s.fillPending(s.deps.Next(task))
+	s.fillPending(s.deps.Next(completed))
 	return s.buildReady(), nil
 }
 
@@ -107,4 +107,17 @@ func (s *Scheduler) fillPending(tasks []string) {
 		pending := s.pending[qid]
 		s.pending[qid] = append(pending, tid)
 	}
+}
+
+func (s *Scheduler) noPendingTasks() bool {
+	if s.deps.HasPending() {
+		return false
+	}
+	for qid, tasks := range s.pending {
+		if len(tasks) > 0 {
+			return false
+		}
+		delete(s.pending, qid)
+	}
+	return true
 }
