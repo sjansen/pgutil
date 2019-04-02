@@ -1,4 +1,4 @@
-package graphs
+package dag
 
 import "sort"
 

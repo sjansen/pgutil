@@ -1,11 +1,11 @@
-package graphs_test
+package dag_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/graphs"
+	"github.com/sjansen/pgutil/internal/dag"
 )
 
 var acyclic = map[string][]string{
@@ -77,36 +77,36 @@ func TestTSort(t *testing.T) {
 
 	// acyclic
 	expected := []string{"t", "r", "o", "u", "b", "l", "e", "m", "a", "k", "i", "n", "g"}
-	g, err := graphs.NewDirectedGraph(acyclic)
+	g, err := dag.NewDirectedGraph(acyclic)
 	require.NoError(err)
 
-	actual, cycle := graphs.TSort(g)
+	actual, cycle := dag.TSort(g)
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	// reversed
 	expected = []string{"g", "n", "i", "k", "a", "m", "e", "l", "b", "u", "o", "r", "t"}
-	g, err = graphs.NewDirectedGraph(reversed)
+	g, err = dag.NewDirectedGraph(reversed)
 	require.NoError(err)
 
-	actual, cycle = graphs.TSort(g)
+	actual, cycle = dag.TSort(g)
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	// unpredictable
 	expected = []string{"a", "b", "i", "h", "j", "c", "d", "k", "e", "f", "g", "l", "m"}
-	g, err = graphs.NewDirectedGraph(unpredictable)
+	g, err = dag.NewDirectedGraph(unpredictable)
 	require.NoError(err)
 
-	actual, cycle = graphs.TSort(g)
+	actual, cycle = dag.TSort(g)
 	require.Equal(expected, actual)
 	require.Empty(cycle)
 
 	// cyclic
-	g, err = graphs.NewDirectedGraph(cyclic)
+	g, err = dag.NewDirectedGraph(cyclic)
 	require.NoError(err)
 
-	actual, cycle = graphs.TSort(g)
+	actual, cycle = dag.TSort(g)
 	require.Empty(actual)
 	for _, n := range []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"} {
 		require.Contains(cycle, n)

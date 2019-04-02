@@ -1,22 +1,22 @@
-package graphs_test
+package dag_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/graphs"
+	"github.com/sjansen/pgutil/internal/dag"
 )
 
 func TestNodeSet(t *testing.T) {
 	require := require.New(t)
 
-	var set graphs.NodeSet
+	var set dag.NodeSet
 	require.Equal(0, set.Size())
 	require.False(set.Contains("foo"))
 	set.Remove("bar")
 
-	set = graphs.NodeSet{}
+	set = dag.NodeSet{}
 	require.Equal(0, set.Size())
 	set.Add("foo")
 	set.Add("bar")

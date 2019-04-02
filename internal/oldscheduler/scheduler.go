@@ -3,7 +3,7 @@ package oldscheduler
 import (
 	"context"
 
-	"github.com/sjansen/pgutil/internal/graphs"
+	"github.com/sjansen/pgutil/internal/dag"
 	"github.com/sjansen/pgutil/internal/tasks"
 )
 
@@ -15,7 +15,7 @@ type Scheduler struct {
 }
 
 func (s *Scheduler) Schedule(ctx context.Context) ([]*tasks.Status, error) {
-	graph, err := graphs.NewDependencyGraph(s.Deps)
+	graph, err := dag.NewDependencyGraph(s.Deps)
 	if err != nil {
 		return nil, err
 	}

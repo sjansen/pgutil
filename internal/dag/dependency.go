@@ -1,4 +1,4 @@
-package graphs
+package dag
 
 type DependencyGraph struct {
 	dependencies map[string]NodeSet

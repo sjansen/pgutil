@@ -1,33 +1,33 @@
-package graphs_test
+package dag_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/graphs"
+	"github.com/sjansen/pgutil/internal/dag"
 )
 
 func TestNewDependencyGraph(t *testing.T) {
 	require := require.New(t)
 
-	var expected error = &graphs.InvalidEdgeError{Node: "foo", Edge: "bar"}
+	var expected error = &dag.InvalidEdgeError{Node: "foo", Edge: "bar"}
 	nodes := map[string][]string{
 		"foo": {"bar"},
 	}
-	g, err := graphs.NewDependencyGraph(nodes)
+	g, err := dag.NewDependencyGraph(nodes)
 	require.Nil(g)
 	require.Equal(expected, err)
 	require.NotEmpty(err.Error())
 
-	expected = &graphs.CircularDependencyError{
+	expected = &dag.CircularDependencyError{
 		Cycle: []string{"foo", "bar"},
 	}
 	nodes = map[string][]string{
 		"foo": {"bar"},
 		"bar": {"foo"},
 	}
-	g, err = graphs.NewDependencyGraph(nodes)
+	g, err = dag.NewDependencyGraph(nodes)
 	require.Nil(g)
 	require.Equal(expected, err)
 	require.NotEmpty(err.Error())
@@ -50,7 +50,7 @@ func TestDependencyGraph(t *testing.T) {
 		"p": {"g"},
 		"r": {},
 	}
-	g, err := graphs.NewDependencyGraph(nodes)
+	g, err := dag.NewDependencyGraph(nodes)
 	require.NoError(err)
 
 	completed := []string{""}

@@ -1,23 +1,23 @@
-package graphs_test
+package dag_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/graphs"
+	"github.com/sjansen/pgutil/internal/dag"
 )
 
 func TestNewDirectedGraph(t *testing.T) {
 	require := require.New(t)
 
-	expected := &graphs.InvalidEdgeError{Node: "baz", Edge: "qux"}
+	expected := &dag.InvalidEdgeError{Node: "baz", Edge: "qux"}
 	nodes := map[string][]string{
 		"foo": {"bar", "baz"},
 		"bar": {"baz"},
 		"baz": {"qux"},
 	}
-	g, err := graphs.NewDirectedGraph(nodes)
+	g, err := dag.NewDirectedGraph(nodes)
 	require.Nil(g)
 	require.Equal(expected, err)
 	require.NotEmpty(err.Error())
@@ -27,7 +27,7 @@ func TestDirectedGraph(t *testing.T) {
 	require := require.New(t)
 
 	// nil constructor
-	g, err := graphs.NewDirectedGraph(nil)
+	g, err := dag.NewDirectedGraph(nil)
 	require.NoError(err)
 	g.AddEdges("foo", []string{"bar", "baz"})
 	require.True(g.HasNode("foo"))
@@ -43,7 +43,7 @@ func TestDirectedGraph(t *testing.T) {
 		"bar": {},
 		"baz": {"foo", "bar"},
 	}
-	g, err = graphs.NewDirectedGraph(nodes)
+	g, err = dag.NewDirectedGraph(nodes)
 	require.NoError(err)
 	require.Equal(1, g.OutDegree("foo"))
 	require.Equal(0, g.OutDegree("bar"))

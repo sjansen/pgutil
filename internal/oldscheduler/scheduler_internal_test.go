@@ -7,14 +7,14 @@ import (
 	"github.com/fortytw2/leaktest"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/graphs"
+	"github.com/sjansen/pgutil/internal/dag"
 	"github.com/sjansen/pgutil/internal/tasks"
 	"github.com/sjansen/pgutil/internal/tasks/mocks"
 )
 
 type mockGraph struct {
 	next map[string][]string
-	seen graphs.NodeSet
+	seen dag.NodeSet
 }
 
 func (m *mockGraph) HasPending() bool {
@@ -48,7 +48,7 @@ func TestScheduler(t *testing.T) {
 		"h": nil,
 	}
 	graph := &mockGraph{
-		seen: graphs.NodeSet{},
+		seen: dag.NodeSet{},
 		next: config,
 	}
 	tasksByID := map[string]tasks.Task{}

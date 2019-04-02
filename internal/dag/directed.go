@@ -1,4 +1,4 @@
-package graphs
+package dag
 
 type DirectedGraph map[string]NodeSet
 

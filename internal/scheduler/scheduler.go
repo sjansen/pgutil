@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-	"github.com/sjansen/pgutil/internal/graphs"
+	"github.com/sjansen/pgutil/internal/dag"
 )
 
 type Task interface {
@@ -16,7 +16,7 @@ type Queue interface {
 type queueID string
 type taskID string
 type Scheduler struct {
-	deps     *graphs.DependencyGraph
+	deps     *dag.DependencyGraph
 	tasks    map[taskID]queueID
 	pending  map[queueID][]taskID
 	queueCap map[queueID]int
@@ -47,7 +47,7 @@ func Start(queues map[string]Queue, tasks map[string]Task) (s *Scheduler, ready 
 		deps[k] = v.Dependencies()
 	}
 
-	s.deps, err = graphs.NewDependencyGraph(deps)
+	s.deps, err = dag.NewDependencyGraph(deps)
 	if err != nil {
 		return nil, nil, err
 	}
