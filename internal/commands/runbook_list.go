@@ -5,7 +5,7 @@ import (
 	"io"
 	"sort"
 
-	"github.com/sjansen/pgutil/internal/runbook"
+	"github.com/sjansen/pgutil/internal/oldrunbook"
 )
 
 type RunBookListCmd struct {
@@ -13,7 +13,7 @@ type RunBookListCmd struct {
 }
 
 func (c *RunBookListCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
-	cfg, err := runbook.Load(c.File)
+	cfg, err := oldrunbook.Load(c.File)
 	if err != nil {
 		return err
 	}

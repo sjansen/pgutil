@@ -1,4 +1,4 @@
-package runbook_test
+package oldrunbook_test
 
 import (
 	"io/ioutil"
@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/runbook"
-	"github.com/sjansen/pgutil/internal/runbook/tasks"
+	"github.com/sjansen/pgutil/internal/oldrunbook"
+	"github.com/sjansen/pgutil/internal/oldrunbook/tasks"
 )
 
 func readfile(filename string) string {
@@ -21,8 +21,8 @@ func readfile(filename string) string {
 func TestLoad(t *testing.T) {
 	require := require.New(t)
 
-	expected := &runbook.Config{
-		Databases: map[string]*runbook.Database{
+	expected := &oldrunbook.Config{
+		Databases: map[string]*oldrunbook.Database{
 			"default": {
 				Host:     "localhost",
 				DBName:   "tmp",
@@ -30,7 +30,7 @@ func TestLoad(t *testing.T) {
 				Password: "hunter2",
 			},
 		},
-		Tasks: map[string]*runbook.Task{
+		Tasks: map[string]*oldrunbook.Task{
 			"create-dir": {
 				Exec: &tasks.Exec{
 					Args: []string{"mkdir", "/tmp/pgutil-simple-example"},
@@ -63,19 +63,19 @@ func TestLoad(t *testing.T) {
 		},
 	}
 
-	actual, err := runbook.Load("testdata/simple.jsonnet")
+	actual, err := oldrunbook.Load("testdata/simple.jsonnet")
 	require.NoError(err)
 	require.Equal(expected, actual)
 
-	actual, err = runbook.Load("testdata/invalid-filename")
+	actual, err = oldrunbook.Load("testdata/invalid-filename")
 	require.Nil(actual)
 	require.Error(err)
 
-	actual, err = runbook.Load("testdata/invalid-import.jsonnet")
+	actual, err = oldrunbook.Load("testdata/invalid-import.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
 
-	actual, err = runbook.Load("testdata/invalid-task-field.jsonnet")
+	actual, err = oldrunbook.Load("testdata/invalid-task-field.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
 }

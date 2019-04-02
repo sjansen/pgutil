@@ -4,8 +4,8 @@ import (
 	"context"
 	"io"
 
+	"github.com/sjansen/pgutil/internal/oldrunbook"
 	"github.com/sjansen/pgutil/internal/oldscheduler"
-	"github.com/sjansen/pgutil/internal/runbook"
 	"github.com/sjansen/pgutil/internal/tasks"
 	"github.com/sjansen/pgutil/internal/tasks/exec"
 	"github.com/sjansen/pgutil/internal/tasks/sql"
@@ -21,7 +21,7 @@ type RunBookRunCmd struct {
 }
 
 func (c *RunBookRunCmd) Run(stdout, stderr io.Writer, impl *Dependencies) error {
-	cfg, err := runbook.Load(c.File)
+	cfg, err := oldrunbook.Load(c.File)
 	if err != nil {
 		return err
 	}

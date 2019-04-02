@@ -1,4 +1,4 @@
-package runbook
+package oldrunbook
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 
 	jsonnet "github.com/google/go-jsonnet"
 
-	"github.com/sjansen/pgutil/internal/runbook/tasks"
+	"github.com/sjansen/pgutil/internal/oldrunbook/tasks"
 )
 
 type Config struct {
