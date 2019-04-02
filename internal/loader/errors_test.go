@@ -12,6 +12,6 @@ import (
 func TestErrors(t *testing.T) {
 	require := require.New(t)
 
-	var err error = &loader.InternalError{errors.New("i am error")}
+	var err error = &loader.InternalError{Original: errors.New("i am error")}
 	require.NotEmpty(err.Error())
 }
