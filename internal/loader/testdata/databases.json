@@ -1,0 +1,16 @@
+{
+    "dst": {
+        "concurrency": 3,
+        "host": "localhost",
+        "dbname": "tmp-pgutil-dst",
+        "username": "AzureDiamond",
+        "password": "hunter2"
+    },
+    "src": {
+        "concurrency": 3,
+        "host": "localhost",
+        "dbname": "tmp-pgutil-src",
+        "username": "AzureDiamond",
+        "password": "hunter2"
+    }
+}
