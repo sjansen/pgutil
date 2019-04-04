@@ -7,9 +7,9 @@ env:
 services:
   - docker
 
-cache:
-  directories:
-    - $GOPATH/pkg/mod
+#cache:
+#  directories:
+#    - $GOPATH/pkg/mod
 
 before_script:
   - "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | sudo bash"
@@ -18,7 +18,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - go get
+  - go mod download
   - fossa analyze
   - docker-compose --version
   - docker-compose build --pull go
