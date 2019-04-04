@@ -11,6 +11,7 @@ require (
 	github.com/google/go-jsonnet v0.12.1
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/mattn/go-isatty v0.0.7
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.4.3 // indirect
 	github.com/sergi/go-diff v1.0.0 // indirect

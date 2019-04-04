@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	isatty "github.com/mattn/go-isatty"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -39,31 +40,44 @@ func New(verbosity int, defaultLog io.Writer, traceLog io.Writer) *zap.SugaredLo
 		level = zapcore.ErrorLevel
 	}
 
+	// default log
+	encoder := zapcore.CapitalLevelEncoder
+	if x, ok := defaultLog.(interface{ Fd() uintptr }); ok {
+		if isatty.IsTerminal(x.Fd()) {
+			encoder = zapcore.CapitalColorLevelEncoder
+		}
+	}
+	cfg := zapcore.EncoderConfig{
+		LevelKey:       "level",
+		MessageKey:     "msg",
+		NameKey:        "logger",
+		EncodeDuration: zapcore.StringDurationEncoder,
+		EncodeLevel:    encoder,
+		EncodeTime:     zapcore.ISO8601TimeEncoder,
+	}
 	core := zapcore.NewCore(
-		zapcore.NewConsoleEncoder(zapcore.EncoderConfig{
-			MessageKey:     "msg",
-			NameKey:        "logger",
-			EncodeTime:     zapcore.ISO8601TimeEncoder,
-			EncodeDuration: zapcore.StringDurationEncoder,
-		}),
+		zapcore.NewConsoleEncoder(cfg),
 		zapcore.AddSync(defaultLog),
 		level,
 	)
+
+	// trace log
 	if traceLog != nil {
 		trace := zapcore.NewCore(
 			zapcore.NewConsoleEncoder(zapcore.EncoderConfig{
-				MessageKey:     "msg",
 				LevelKey:       "level",
+				MessageKey:     "msg",
 				NameKey:        "logger",
 				TimeKey:        "time",
+				EncodeDuration: zapcore.StringDurationEncoder,
 				EncodeLevel:    zapcore.CapitalLevelEncoder,
 				EncodeTime:     zapcore.ISO8601TimeEncoder,
-				EncodeDuration: zapcore.StringDurationEncoder,
 			}),
 			zapcore.AddSync(traceLog),
 			zapcore.DebugLevel,
 		)
 		core = zapcore.NewTee(core, trace)
 	}
+
 	return zap.New(core).Sugar()
 }
