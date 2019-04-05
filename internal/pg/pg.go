@@ -43,7 +43,7 @@ func mergeOptions(o *Options) (*gopg.Options, error) {
 		ApplicationName: "pgutil",
 	}
 
-	if o.Address != "" {
+	if o != nil && o.Address != "" {
 		result.Addr = o.Address
 	} else if host := os.Getenv("PGHOST"); host != "" {
 		if port := os.Getenv("PGPORT"); port != "" {
@@ -53,7 +53,7 @@ func mergeOptions(o *Options) (*gopg.Options, error) {
 		}
 	}
 
-	if o.Username != "" {
+	if o != nil && o.Username != "" {
 		result.User = o.Username
 	} else if username := os.Getenv("PGUSER"); username != "" {
 		result.User = username
@@ -63,13 +63,13 @@ func mergeOptions(o *Options) (*gopg.Options, error) {
 		result.User = u.Username
 	}
 
-	if o.Password != "" {
+	if o != nil && o.Password != "" {
 		result.Password = o.Password
 	} else if password := os.Getenv("PGPASSWORD"); password != "" {
 		result.Password = password
 	}
 
-	if o.Database != "" {
+	if o != nil && o.Database != "" {
 		result.Database = o.Database
 	} else if database := os.Getenv("PGDATABASE"); database != "" {
 		result.Database = database
