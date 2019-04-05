@@ -13,7 +13,7 @@ func Discard() *zap.SugaredLogger {
 	return New(0, ioutil.Discard, nil)
 }
 
-func New(verbosity int, defaultLog io.Writer, traceLog io.Writer) *zap.SugaredLogger {
+func New(verbosity int, defaultLog io.Writer, debugLog io.Writer) *zap.SugaredLogger {
 	var level zapcore.Level
 	switch {
 	case verbosity >= 3:
@@ -47,9 +47,9 @@ func New(verbosity int, defaultLog io.Writer, traceLog io.Writer) *zap.SugaredLo
 		level,
 	)
 
-	// trace log
-	if traceLog != nil {
-		trace := zapcore.NewCore(
+	// debug log
+	if debugLog != nil {
+		debugCore := zapcore.NewCore(
 			zapcore.NewConsoleEncoder(zapcore.EncoderConfig{
 				LevelKey:       "level",
 				MessageKey:     "msg",
@@ -59,15 +59,15 @@ func New(verbosity int, defaultLog io.Writer, traceLog io.Writer) *zap.SugaredLo
 				EncodeLevel:    zapcore.CapitalLevelEncoder,
 				EncodeTime:     zapcore.ISO8601TimeEncoder,
 			}),
-			zapcore.AddSync(traceLog),
+			zapcore.AddSync(debugLog),
 			zapcore.DebugLevel,
 		)
-		core = zapcore.NewTee(core, trace)
+		core = zapcore.NewTee(core, debugCore)
 	}
 
 	log := zap.New(core).Sugar()
-	if traceLog != nil {
-		if x, ok := traceLog.(interface{ Name() string }); ok {
+	if debugLog != nil {
+		if x, ok := debugLog.(interface{ Name() string }); ok {
 			log.Infof("logging to: %s", x.Name())
 		}
 	}
