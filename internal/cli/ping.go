@@ -1,6 +1,10 @@
 package cli
 
-import "github.com/sjansen/pgutil/internal/commands"
+import (
+	"os"
+
+	"github.com/sjansen/pgutil/internal/commands"
+)
 
 func registerPing(p *ArgParser) {
 	c := &commands.PingCmd{}
@@ -9,4 +13,6 @@ func registerPing(p *ArgParser) {
 	cmd.Flag("port", "server port number").Short('p').StringVar(&c.Port)
 	cmd.Flag("dbname", "database name").Short('d').StringVar(&c.DBName)
 	cmd.Flag("username", "connect as username").Short('U').StringVar(&c.Username)
+	cmd.Flag("verbose", "verbose mode, repeat to increase verbosity").Short('v').CounterVar(&c.Verbosity)
+	cmd.Flag("debug", "debug log").OpenFileVar(&c.Debug, os.O_CREATE|os.O_WRONLY, 0644)
 }

@@ -1,27 +1,13 @@
 package logger
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
-	"os"
 
 	isatty "github.com/mattn/go-isatty"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
-
-func Default(verbosity int) *zap.SugaredLogger {
-	tmpfile, err := ioutil.TempFile("", "pgutil")
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "unable to open trace log:", err)
-		tmpfile = nil
-	} else {
-		fmt.Fprintln(os.Stderr, "logging to:", tmpfile.Name())
-	}
-
-	return New(verbosity, os.Stderr, tmpfile)
-}
 
 func Discard() *zap.SugaredLogger {
 	return New(0, ioutil.Discard, nil)
@@ -79,5 +65,11 @@ func New(verbosity int, defaultLog io.Writer, traceLog io.Writer) *zap.SugaredLo
 		core = zapcore.NewTee(core, trace)
 	}
 
-	return zap.New(core).Sugar()
+	log := zap.New(core).Sugar()
+	if traceLog != nil {
+		if x, ok := traceLog.(interface{ Name() string }); ok {
+			log.Infof("logging to: %s", x.Name())
+		}
+	}
+	return log
 }
