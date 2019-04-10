@@ -18,8 +18,8 @@ func TestLoad(t *testing.T) {
 			"sh": func() loader.Queue { return &shQueue{} },
 		},
 		Tasks: map[string]func() loader.TaskConfig{
-			"pg": func() loader.TaskConfig { return &pgTask{} },
-			"sh": func() loader.TaskConfig { return &shTask{} },
+			"pg/exec": func() loader.TaskConfig { return &pgTask{} },
+			"sh":      func() loader.TaskConfig { return &shTask{} },
 		},
 	}
 

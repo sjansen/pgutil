@@ -19,6 +19,7 @@ local directory = '/tmp/pgutil-simple-example';
         },
         'create-table': {
             queue: 'pg/src',
+            type: 'pg/exec',
             config: {
                 sql: importstr 'scripts/create.sql',
             },
@@ -26,6 +27,7 @@ local directory = '/tmp/pgutil-simple-example';
         'insert-new-measurements': {
             after: ['create-table'],
             queue: 'pg/src',
+            type: 'pg/exec',
             config: {
                 sql: importstr 'scripts/insert.sql',
             },
@@ -33,6 +35,7 @@ local directory = '/tmp/pgutil-simple-example';
         'delete-old-measurements': {
             after: ['insert-new-measurements'],
             queue: 'pg/src',
+            type: 'pg/exec',
             config: {
                 sql: importstr 'scripts/delete.sql',
             },

@@ -3,6 +3,7 @@ package loader
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -21,8 +22,8 @@ type Runbook struct {
 }
 
 type Task struct {
-	Queue  string
 	After  []string
+	Queue  string
 	Config TaskConfig
 }
 
@@ -42,8 +43,9 @@ type runbook struct {
 }
 
 type task struct {
-	Queue  string
 	After  []string
+	Queue  string
+	Type   string
 	Config json.RawMessage
 }
 
@@ -99,11 +101,21 @@ func (l *Loader) Load(filename string) (*Runbook, error) {
 		}
 	}
 	for id, raw := range tmp.Tasks {
-		taskType := raw.Queue
-		if idx := strings.Index(taskType, "/"); idx >= 0 {
-			taskType = taskType[:idx]
+		// TODO validate queue type & id
+
+		taskType := raw.Type
+		if taskType == "" {
+			taskType = raw.Queue
+			if idx := strings.Index(taskType, "/"); idx >= 0 {
+				taskType = taskType[:idx]
+			}
 		}
-		config := l.Tasks[taskType]()
+
+		factory, ok := l.Tasks[taskType]
+		if !ok {
+			return nil, errors.New("invalid task type")
+		}
+		config := factory()
 
 		dec := json.NewDecoder(
 			bytes.NewReader(raw.Config),
