@@ -21,10 +21,9 @@ type Runbook struct {
 	Tasks  map[string]*Task
 }
 
-type Task struct {
-	After  []string
-	Queue  string
-	Config TaskConfig
+type runbook struct {
+	Queues map[string]map[string]json.RawMessage
+	Tasks  map[string]*task
 }
 
 type Queue interface {
@@ -33,13 +32,10 @@ type Queue interface {
 	VerifyTask(config interface{}) error
 }
 
-type TaskConfig interface {
-	VerifyConfig() error
-}
-
-type runbook struct {
-	Queues map[string]map[string]json.RawMessage
-	Tasks  map[string]*task
+type Task struct {
+	After  []string
+	Queue  string
+	Config TaskConfig
 }
 
 type task struct {
@@ -47,6 +43,10 @@ type task struct {
 	Queue  string
 	Type   string
 	Config json.RawMessage
+}
+
+type TaskConfig interface {
+	VerifyConfig() error
 }
 
 func (l *Loader) Load(filename string) (*Runbook, error) {
