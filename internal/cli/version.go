@@ -17,7 +17,5 @@ func registerVersion(p *ArgParser, build string, info *debug.BuildInfo) {
 		Verbose:   false,
 	}
 	cmd := p.addCommand(c, "version", "Print pgutil's version")
-	if info != nil {
-		cmd.Flag("verbose", "include build details").Short('v').BoolVar(&c.Verbose)
-	}
+	cmd.Flag("verbose", "include build details").Short('v').BoolVar(&c.Verbose)
 }

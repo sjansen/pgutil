@@ -1,6 +1,7 @@
 package loader_test
 
 import (
+	"errors"
 	"io/ioutil"
 	"testing"
 
@@ -25,6 +26,8 @@ func TestLoad(t *testing.T) {
 
 	expected := &loader.Runbook{
 		Queues: map[string]loader.Queue{
+			"sh": &shQueue{},
+			"pg": &pgQueue{},
 			"pg/dst": &pgQueue{
 				Concurrency: 3,
 				Host:        "localhost",
@@ -116,6 +119,9 @@ func (q *pgQueue) VerifyConfig() error {
 	return nil
 }
 func (q *pgQueue) VerifyTask(config interface{}) error {
+	if _, ok := config.(*pgTask); !ok {
+		return errors.New("invalid pg task")
+	}
 	return nil
 }
 
@@ -133,6 +139,9 @@ func (q *shQueue) VerifyConfig() error {
 	return nil
 }
 func (q *shQueue) VerifyTask(config interface{}) error {
+	if _, ok := config.(*shTask); !ok {
+		return errors.New("invalid sh task")
+	}
 	return nil
 }
 

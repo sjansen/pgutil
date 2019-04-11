@@ -82,6 +82,19 @@ func (l *Loader) Load(filename string) (*Runbook, error) {
 		Queues: map[string]Queue{},
 		Tasks:  map[string]*Task{},
 	}
+
+	if err = l.loadQueues(tmp, book); err != nil {
+		return nil, err
+	}
+
+	if err = l.loadTasks(tmp, book); err != nil {
+		return nil, err
+	}
+
+	return book, nil
+}
+
+func (l *Loader) loadQueues(tmp *runbook, book *Runbook) error {
 	for queueType, queues := range tmp.Queues {
 		for name, config := range queues {
 			dec := json.NewDecoder(
@@ -89,20 +102,36 @@ func (l *Loader) Load(filename string) (*Runbook, error) {
 			)
 			dec.DisallowUnknownFields()
 
-			queue := l.Queues[queueType]()
+			factory, ok := l.Queues[queueType]
+			if !ok {
+				return errors.New("invalid queue type")
+			}
+			queue := factory()
+
 			if err := dec.Decode(queue); err != nil {
-				return nil, err
+				return err
 			}
 			if err := queue.VerifyConfig(); err != nil {
-				return nil, err
+				return err
 			}
 
-			book.Queues[queueType+"/"+name] = queue
+			if name == "" {
+				book.Queues[queueType] = queue
+			} else {
+				book.Queues[queueType+"/"+name] = queue
+			}
 		}
 	}
-	for id, raw := range tmp.Tasks {
-		// TODO validate queue type & id
+	for queueType, factory := range l.Queues {
+		if _, ok := book.Queues[queueType]; !ok {
+			book.Queues[queueType] = factory()
+		}
+	}
+	return nil
+}
 
+func (l *Loader) loadTasks(tmp *runbook, book *Runbook) error {
+	for id, raw := range tmp.Tasks {
 		taskType := raw.Type
 		if taskType == "" {
 			taskType = raw.Queue
@@ -113,26 +142,36 @@ func (l *Loader) Load(filename string) (*Runbook, error) {
 
 		factory, ok := l.Tasks[taskType]
 		if !ok {
-			return nil, errors.New("invalid task type")
+			return errors.New("invalid task type")
 		}
-		config := factory()
+		task := factory()
 
-		dec := json.NewDecoder(
-			bytes.NewReader(raw.Config),
-		)
-		dec.DisallowUnknownFields()
-		if err := dec.Decode(config); err != nil {
-			return nil, err
+		if len(raw.Config) > 0 {
+			dec := json.NewDecoder(
+				bytes.NewReader(raw.Config),
+			)
+			dec.DisallowUnknownFields()
+			if err := dec.Decode(task); err != nil {
+				return err
+			}
 		}
-		if err := config.VerifyConfig(); err != nil {
-			return nil, err
+		if err := task.VerifyConfig(); err != nil {
+			return err
+		}
+
+		if queue, ok := book.Queues[raw.Queue]; ok {
+			if err := queue.VerifyTask(task); err != nil {
+				return err
+			}
+		} else {
+			return errors.New("invalid queue ID")
 		}
 
 		book.Tasks[id] = &Task{
 			Queue:  raw.Queue,
 			After:  raw.After,
-			Config: config,
+			Config: task,
 		}
 	}
-	return book, nil
+	return nil
 }
