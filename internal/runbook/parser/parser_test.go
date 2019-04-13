@@ -10,7 +10,7 @@ import (
 	"github.com/sjansen/pgutil/internal/runbook/parser"
 )
 
-func TestLoad(t *testing.T) {
+func TestParse(t *testing.T) {
 	require := require.New(t)
 
 	l := parser.Parser{
@@ -18,9 +18,9 @@ func TestLoad(t *testing.T) {
 			"pg": func() parser.Queue { return &pgQueue{} },
 			"sh": func() parser.Queue { return &shQueue{} },
 		},
-		Tasks: map[string]func() parser.TaskConfig{
-			"pg/exec": func() parser.TaskConfig { return &pgTask{} },
-			"sh":      func() parser.TaskConfig { return &shTask{} },
+		Tasks: map[string]func() parser.Task{
+			"pg/exec": func() parser.Task { return &pgTask{} },
+			"sh":      func() parser.Task { return &shTask{} },
 		},
 	}
 
@@ -43,52 +43,52 @@ func TestLoad(t *testing.T) {
 				Password:    "hunter2",
 			},
 		},
-		Tasks: map[string]*parser.Task{
+		Steps: map[string]*parser.Step{
 			"create-dir": {
 				Queue: "sh",
-				Config: &shTask{
+				Task: &shTask{
 					Args: []string{"mkdir", "/tmp/pgutil-simple-example"},
 				},
 			},
 			"remove-dir": {
 				Queue: "sh",
 				After: []string{"delete-old-measurements", "insert-new-measurements"},
-				Config: &shTask{
+				Task: &shTask{
 					Args: []string{"rmdir", "/tmp/pgutil-simple-example"},
 				},
 			},
 			"create-table": {
 				Queue: "pg/src",
-				Config: &pgTask{
+				Task: &pgTask{
 					SQL: readfile("testdata/scripts/create.sql"),
 				},
 			},
 			"delete-old-measurements": {
 				Queue: "pg/src",
 				After: []string{"insert-new-measurements"},
-				Config: &pgTask{
+				Task: &pgTask{
 					SQL: readfile("testdata/scripts/delete.sql"),
 				},
 			},
 			"insert-new-measurements": {
 				Queue: "pg/src",
 				After: []string{"create-table"},
-				Config: &pgTask{
+				Task: &pgTask{
 					SQL: readfile("testdata/scripts/insert.sql"),
 				},
 			},
 		},
 	}
 
-	actual, err := l.Load("testdata/simple.jsonnet")
+	actual, err := l.Parse("testdata/simple.jsonnet")
 	require.NoError(err)
 	require.Equal(expected, actual)
 
-	actual, err = l.Load("testdata/invalid-filename")
+	actual, err = l.Parse("testdata/invalid-filename")
 	require.Nil(actual)
 	require.Error(err)
 
-	actual, err = l.Load("testdata/invalid-import.jsonnet")
+	actual, err = l.Parse("testdata/invalid-import.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
 }

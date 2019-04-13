@@ -13,12 +13,12 @@ import (
 
 type Parser struct {
 	Queues map[string]func() Queue
-	Tasks  map[string]func() TaskConfig
+	Tasks  map[string]func() Task
 }
 
 type Runbook struct {
 	Queues map[string]Queue
-	Tasks  map[string]*Task
+	Steps  map[string]*Step
 }
 
 type runbook struct {
@@ -29,13 +29,13 @@ type runbook struct {
 type Queue interface {
 	ConcurrencyLimit() int
 	VerifyConfig() error
-	VerifyTask(config interface{}) error
+	VerifyTask(task interface{}) error
 }
 
-type Task struct {
-	After  []string
-	Queue  string
-	Config TaskConfig
+type Step struct {
+	After []string
+	Queue string
+	Task  Task
 }
 
 type task struct {
@@ -45,11 +45,11 @@ type task struct {
 	Config json.RawMessage
 }
 
-type TaskConfig interface {
+type Task interface {
 	VerifyConfig() error
 }
 
-func (p *Parser) Load(filename string) (*Runbook, error) {
+func (p *Parser) Parse(filename string) (*Runbook, error) {
 	directory := filepath.Dir(filename)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -80,14 +80,14 @@ func (p *Parser) Load(filename string) (*Runbook, error) {
 
 	book := &Runbook{
 		Queues: map[string]Queue{},
-		Tasks:  map[string]*Task{},
+		Steps:  map[string]*Step{},
 	}
 
 	if err = p.loadQueues(tmp, book); err != nil {
 		return nil, err
 	}
 
-	if err = p.loadTasks(tmp, book); err != nil {
+	if err = p.loadSteps(tmp, book); err != nil {
 		return nil, err
 	}
 
@@ -130,7 +130,7 @@ func (p *Parser) loadQueues(tmp *runbook, book *Runbook) error {
 	return nil
 }
 
-func (p *Parser) loadTasks(tmp *runbook, book *Runbook) error {
+func (p *Parser) loadSteps(tmp *runbook, book *Runbook) error {
 	for id, raw := range tmp.Tasks {
 		taskType := raw.Type
 		if taskType == "" {
@@ -167,10 +167,10 @@ func (p *Parser) loadTasks(tmp *runbook, book *Runbook) error {
 			return errors.New("invalid queue ID")
 		}
 
-		book.Tasks[id] = &Task{
-			Queue:  raw.Queue,
-			After:  raw.After,
-			Config: task,
+		book.Steps[id] = &Step{
+			Queue: raw.Queue,
+			After: raw.After,
+			Task:  task,
 		}
 	}
 	return nil
