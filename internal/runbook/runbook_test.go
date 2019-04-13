@@ -5,31 +5,31 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/loader"
+	"github.com/sjansen/pgutil/internal/runbook/parser"
 	"github.com/sjansen/pgutil/internal/runbook/testutils"
 )
 
 func TestLoad(t *testing.T) {
 	require := require.New(t)
 
-	l := loader.Loader{
-		Queues: map[string]func() loader.Queue{
-			"strbuf": func() loader.Queue { return &testutils.StrBuf{} },
+	l := parser.Parser{
+		Queues: map[string]func() parser.Queue{
+			"strbuf": func() parser.Queue { return &testutils.StrBuf{} },
 		},
-		Tasks: map[string]func() loader.TaskConfig{
-			"strbuf/echo":  func() loader.TaskConfig { return &testutils.EchoTask{} },
-			"strbuf/rev":   func() loader.TaskConfig { return &testutils.RevTask{} },
-			"strbuf/rot13": func() loader.TaskConfig { return &testutils.Rot13Task{} },
+		Tasks: map[string]func() parser.TaskConfig{
+			"strbuf/echo":  func() parser.TaskConfig { return &testutils.EchoTask{} },
+			"strbuf/rev":   func() parser.TaskConfig { return &testutils.RevTask{} },
+			"strbuf/rot13": func() parser.TaskConfig { return &testutils.Rot13Task{} },
 		},
 	}
 
-	expected := &loader.Runbook{
-		Queues: map[string]loader.Queue{
+	expected := &parser.Runbook{
+		Queues: map[string]parser.Queue{
 			"strbuf": &testutils.StrBuf{
 				Message: ".ravgyniB ehbl xaveq bg rehf rO",
 			},
 		},
-		Tasks: map[string]*loader.Task{
+		Tasks: map[string]*parser.Task{
 			"encrypted": {
 				Queue:  "strbuf",
 				Config: &testutils.EchoTask{},

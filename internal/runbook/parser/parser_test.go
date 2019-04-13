@@ -1,4 +1,4 @@
-package loader_test
+package parser_test
 
 import (
 	"errors"
@@ -7,25 +7,25 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/loader"
+	"github.com/sjansen/pgutil/internal/runbook/parser"
 )
 
 func TestLoad(t *testing.T) {
 	require := require.New(t)
 
-	l := loader.Loader{
-		Queues: map[string]func() loader.Queue{
-			"pg": func() loader.Queue { return &pgQueue{} },
-			"sh": func() loader.Queue { return &shQueue{} },
+	l := parser.Parser{
+		Queues: map[string]func() parser.Queue{
+			"pg": func() parser.Queue { return &pgQueue{} },
+			"sh": func() parser.Queue { return &shQueue{} },
 		},
-		Tasks: map[string]func() loader.TaskConfig{
-			"pg/exec": func() loader.TaskConfig { return &pgTask{} },
-			"sh":      func() loader.TaskConfig { return &shTask{} },
+		Tasks: map[string]func() parser.TaskConfig{
+			"pg/exec": func() parser.TaskConfig { return &pgTask{} },
+			"sh":      func() parser.TaskConfig { return &shTask{} },
 		},
 	}
 
-	expected := &loader.Runbook{
-		Queues: map[string]loader.Queue{
+	expected := &parser.Runbook{
+		Queues: map[string]parser.Queue{
 			"sh": &shQueue{},
 			"pg": &pgQueue{},
 			"pg/dst": &pgQueue{
@@ -43,7 +43,7 @@ func TestLoad(t *testing.T) {
 				Password:    "hunter2",
 			},
 		},
-		Tasks: map[string]*loader.Task{
+		Tasks: map[string]*parser.Task{
 			"create-dir": {
 				Queue: "sh",
 				Config: &shTask{

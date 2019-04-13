@@ -1,4 +1,4 @@
-package loader
+package parser
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 	jsonnet "github.com/google/go-jsonnet"
 )
 
-type Loader struct {
+type Parser struct {
 	Queues map[string]func() Queue
 	Tasks  map[string]func() TaskConfig
 }
@@ -49,7 +49,7 @@ type TaskConfig interface {
 	VerifyConfig() error
 }
 
-func (l *Loader) Load(filename string) (*Runbook, error) {
+func (p *Parser) Load(filename string) (*Runbook, error) {
 	directory := filepath.Dir(filename)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -83,18 +83,18 @@ func (l *Loader) Load(filename string) (*Runbook, error) {
 		Tasks:  map[string]*Task{},
 	}
 
-	if err = l.loadQueues(tmp, book); err != nil {
+	if err = p.loadQueues(tmp, book); err != nil {
 		return nil, err
 	}
 
-	if err = l.loadTasks(tmp, book); err != nil {
+	if err = p.loadTasks(tmp, book); err != nil {
 		return nil, err
 	}
 
 	return book, nil
 }
 
-func (l *Loader) loadQueues(tmp *runbook, book *Runbook) error {
+func (p *Parser) loadQueues(tmp *runbook, book *Runbook) error {
 	for queueType, queues := range tmp.Queues {
 		for name, config := range queues {
 			dec := json.NewDecoder(
@@ -102,7 +102,7 @@ func (l *Loader) loadQueues(tmp *runbook, book *Runbook) error {
 			)
 			dec.DisallowUnknownFields()
 
-			factory, ok := l.Queues[queueType]
+			factory, ok := p.Queues[queueType]
 			if !ok {
 				return errors.New("invalid queue type")
 			}
@@ -122,7 +122,7 @@ func (l *Loader) loadQueues(tmp *runbook, book *Runbook) error {
 			}
 		}
 	}
-	for queueType, factory := range l.Queues {
+	for queueType, factory := range p.Queues {
 		if _, ok := book.Queues[queueType]; !ok {
 			book.Queues[queueType] = factory()
 		}
@@ -130,7 +130,7 @@ func (l *Loader) loadQueues(tmp *runbook, book *Runbook) error {
 	return nil
 }
 
-func (l *Loader) loadTasks(tmp *runbook, book *Runbook) error {
+func (p *Parser) loadTasks(tmp *runbook, book *Runbook) error {
 	for id, raw := range tmp.Tasks {
 		taskType := raw.Type
 		if taskType == "" {
@@ -140,7 +140,7 @@ func (l *Loader) loadTasks(tmp *runbook, book *Runbook) error {
 			}
 		}
 
-		factory, ok := l.Tasks[taskType]
+		factory, ok := p.Tasks[taskType]
 		if !ok {
 			return errors.New("invalid task type")
 		}

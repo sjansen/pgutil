@@ -1,4 +1,4 @@
-package loader_test
+package parser_test
 
 import (
 	"errors"
@@ -6,12 +6,12 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/loader"
+	"github.com/sjansen/pgutil/internal/runbook/parser"
 )
 
 func TestErrors(t *testing.T) {
 	require := require.New(t)
 
-	var err error = &loader.InternalError{Original: errors.New("i am error")}
+	var err error = &parser.InternalError{Original: errors.New("i am error")}
 	require.NotEmpty(err.Error())
 }

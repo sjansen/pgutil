@@ -1,4 +1,4 @@
-package loader
+package parser
 
 type InternalError struct {
 	Original error
