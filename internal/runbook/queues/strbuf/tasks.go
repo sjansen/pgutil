@@ -1,40 +1,8 @@
-package testutils
+package strbuf
 
-import (
-	"errors"
-	"fmt"
-)
+import "fmt"
 
-type StrBuf struct {
-	Message string
-}
-
-func (q *StrBuf) ConcurrencyLimit() int {
-	return 1
-}
-
-func (q *StrBuf) Start(task interface{}) error {
-	if t, ok := task.(StrBufTask); ok {
-		q.Message = t.Munge(q.Message)
-	}
-	return errors.New("invalid task")
-}
-
-func (q *StrBuf) VerifyConfig() error {
-	if q.Message == "" {
-		return errors.New("invalid message")
-	}
-	return nil
-}
-
-func (q *StrBuf) VerifyTask(config interface{}) error {
-	if _, ok := config.(StrBufTask); !ok {
-		return errors.New("invalid task")
-	}
-	return nil
-}
-
-type StrBufTask interface {
+type Task interface {
 	Munge(string) string
 }
 
@@ -80,7 +48,6 @@ func (t *Rot13Task) Munge(msg string) string {
 		case 'N' <= r && r <= 'Z':
 			runes[i] = r - 13
 		}
-
 	}
 	return string(runes)
 }
