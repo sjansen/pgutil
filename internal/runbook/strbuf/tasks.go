@@ -2,10 +2,6 @@ package strbuf
 
 import "fmt"
 
-type Task interface {
-	Munge(string) string
-}
-
 type EchoTask struct{}
 
 func (t *EchoTask) Munge(msg string) string {
@@ -13,7 +9,7 @@ func (t *EchoTask) Munge(msg string) string {
 	return msg
 }
 
-func (t *EchoTask) VerifyConfig() error {
+func (t *EchoTask) Check() error {
 	return nil
 }
 
@@ -29,7 +25,7 @@ func (t *RevTask) Munge(msg string) string {
 	return string(runes)
 }
 
-func (t *RevTask) VerifyConfig() error {
+func (t *RevTask) Check() error {
 	return nil
 }
 
@@ -52,6 +48,6 @@ func (t *Rot13Task) Munge(msg string) string {
 	return string(runes)
 }
 
-func (t *Rot13Task) VerifyConfig() error {
+func (t *Rot13Task) Check() error {
 	return nil
 }

@@ -6,48 +6,44 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/runbook/parser"
-	"github.com/sjansen/pgutil/internal/runbook/queues/strbuf"
+	"github.com/sjansen/pgutil/internal/runbook/strbuf"
+	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
 func TestParse(t *testing.T) {
 	require := require.New(t)
 
 	l := parser.Parser{
-		Queues: map[string]func() parser.Queue{
-			"strbuf": func() parser.Queue { return &strbuf.StrBuf{} },
-		},
-		Tasks: map[string]func() parser.Task{
-			"strbuf/echo":  func() parser.Task { return &strbuf.EchoTask{} },
-			"strbuf/rev":   func() parser.Task { return &strbuf.RevTask{} },
-			"strbuf/rot13": func() parser.Task { return &strbuf.Rot13Task{} },
+		Targets: map[string]types.TargetFactory{
+			"strbuf": &strbuf.TargetFactory{},
 		},
 	}
 
-	expected := &parser.Runbook{
-		Queues: map[string]parser.Queue{
-			"strbuf": &strbuf.StrBuf{
-				Message: ".ravgyniB ehbl xaveq bg rehf rO",
+	expected := &types.Runbook{
+		Targets: map[string]types.Target{
+			"strbuf": &strbuf.Target{
+				Data: ".ravgyniB ehbl xaveq bg rehf rO",
 			},
 		},
-		Steps: map[string]*parser.Step{
+		Tasks: map[string]*types.Task{
 			"encrypted": {
-				Queue: "strbuf",
-				Task:  &strbuf.EchoTask{},
+				Target: "strbuf",
+				Config: &strbuf.EchoTask{},
 			},
 			"decrypted": {
-				After: []string{"reverse", "rotate"},
-				Queue: "strbuf",
-				Task:  &strbuf.EchoTask{},
+				After:  []string{"reverse", "rotate"},
+				Target: "strbuf",
+				Config: &strbuf.EchoTask{},
 			},
 			"reverse": {
-				After: []string{"encrypted"},
-				Queue: "strbuf",
-				Task:  &strbuf.RevTask{},
+				After:  []string{"encrypted"},
+				Target: "strbuf",
+				Config: &strbuf.RevTask{},
 			},
 			"rotate": {
-				After: []string{"encrypted"},
-				Queue: "strbuf",
-				Task:  &strbuf.Rot13Task{},
+				After:  []string{"encrypted"},
+				Target: "strbuf",
+				Config: &strbuf.Rot13Task{},
 			},
 		},
 	}

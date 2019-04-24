@@ -1,18 +1,19 @@
 package strbuf_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/runbook/queues/strbuf"
+	"github.com/sjansen/pgutil/internal/runbook/strbuf"
 )
 
 func TestRevTask(t *testing.T) {
 	require := require.New(t)
 
 	task := &strbuf.RevTask{}
-	require.NoError(task.VerifyConfig())
+	require.NoError(task.Check())
 
 	actual := task.Munge("!noopS")
 	require.Equal("Spoon!", actual)
@@ -22,7 +23,7 @@ func TestRot13Task(t *testing.T) {
 	require := require.New(t)
 
 	task := &strbuf.Rot13Task{}
-	require.NoError(task.VerifyConfig())
+	require.NoError(task.Check())
 
 	actual := task.Munge("Fcbba!")
 	require.Equal("Spoon!", actual)
@@ -31,15 +32,14 @@ func TestRot13Task(t *testing.T) {
 func TestStrBuf(t *testing.T) {
 	require := require.New(t)
 
-	queue := &strbuf.StrBuf{Message: "!abbcF"}
-	require.NoError(queue.VerifyConfig())
+	target := &strbuf.Target{Data: "!abbcF"}
+	require.NoError(target.Analyze())
 
 	t1 := &strbuf.RevTask{}
 	t2 := &strbuf.Rot13Task{}
-	require.NoError(queue.VerifyTask(t1))
-	require.NoError(queue.VerifyTask(t2))
 
-	queue.Start(t1)
-	queue.Start(t2)
-	require.Equal("Spoon!", queue.Message)
+	ctx := context.TODO()
+	target.Handle(ctx, t1)
+	target.Handle(ctx, t2)
+	require.Equal("Spoon!", target.Data)
 }

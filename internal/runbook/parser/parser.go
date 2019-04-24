@@ -9,47 +9,29 @@ import (
 	"strings"
 
 	jsonnet "github.com/google/go-jsonnet"
+
+	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
+// Parser registers available targets and tasks
 type Parser struct {
-	Queues map[string]func() Queue
-	Tasks  map[string]func() Task
-}
-
-type Runbook struct {
-	Queues map[string]Queue
-	Steps  map[string]*Step
+	Targets map[string]types.TargetFactory
 }
 
 type runbook struct {
-	Queues map[string]map[string]json.RawMessage
-	Tasks  map[string]*task
+	Targets map[string]*struct {
+		Class  string
+		Config json.RawMessage
+	}
+	Tasks map[string]*struct {
+		After  []string
+		Target string
+		Config json.RawMessage
+	}
 }
 
-type Queue interface {
-	ConcurrencyLimit() int
-	VerifyConfig() error
-	VerifyTask(task interface{}) error
-}
-
-type Step struct {
-	After []string
-	Queue string
-	Task  Task
-}
-
-type task struct {
-	After  []string
-	Queue  string
-	Type   string
-	Config json.RawMessage
-}
-
-type Task interface {
-	VerifyConfig() error
-}
-
-func (p *Parser) Parse(filename string) (*Runbook, error) {
+// Parse load targets and task from a runbook file
+func (p *Parser) Parse(filename string) (*types.Runbook, error) {
 	directory := filepath.Dir(filename)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -57,10 +39,9 @@ func (p *Parser) Parse(filename string) (*Runbook, error) {
 	}
 
 	vm := jsonnet.MakeVM()
-	importer := &jsonnet.FileImporter{
+	vm.Importer(&jsonnet.FileImporter{
 		JPaths: []string{directory},
-	}
-	vm.Importer(importer)
+	})
 
 	evaluated, err := vm.EvaluateSnippet(filename, string(data))
 	if err != nil {
@@ -78,99 +59,82 @@ func (p *Parser) Parse(filename string) (*Runbook, error) {
 		return nil, err
 	}
 
-	book := &Runbook{
-		Queues: map[string]Queue{},
-		Steps:  map[string]*Step{},
+	book := &types.Runbook{
+		Targets: make(map[string]types.Target),
+		Tasks:   make(map[string]*types.Task),
 	}
 
-	if err = p.loadQueues(tmp, book); err != nil {
+	if err = p.loadTargets(tmp, book); err != nil {
 		return nil, err
 	}
-
-	if err = p.loadSteps(tmp, book); err != nil {
+	if err = p.loadTasks(tmp, book); err != nil {
 		return nil, err
 	}
 
 	return book, nil
 }
 
-func (p *Parser) loadQueues(tmp *runbook, book *Runbook) error {
-	for queueType, queues := range tmp.Queues {
-		for name, config := range queues {
+func (p *Parser) loadTargets(tmp *runbook, book *types.Runbook) error {
+	for targetID, wrapper := range tmp.Targets {
+		factory, ok := p.Targets[wrapper.Class]
+		if !ok {
+			return errors.New("invalid target class")
+		}
+		target := factory.NewTarget()
+
+		if len(wrapper.Config) > 0 {
 			dec := json.NewDecoder(
-				bytes.NewReader(config),
+				bytes.NewReader(wrapper.Config),
 			)
 			dec.DisallowUnknownFields()
-
-			factory, ok := p.Queues[queueType]
-			if !ok {
-				return errors.New("invalid queue type")
-			}
-			queue := factory()
-
-			if err := dec.Decode(queue); err != nil {
+			if err := dec.Decode(target); err != nil {
 				return err
 			}
-			if err := queue.VerifyConfig(); err != nil {
-				return err
-			}
-
-			if name == "" {
-				book.Queues[queueType] = queue
-			} else {
-				book.Queues[queueType+"/"+name] = queue
-			}
 		}
-	}
-	for queueType, factory := range p.Queues {
-		if _, ok := book.Queues[queueType]; !ok {
-			book.Queues[queueType] = factory()
+		if err := target.Analyze(); err != nil {
+			return err
 		}
+		book.Targets[targetID] = target
 	}
 	return nil
 }
 
-func (p *Parser) loadSteps(tmp *runbook, book *Runbook) error {
-	for id, raw := range tmp.Tasks {
-		taskType := raw.Type
-		if taskType == "" {
-			taskType = raw.Queue
-			if idx := strings.Index(taskType, "/"); idx >= 0 {
-				taskType = taskType[:idx]
-			}
+func (p *Parser) loadTasks(tmp *runbook, book *types.Runbook) error {
+	for taskID, task := range tmp.Tasks {
+		targetID := task.Target
+		taskClass := ""
+		if idx := strings.Index(task.Target, "/"); idx != -1 {
+			targetID = task.Target[:idx]
+			taskClass = task.Target[idx+1:]
 		}
 
-		factory, ok := p.Tasks[taskType]
+		factory, ok := book.Targets[targetID]
 		if !ok {
-			return errors.New("invalid task type")
+			return errors.New("invalid target")
 		}
-		task := factory()
 
-		if len(raw.Config) > 0 {
-			dec := json.NewDecoder(
-				bytes.NewReader(raw.Config),
-			)
-			dec.DisallowUnknownFields()
-			if err := dec.Decode(task); err != nil {
-				return err
-			}
-		}
-		if err := task.VerifyConfig(); err != nil {
+		taskConfig, err := factory.NewTaskConfig(taskClass)
+		if err != nil {
 			return err
 		}
 
-		if queue, ok := book.Queues[raw.Queue]; ok {
-			if err := queue.VerifyTask(task); err != nil {
+		if len(task.Config) > 0 {
+			dec := json.NewDecoder(
+				bytes.NewReader(task.Config),
+			)
+			dec.DisallowUnknownFields()
+			if err := dec.Decode(taskConfig); err != nil {
 				return err
 			}
-		} else {
-			return errors.New("invalid queue ID")
+		}
+		if err := taskConfig.Check(); err != nil {
+			return err
 		}
 
-		book.Steps[id] = &Step{
-			Queue: raw.Queue,
-			After: raw.After,
-			Task:  task,
+		book.Tasks[taskID] = &types.Task{
+			After:  task.After,
+			Target: targetID,
+			Config: taskConfig,
 		}
 	}
 	return nil
