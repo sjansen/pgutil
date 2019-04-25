@@ -28,22 +28,22 @@ func TestParse(t *testing.T) {
 		Tasks: map[string]*types.Task{
 			"encrypted": {
 				Target: "strbuf",
-				Config: &strbuf.EchoTask{},
+				Config: &strbuf.Echo{},
 			},
 			"decrypted": {
 				After:  []string{"reverse", "rotate"},
 				Target: "strbuf",
-				Config: &strbuf.EchoTask{},
+				Config: &strbuf.Echo{},
 			},
 			"reverse": {
 				After:  []string{"encrypted"},
 				Target: "strbuf",
-				Config: &strbuf.RevTask{},
+				Config: &strbuf.Rev{},
 			},
 			"rotate": {
 				After:  []string{"encrypted"},
 				Target: "strbuf",
-				Config: &strbuf.Rot13Task{},
+				Config: &strbuf.Rot13{},
 			},
 		},
 	}

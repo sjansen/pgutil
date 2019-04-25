@@ -2,37 +2,44 @@ package strbuf
 
 import "fmt"
 
-type EchoTask struct{}
+var _ munger = &Echo{}
 
-func (t *EchoTask) Munge(msg string) string {
-	fmt.Println(msg)
-	return msg
+type Echo struct{}
+
+func (x *Echo) munge(t *Target) error {
+	_, err := fmt.Fprintln(t.stdout, t.Data)
+	return err
 }
 
-func (t *EchoTask) Check() error {
+func (x *Echo) Check() error {
 	return nil
 }
 
-type RevTask struct{}
+var _ munger = &Rev{}
 
-func (t *RevTask) Munge(msg string) string {
-	runes := []rune(msg)
+type Rev struct{}
+
+func (x *Rev) munge(t *Target) error {
+	runes := []rune(t.Data)
 	n := len(runes)
 	for i := 0; i < n/2; i++ {
 		j := n - i - 1
 		runes[i], runes[j] = runes[j], runes[i]
 	}
-	return string(runes)
-}
-
-func (t *RevTask) Check() error {
+	t.Data = string(runes)
 	return nil
 }
 
-type Rot13Task struct{}
+func (x *Rev) Check() error {
+	return nil
+}
 
-func (t *Rot13Task) Munge(msg string) string {
-	runes := []rune(msg)
+var _ munger = &Rot13{}
+
+type Rot13 struct{}
+
+func (x *Rot13) munge(t *Target) error {
+	runes := []rune(t.Data)
 	for i, r := range runes {
 		switch {
 		case 'a' <= r && r <= 'm':
@@ -45,9 +52,10 @@ func (t *Rot13Task) Munge(msg string) string {
 			runes[i] = r - 13
 		}
 	}
-	return string(runes)
+	t.Data = string(runes)
+	return nil
 }
 
-func (t *Rot13Task) Check() error {
+func (x *Rot13) Check() error {
 	return nil
 }

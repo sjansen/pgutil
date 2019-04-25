@@ -20,8 +20,8 @@ type Target struct {
 	Data   string
 }
 
-type Task interface {
-	Munge(string) string
+type munger interface {
+	munge(*Target) error
 }
 
 func (f *TargetFactory) NewTarget() types.Target {
@@ -40,8 +40,8 @@ func (t *Target) ConcurrencyLimit() int {
 }
 
 func (t *Target) Handle(ctx context.Context, task types.TaskConfig) error {
-	if x, ok := task.(Task); ok {
-		t.Data = x.Munge(t.Data)
+	if x, ok := task.(munger); ok {
+		return x.munge(t)
 	}
 	return errors.New("invalid task")
 }
@@ -49,11 +49,11 @@ func (t *Target) Handle(ctx context.Context, task types.TaskConfig) error {
 func (t *Target) NewTaskConfig(class string) (types.TaskConfig, error) {
 	switch class {
 	case "echo":
-		return &EchoTask{}, nil
+		return &Echo{}, nil
 	case "rev":
-		return &RevTask{}, nil
+		return &Rev{}, nil
 	case "rot13":
-		return &Rot13Task{}, nil
+		return &Rot13{}, nil
 	}
 	return nil, errors.New("invalid task class") // TODO
 }
