@@ -1,57 +1,73 @@
 package scheduler_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/runbook/scheduler"
+	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
 type queue struct {
 	capacity int
 }
 
-func (q *queue) Capacity() int {
+func (q *queue) Analyze() error {
+	return nil
+}
+
+func (q *queue) ConcurrencyLimit() int {
 	return q.capacity
 }
 
-type task struct {
-	queue string
-	deps  []string
+func (q *queue) Handle(ctx context.Context, task types.TaskConfig) error {
+	return nil
 }
 
-func (t *task) Dependencies() []string {
-	return t.deps
+func (q *queue) NewTaskConfig(class string) (types.TaskConfig, error) {
+	return nil, nil
 }
 
-func (t *task) Queue() string {
-	return t.queue
+func (q *queue) Start() error {
+	return nil
+}
+
+func (q *queue) Stop() error {
+	return nil
+}
+
+func newTask(target string, after []string) *types.Task {
+	return &types.Task{
+		After:  after,
+		Target: target,
+	}
 }
 
 func TestScheduler(t *testing.T) {
 	require := require.New(t)
 
-	queues := map[string]scheduler.Queue{
+	queues := map[string]types.Target{
 		"q1": &queue{1},
 		"q2": &queue{2},
 		"q3": &queue{2},
 	}
 
-	tasks := map[string]scheduler.Task{
-		"t01": &task{"q1", nil},
-		"t02": &task{"q1", nil},
-		"t03": &task{"q1", nil},
-		"t04": &task{"q2", nil},
-		"t05": &task{"q2", nil},
-		"t06": &task{"q2", nil},
-		"t07": &task{"q3", []string{"t01", "t02"}},
-		"t08": &task{"q3", []string{"t03", "t04", "t07"}},
-		"t09": &task{"q1", []string{"t07"}},
-		"t10": &task{"q2", []string{"t07"}},
-		"t11": &task{"q3", []string{"t05", "t07"}},
-		"t12": &task{"q3", []string{"t06", "t07"}},
-		"t13": &task{"q2", []string{"t07"}},
+	tasks := map[string]*types.Task{
+		"t01": newTask("q1", nil),
+		"t02": newTask("q1", nil),
+		"t03": newTask("q1", nil),
+		"t04": newTask("q2", nil),
+		"t05": newTask("q2", nil),
+		"t06": newTask("q2", nil),
+		"t07": newTask("q3", []string{"t01", "t02"}),
+		"t08": newTask("q3", []string{"t03", "t04", "t07"}),
+		"t09": newTask("q1", []string{"t07"}),
+		"t10": newTask("q2", []string{"t07"}),
+		"t11": newTask("q3", []string{"t05", "t07"}),
+		"t12": newTask("q3", []string{"t06", "t07"}),
+		"t13": newTask("q2", []string{"t07"}),
 	}
 
 	expected := map[string][]string{
@@ -122,13 +138,13 @@ func TestScheduler(t *testing.T) {
 func TestDependencyCycle(t *testing.T) {
 	require := require.New(t)
 
-	queues := map[string]scheduler.Queue{
+	queues := map[string]types.Target{
 		"q1": &queue{1},
 	}
 
-	tasks := map[string]scheduler.Task{
-		"t1": &task{"q1", []string{"t2"}},
-		"t2": &task{"q1", []string{"t1"}},
+	tasks := map[string]*types.Task{
+		"t1": newTask("q1", []string{"t2"}),
+		"t2": newTask("q1", []string{"t1"}),
 	}
 
 	s, ready, err := scheduler.Start(queues, tasks)

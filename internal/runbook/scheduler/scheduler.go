@@ -2,16 +2,8 @@ package scheduler
 
 import (
 	"github.com/sjansen/pgutil/internal/dag"
+	"github.com/sjansen/pgutil/internal/runbook/types"
 )
-
-type Task interface {
-	Queue() string
-	Dependencies() []string
-}
-
-type Queue interface {
-	Capacity() int
-}
 
 type queueID string
 type taskID string
@@ -23,7 +15,9 @@ type Scheduler struct {
 	queueLen map[queueID]int
 }
 
-func Start(queues map[string]Queue, tasks map[string]Task) (s *Scheduler, ready map[string][]string, err error) {
+func Start(queues map[string]types.Target, tasks map[string]*types.Task) (
+	s *Scheduler, ready map[string][]string, err error,
+) {
 	s = &Scheduler{
 		tasks:   map[taskID]queueID{},
 		pending: map[queueID][]taskID{},
@@ -34,17 +28,17 @@ func Start(queues map[string]Queue, tasks map[string]Task) (s *Scheduler, ready 
 
 	for k, v := range queues {
 		qid := queueID(k)
-		s.queueCap[qid] = v.Capacity()
+		s.queueCap[qid] = v.ConcurrencyLimit()
 		s.queueLen[qid] = 0
 	}
 
 	deps := map[string][]string{}
 	for k, v := range tasks {
 		tid := taskID(k)
-		qid := queueID(v.Queue())
+		qid := queueID(v.Target)
 		s.tasks[tid] = qid
 
-		deps[k] = v.Dependencies()
+		deps[k] = v.After
 	}
 
 	s.deps, err = dag.NewDependencyGraph(deps)
