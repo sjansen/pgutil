@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/scheduler"
+	"github.com/sjansen/pgutil/internal/runbook/scheduler"
 )
 
 type queue struct {
