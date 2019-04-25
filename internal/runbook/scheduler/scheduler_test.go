@@ -10,31 +10,31 @@ import (
 	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
-type queue struct {
+type target struct {
 	capacity int
 }
 
-func (q *queue) Analyze() error {
+func (t *target) Analyze() error {
 	return nil
 }
 
-func (q *queue) ConcurrencyLimit() int {
-	return q.capacity
+func (t *target) ConcurrencyLimit() int {
+	return t.capacity
 }
 
-func (q *queue) Handle(ctx context.Context, task types.TaskConfig) error {
+func (t *target) Handle(ctx context.Context, task types.TaskConfig) error {
 	return nil
 }
 
-func (q *queue) NewTaskConfig(class string) (types.TaskConfig, error) {
+func (t *target) NewTaskConfig(class string) (types.TaskConfig, error) {
 	return nil, nil
 }
 
-func (q *queue) Start() error {
+func (t *target) Start() error {
 	return nil
 }
 
-func (q *queue) Stop() error {
+func (t *target) Stop() error {
 	return nil
 }
 
@@ -48,10 +48,10 @@ func newTask(target string, after []string) *types.Task {
 func TestScheduler(t *testing.T) {
 	require := require.New(t)
 
-	queues := map[string]types.Target{
-		"q1": &queue{1},
-		"q2": &queue{2},
-		"q3": &queue{2},
+	targets := map[string]types.Target{
+		"q1": &target{1},
+		"q2": &target{2},
+		"q3": &target{2},
 	}
 
 	tasks := map[string]*types.Task{
@@ -75,7 +75,7 @@ func TestScheduler(t *testing.T) {
 		"q2": {"t04", "t05"},
 	}
 
-	s, ready, err := scheduler.Start(queues, tasks)
+	s, ready, err := scheduler.Start(targets, tasks)
 	require.NoError(err, "start")
 	require.NotNil(s, "start")
 	require.Equal(expected, ready, "start")
@@ -138,8 +138,8 @@ func TestScheduler(t *testing.T) {
 func TestDependencyCycle(t *testing.T) {
 	require := require.New(t)
 
-	queues := map[string]types.Target{
-		"q1": &queue{1},
+	targets := map[string]types.Target{
+		"q1": &target{1},
 	}
 
 	tasks := map[string]*types.Task{
@@ -147,7 +147,7 @@ func TestDependencyCycle(t *testing.T) {
 		"t2": newTask("q1", []string{"t1"}),
 	}
 
-	s, ready, err := scheduler.Start(queues, tasks)
+	s, ready, err := scheduler.Start(targets, tasks)
 	require.Error(err)
 	require.Nil(s)
 	require.Nil(ready)

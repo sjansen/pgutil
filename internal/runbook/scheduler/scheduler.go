@@ -5,37 +5,37 @@ import (
 	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
-type queueID string
+type targetID string
 type taskID string
 type Scheduler struct {
-	deps     *dag.DependencyGraph
-	tasks    map[taskID]queueID
-	pending  map[queueID][]taskID
-	queueCap map[queueID]int
-	queueLen map[queueID]int
+	deps      *dag.DependencyGraph
+	tasks     map[taskID]targetID
+	pending   map[targetID][]taskID
+	targetCap map[targetID]int
+	targetLen map[targetID]int
 }
 
-func Start(queues map[string]types.Target, tasks map[string]*types.Task) (
+func Start(targets map[string]types.Target, tasks map[string]*types.Task) (
 	s *Scheduler, ready map[string][]string, err error,
 ) {
 	s = &Scheduler{
-		tasks:   map[taskID]queueID{},
-		pending: map[queueID][]taskID{},
+		tasks:   map[taskID]targetID{},
+		pending: map[targetID][]taskID{},
 
-		queueCap: map[queueID]int{},
-		queueLen: map[queueID]int{},
+		targetCap: map[targetID]int{},
+		targetLen: map[targetID]int{},
 	}
 
-	for k, v := range queues {
-		qid := queueID(k)
-		s.queueCap[qid] = v.ConcurrencyLimit()
-		s.queueLen[qid] = 0
+	for k, v := range targets {
+		qid := targetID(k)
+		s.targetCap[qid] = v.ConcurrencyLimit()
+		s.targetLen[qid] = 0
 	}
 
 	deps := map[string][]string{}
 	for k, v := range tasks {
 		tid := taskID(k)
-		qid := queueID(v.Target)
+		qid := targetID(v.Target)
 		s.tasks[tid] = qid
 
 		deps[k] = v.After
@@ -57,7 +57,7 @@ func (s *Scheduler) Next(completed string) (ready map[string][]string, err error
 
 	tid := taskID(completed)
 	qid := s.tasks[tid]
-	s.queueLen[qid]--
+	s.targetLen[qid]--
 
 	s.fillPending(s.deps.Next(completed))
 	return s.buildReady(), nil
@@ -71,8 +71,8 @@ func (s *Scheduler) buildReady() map[string][]string {
 			continue
 		}
 
-		queueLen := s.queueLen[qid]
-		n := s.queueCap[qid] - queueLen
+		targetLen := s.targetLen[qid]
+		n := s.targetCap[qid] - targetLen
 		switch {
 		case n < 1:
 			continue
@@ -88,7 +88,7 @@ func (s *Scheduler) buildReady() map[string][]string {
 		ready[string(qid)] = tids
 
 		s.pending[qid] = tasks[n:]
-		s.queueLen[qid] = queueLen + n
+		s.targetLen[qid] = targetLen + n
 	}
 
 	return ready
