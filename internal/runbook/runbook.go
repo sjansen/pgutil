@@ -1,9 +1,52 @@
 package runbook
 
 import (
+	"context"
+	"io"
+
+	"github.com/sjansen/pgutil/internal/runbook/parser"
 	"github.com/sjansen/pgutil/internal/runbook/scheduler"
+	"github.com/sjansen/pgutil/internal/runbook/strbuf"
 	"github.com/sjansen/pgutil/internal/runbook/types"
 )
+
+type Runner struct {
+	StdOut io.Writer
+	StdErr io.Writer
+}
+
+func (r *Runner) Run(filename string) error {
+	parser := parser.Parser{
+		Targets: map[string]types.TargetFactory{
+			"strbuf": &strbuf.TargetFactory{
+				StdOut: r.StdOut,
+			},
+		},
+	}
+
+	runbook, err := parser.Parse(filename)
+	if err != nil {
+		return err
+	}
+
+	completed := newCompletedChan(runbook.Targets)
+	defer close(completed)
+
+	ready := startScheduler(runbook.Targets, runbook.Tasks, completed)
+
+	ctx := context.TODO()
+	for taskID := range ready {
+		task := runbook.Tasks[string(taskID)]
+		target := runbook.Targets[task.Target]
+		err = target.Handle(ctx, task.Config)
+		if err != nil {
+			return err
+		}
+		completed <- taskID
+	}
+
+	return nil
+}
 
 func newCompletedChan(targets types.Targets) chan types.TaskID {
 	capacity := 0

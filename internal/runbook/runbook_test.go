@@ -1,10 +1,12 @@
 package runbook_test
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/sjansen/pgutil/internal/runbook"
 	"github.com/sjansen/pgutil/internal/runbook/parser"
 	"github.com/sjansen/pgutil/internal/runbook/strbuf"
 	"github.com/sjansen/pgutil/internal/runbook/types"
@@ -13,7 +15,7 @@ import (
 func TestParse(t *testing.T) {
 	require := require.New(t)
 
-	l := parser.Parser{
+	p := parser.Parser{
 		Targets: map[string]types.TargetFactory{
 			"strbuf": &strbuf.TargetFactory{},
 		},
@@ -48,7 +50,27 @@ func TestParse(t *testing.T) {
 		},
 	}
 
-	actual, err := l.Parse("testdata/message.jsonnet")
+	actual, err := p.Parse("testdata/message.jsonnet")
 	require.NoError(err)
 	require.Equal(expected, actual)
+}
+
+func TestRunner(t *testing.T) {
+	require := require.New(t)
+
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	r := &runbook.Runner{
+		StdOut: stdout,
+		StdErr: stderr,
+	}
+
+	err := r.Run("testdata/message.jsonnet")
+	require.NoError(err)
+
+	expected := `.ravgyniB ehbl xaveq bg rehf rO
+Be sure to drink your Ovaltine.
+`
+	require.Equal(expected, stdout.String())
+	require.Equal("", stderr.String())
 }
