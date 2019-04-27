@@ -2,6 +2,12 @@ exclude: '^vendor/'
 repos:
 -  repo: local
    hooks:
+   -  id: jsonnet
+      name: jsonnet
+      language: system
+      entry: jsonnet fmt --test
+      pass_filenames: true
+      files: '.*\.jsonnet$'
    -  id: vet
       name: go vet
       language: system

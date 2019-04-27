@@ -1,14 +1,9 @@
 package commands
 
 import (
-	"context"
 	"io"
 
-	"github.com/sjansen/pgutil/internal/oldrunbook"
-	"github.com/sjansen/pgutil/internal/oldscheduler"
-	"github.com/sjansen/pgutil/internal/tasks"
-	"github.com/sjansen/pgutil/internal/tasks/exec"
-	"github.com/sjansen/pgutil/internal/tasks/sql"
+	"github.com/sjansen/pgutil/internal/runbook"
 )
 
 type RunBookRunCmd struct {
@@ -21,46 +16,10 @@ type RunBookRunCmd struct {
 }
 
 func (c *RunBookRunCmd) Run(stdout, stderr io.Writer, impl *Dependencies) error {
-	cfg, err := oldrunbook.Load(c.File)
-	if err != nil {
-		return err
+	r := &runbook.Runner{
+		StdOut: stdout,
+		StdErr: stderr,
 	}
 
-	db, err := impl.DB(nil)
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	deps := make(map[string][]string, len(cfg.Tasks))
-	for id, task := range cfg.Tasks {
-		deps[id] = task.After
-	}
-
-	tasks := map[string]tasks.Task{}
-	for id, task := range cfg.Tasks {
-		switch {
-		case task.Exec != nil:
-			tasks[id] = &exec.Task{
-				Args:   task.Exec.Args,
-				Stdout: stdout,
-				Stderr: stderr,
-			}
-		case task.SQL != nil:
-			tasks[id] = &sql.Task{
-				C:   db,
-				SQL: task.SQL.SQL,
-			}
-		}
-	}
-
-	scheduler := &oldscheduler.Scheduler{
-		Workers: 2,
-		Deps:    deps,
-		Tasks:   tasks,
-	}
-
-	ctx := context.Background()
-	_, err = scheduler.Schedule(ctx)
-	return err
+	return r.Run(c.File)
 }
