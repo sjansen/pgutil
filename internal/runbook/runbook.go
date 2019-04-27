@@ -10,19 +10,8 @@ import (
 	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
-type Runner struct {
-	StdOut io.Writer
-	StdErr io.Writer
-}
-
-func (r *Runner) Run(filename string) error {
-	parser := parser.Parser{
-		Targets: map[string]types.TargetFactory{
-			"strbuf": &strbuf.TargetFactory{
-				StdOut: r.StdOut,
-			},
-		},
-	}
+func Run(filename string, stdout, stderr io.Writer) error {
+	parser := newParser(stdout, stderr)
 
 	runbook, err := parser.Parse(filename)
 	if err != nil {
@@ -55,6 +44,16 @@ func newCompletedChan(targets types.Targets) chan types.TaskID {
 	}
 	capacity *= 2
 	return make(chan types.TaskID, capacity)
+}
+
+func newParser(stdout, stderr io.Writer) *parser.Parser {
+	return &parser.Parser{
+		Targets: map[string]types.TargetFactory{
+			"strbuf": &strbuf.TargetFactory{
+				StdOut: stdout,
+			},
+		},
+	}
 }
 
 func startScheduler(targets types.Targets, tasks types.Tasks, completed <-chan types.TaskID) <-chan types.TaskID {

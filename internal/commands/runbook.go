@@ -16,10 +16,5 @@ type RunBookRunCmd struct {
 }
 
 func (c *RunBookRunCmd) Run(stdout, stderr io.Writer, impl *Dependencies) error {
-	r := &runbook.Runner{
-		StdOut: stdout,
-		StdErr: stderr,
-	}
-
-	return r.Run(c.File)
+	return runbook.Run(c.File, stdout, stderr)
 }

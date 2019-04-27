@@ -55,17 +55,11 @@ func TestParse(t *testing.T) {
 	require.Equal(expected, actual)
 }
 
-func TestRunner(t *testing.T) {
+func TestRun(t *testing.T) {
 	require := require.New(t)
 
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
-	r := &runbook.Runner{
-		StdOut: stdout,
-		StdErr: stderr,
-	}
-
-	err := r.Run("testdata/message.jsonnet")
+	var stdout, stderr bytes.Buffer
+	err := runbook.Run("testdata/message.jsonnet", &stdout, &stderr)
 	require.NoError(err)
 
 	expected := `.ravgyniB ehbl xaveq bg rehf rO
