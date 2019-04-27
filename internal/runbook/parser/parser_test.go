@@ -24,7 +24,7 @@ func TestParse(t *testing.T) {
 	}
 
 	expected := &types.Runbook{
-		Targets: map[string]types.Target{
+		Targets: types.Targets{
 			"sh": &shTarget{},
 			"src": &pgTarget{
 				Concurrency: 3,
@@ -41,7 +41,7 @@ func TestParse(t *testing.T) {
 				Password:    "hunter2",
 			},
 		},
-		Tasks: map[string]*types.Task{
+		Tasks: types.Tasks{
 			"create-dir": {
 				Target: "sh",
 				Config: &shTask{

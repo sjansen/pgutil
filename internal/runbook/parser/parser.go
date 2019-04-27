@@ -60,8 +60,8 @@ func (p *Parser) Parse(filename string) (*types.Runbook, error) {
 	}
 
 	book := &types.Runbook{
-		Targets: make(map[string]types.Target),
-		Tasks:   make(map[string]*types.Task),
+		Targets: make(types.Targets),
+		Tasks:   make(types.Tasks),
 	}
 
 	if err = p.loadTargets(tmp, book); err != nil {

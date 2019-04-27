@@ -10,9 +10,13 @@ type Runbook struct {
 	Tasks   map[string]*Task
 }
 
+// TargetFactory instantiates new targets
 type TargetFactory interface {
 	NewTarget() Target
 }
+
+// Targets maps target IDs to targets
+type Targets map[string]Target
 
 // Target is concerned with specific classes of tasks
 type Target interface {
@@ -23,6 +27,9 @@ type Target interface {
 	Start() error
 	Stop() error
 }
+
+// Tasks maps task IDs to tasks
+type Tasks map[string]*Task
 
 // Task contains generic task data
 type Task struct {

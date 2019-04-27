@@ -20,12 +20,12 @@ func TestParse(t *testing.T) {
 	}
 
 	expected := &types.Runbook{
-		Targets: map[string]types.Target{
+		Targets: types.Targets{
 			"strbuf": &strbuf.Target{
 				Data: ".ravgyniB ehbl xaveq bg rehf rO",
 			},
 		},
-		Tasks: map[string]*types.Task{
+		Tasks: types.Tasks{
 			"encrypted": {
 				Target: "strbuf",
 				Config: &strbuf.Echo{},

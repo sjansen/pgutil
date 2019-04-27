@@ -48,13 +48,13 @@ func newTask(target string, after []string) *types.Task {
 func TestScheduler(t *testing.T) {
 	require := require.New(t)
 
-	targets := map[string]types.Target{
+	targets := types.Targets{
 		"q1": &target{1},
 		"q2": &target{2},
 		"q3": &target{2},
 	}
 
-	tasks := map[string]*types.Task{
+	tasks := types.Tasks{
 		"t01": newTask("q1", nil),
 		"t02": newTask("q1", nil),
 		"t03": newTask("q1", nil),
@@ -75,7 +75,7 @@ func TestScheduler(t *testing.T) {
 		"q2": {"t04", "t05"},
 	}
 
-	s, ready, err := scheduler.Start(targets, tasks)
+	s, ready, err := scheduler.New(targets, tasks)
 	require.NoError(err, "start")
 	require.NotNil(s, "start")
 	require.Equal(expected, ready, "start")
@@ -138,16 +138,16 @@ func TestScheduler(t *testing.T) {
 func TestDependencyCycle(t *testing.T) {
 	require := require.New(t)
 
-	targets := map[string]types.Target{
+	targets := types.Targets{
 		"q1": &target{1},
 	}
 
-	tasks := map[string]*types.Task{
+	tasks := types.Tasks{
 		"t1": newTask("q1", []string{"t2"}),
 		"t2": newTask("q1", []string{"t1"}),
 	}
 
-	s, ready, err := scheduler.Start(targets, tasks)
+	s, ready, err := scheduler.New(targets, tasks)
 	require.Error(err)
 	require.Nil(s)
 	require.Nil(ready)

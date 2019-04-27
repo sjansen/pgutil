@@ -15,9 +15,7 @@ type Scheduler struct {
 	targetLen map[targetID]int
 }
 
-func Start(targets map[string]types.Target, tasks map[string]*types.Task) (
-	s *Scheduler, ready map[string][]string, err error,
-) {
+func New(targets types.Targets, tasks types.Tasks) (s *Scheduler, ready map[string][]string, err error) {
 	s = &Scheduler{
 		tasks:   map[taskID]targetID{},
 		pending: map[targetID][]taskID{},
