@@ -1,5 +1,5 @@
 {
-    tasks: {
-        foo: importstr 'invalid.json',
-    }
+  tasks: {
+    foo: importstr 'invalid.json',
+  },
 }

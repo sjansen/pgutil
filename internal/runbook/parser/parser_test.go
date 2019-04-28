@@ -16,13 +16,7 @@ import (
 func TestParse(t *testing.T) {
 	require := require.New(t)
 
-	l := parser.Parser{
-		Targets: map[string]types.TargetFactory{
-			"pg": &pgFactory{},
-			"sh": &shFactory{},
-		},
-	}
-
+	p := newParser()
 	expected := &types.Runbook{
 		Targets: types.Targets{
 			"sh": &shTarget{},
@@ -78,17 +72,51 @@ func TestParse(t *testing.T) {
 		},
 	}
 
-	actual, err := l.Parse("testdata/simple.jsonnet")
+	actual, err := p.Parse("testdata/simple.jsonnet")
 	require.NoError(err)
 	require.Equal(expected, actual)
 
-	actual, err = l.Parse("testdata/invalid-filename")
+	actual, err = p.Parse("testdata/invalid-filename")
 	require.Nil(actual)
 	require.Error(err)
 
-	actual, err = l.Parse("testdata/invalid-import.jsonnet")
+	actual, err = p.Parse("testdata/invalid-field.jsonnet")
 	require.Nil(actual)
 	require.Error(err)
+
+	actual, err = p.Parse("testdata/invalid-import.jsonnet")
+	require.Nil(actual)
+	require.Error(err)
+
+	actual, err = p.Parse("testdata/invalid-target-class.jsonnet")
+	require.Nil(actual)
+	require.Error(err)
+
+	actual, err = p.Parse("testdata/invalid-target-field.jsonnet")
+	require.Nil(actual)
+	require.Error(err)
+
+	actual, err = p.Parse("testdata/invalid-task-class.jsonnet")
+	require.Nil(actual)
+	require.Error(err)
+
+	actual, err = p.Parse("testdata/invalid-task-field.jsonnet")
+	require.Nil(actual)
+	require.Error(err)
+
+	actual, err = p.Parse("testdata/invalid-task-target.jsonnet")
+	require.Nil(actual)
+	require.Error(err)
+}
+
+func newParser() *parser.Parser {
+	return &parser.Parser{
+		Targets: map[string]types.TargetFactory{
+			"pg": &pgFactory{},
+			"sh": &shFactory{},
+		},
+	}
+
 }
 
 func readfile(filename string) string {
