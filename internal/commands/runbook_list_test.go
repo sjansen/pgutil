@@ -12,14 +12,14 @@ import (
 func TestRunBookList(t *testing.T) {
 	require := require.New(t)
 
-	expected := `Tasks:
-    begin
-    end
-    hostname
-    whoami
+	expected := `Tasks & Targets:
+  decrypted  strbuf
+  encrypted  strbuf
+  reverse    strbuf
+  rotate     strbuf
 `
 	cmd := &commands.RunBookListCmd{
-		File: "testdata/list.jsonnet",
+		File: "testdata/message.jsonnet",
 	}
 	var stdout, stderr bytes.Buffer
 	err := cmd.Run(&stdout, &stderr, nil)

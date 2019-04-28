@@ -32,13 +32,13 @@ func TestScheduler(t *testing.T) {
 	completed := newCompletedChan(targets)
 	ready := startScheduler(targets, tasks, completed)
 
-	seen := map[types.TaskID]struct{}{}
+	seen := map[TaskID]struct{}{}
 	for taskID := range ready {
 		seen[taskID] = struct{}{}
 		completed <- taskID
 	}
 
-	expected := map[types.TaskID]struct{}{
+	expected := map[TaskID]struct{}{
 		"a": {}, "b": {}, "c": {}, "d": {}, "e": {},
 		"f": {}, "g": {}, "h": {}, "i": {}, "j": {},
 	}
@@ -50,7 +50,7 @@ func TestSchedulerEarlyTermination(t *testing.T) {
 	completed := newCompletedChan(targets)
 	ready := startScheduler(targets, tasks, completed)
 
-	seen := map[types.TaskID]struct{}{}
+	seen := map[TaskID]struct{}{}
 	for taskID := range ready {
 		seen[taskID] = struct{}{}
 		if taskID == "e" {
@@ -61,7 +61,7 @@ func TestSchedulerEarlyTermination(t *testing.T) {
 		}
 	}
 
-	expected := map[types.TaskID]struct{}{
+	expected := map[TaskID]struct{}{
 		"a": {}, "b": {}, "c": {}, "d": {}, "e": {},
 	}
 	require.Equal(expected, seen)

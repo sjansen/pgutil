@@ -10,9 +10,29 @@ import (
 	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
+// TargetID uniquely identifies a target
+type TargetID string
+
+// TaskID uniquely identifies a task
+type TaskID string
+
+func List(filename string) (map[TaskID]TargetID, error) {
+	parser := newParser(nil, nil)
+	runbook, err := parser.Parse(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	result := map[TaskID]TargetID{}
+	for taskID, task := range runbook.Tasks {
+		result[TaskID(taskID)] = TargetID(task.Target)
+	}
+
+	return result, nil
+}
+
 func Run(filename string, stdout, stderr io.Writer) error {
 	parser := newParser(stdout, stderr)
-
 	runbook, err := parser.Parse(filename)
 	if err != nil {
 		return err
@@ -37,13 +57,13 @@ func Run(filename string, stdout, stderr io.Writer) error {
 	return nil
 }
 
-func newCompletedChan(targets types.Targets) chan types.TaskID {
+func newCompletedChan(targets types.Targets) chan TaskID {
 	capacity := 0
 	for _, t := range targets {
 		capacity += t.ConcurrencyLimit()
 	}
 	capacity *= 2
-	return make(chan types.TaskID, capacity)
+	return make(chan TaskID, capacity)
 }
 
 func newParser(stdout, stderr io.Writer) *parser.Parser {
@@ -56,10 +76,10 @@ func newParser(stdout, stderr io.Writer) *parser.Parser {
 	}
 }
 
-func startScheduler(targets types.Targets, tasks types.Tasks, completed <-chan types.TaskID) <-chan types.TaskID {
-	ch := make(chan types.TaskID)
+func startScheduler(targets types.Targets, tasks types.Tasks, completed <-chan TaskID) <-chan TaskID {
+	ch := make(chan TaskID)
 
-	go func(ch chan<- types.TaskID) {
+	go func(ch chan<- TaskID) {
 		s, ready, err := scheduler.New(targets, tasks)
 		for {
 			if err != nil {
@@ -67,7 +87,7 @@ func startScheduler(targets types.Targets, tasks types.Tasks, completed <-chan t
 			}
 			for _, taskIDs := range ready {
 				for _, taskID := range taskIDs {
-					ch <- types.TaskID(taskID)
+					ch <- TaskID(taskID)
 				}
 			}
 			if taskID, ok := <-completed; ok {

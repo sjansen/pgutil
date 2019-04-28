@@ -31,9 +31,6 @@ type Target interface {
 // Tasks maps task IDs to tasks
 type Tasks map[string]*Task
 
-// TaskID uniquely identifies a task
-type TaskID string
-
 // Task contains generic task data
 type Task struct {
 	After  []string
