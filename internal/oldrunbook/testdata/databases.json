@@ -1,8 +1,0 @@
-{
-    "default": {
-        "host": "localhost",
-        "dbname": "tmp",
-        "username": "AzureDiamond",
-        "password": "hunter2"
-    }
-}
