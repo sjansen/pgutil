@@ -15,7 +15,7 @@ func TestStrBuf(t *testing.T) {
 
 	buffer := &bytes.Buffer{}
 	factory := &strbuf.TargetFactory{
-		StdOut: buffer,
+		Stdout: buffer,
 	}
 	target := factory.NewTarget()
 

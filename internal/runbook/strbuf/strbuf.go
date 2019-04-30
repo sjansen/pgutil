@@ -11,7 +11,7 @@ import (
 
 type TargetFactory struct {
 	Log    *zap.SugaredLogger
-	StdOut io.Writer
+	Stdout io.Writer
 }
 
 type Target struct {
@@ -27,7 +27,7 @@ type munger interface {
 func (f *TargetFactory) NewTarget() types.Target {
 	return &Target{
 		log:    f.Log,
-		stdout: f.StdOut,
+		stdout: f.Stdout,
 	}
 }
 

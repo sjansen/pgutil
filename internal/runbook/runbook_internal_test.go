@@ -47,6 +47,7 @@ func TestScheduler(t *testing.T) {
 
 func TestSchedulerEarlyTermination(t *testing.T) {
 	require := require.New(t)
+
 	completed := newCompletedChan(targets)
 	ready := startScheduler(targets, tasks, completed)
 

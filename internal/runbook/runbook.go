@@ -16,6 +16,7 @@ type TargetID string
 // TaskID uniquely identifies a task
 type TaskID string
 
+// List enumerates a runbook's tasks and their targets
 func List(filename string) (map[TaskID]TargetID, error) {
 	parser := newParser(nil, nil)
 	runbook, err := parser.Parse(filename)
@@ -31,6 +32,7 @@ func List(filename string) (map[TaskID]TargetID, error) {
 	return result, nil
 }
 
+// Run executes the tasks in a runbook
 func Run(filename string, stdout, stderr io.Writer) error {
 	parser := newParser(stdout, stderr)
 	runbook, err := parser.Parse(filename)
@@ -70,14 +72,19 @@ func newParser(stdout, stderr io.Writer) *parser.Parser {
 	return &parser.Parser{
 		Targets: map[string]types.TargetFactory{
 			"strbuf": &strbuf.TargetFactory{
-				StdOut: stdout,
+				Stdout: stdout,
 			},
 		},
 	}
 }
 
 func startScheduler(targets types.Targets, tasks types.Tasks, completed <-chan TaskID) <-chan TaskID {
-	ch := make(chan TaskID)
+	capacity := 0
+	for _, t := range targets {
+		capacity += t.ConcurrencyLimit()
+	}
+	capacity *= 2
+	ch := make(chan TaskID, capacity)
 
 	go func(ch chan<- TaskID) {
 		s, ready, err := scheduler.New(targets, tasks)
