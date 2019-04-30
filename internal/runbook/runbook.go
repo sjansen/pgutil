@@ -6,6 +6,7 @@ import (
 
 	"github.com/sjansen/pgutil/internal/runbook/parser"
 	"github.com/sjansen/pgutil/internal/runbook/scheduler"
+	"github.com/sjansen/pgutil/internal/runbook/sh"
 	"github.com/sjansen/pgutil/internal/runbook/strbuf"
 	"github.com/sjansen/pgutil/internal/runbook/types"
 )
@@ -71,6 +72,10 @@ func newCompletedChan(targets types.Targets) chan TaskID {
 func newParser(stdout, stderr io.Writer) *parser.Parser {
 	return &parser.Parser{
 		Targets: map[string]types.TargetFactory{
+			"sh": &sh.TargetFactory{
+				Stdout: stdout,
+				Stderr: stderr,
+			},
 			"strbuf": &strbuf.TargetFactory{
 				Stdout: stdout,
 			},
