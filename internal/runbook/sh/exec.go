@@ -3,7 +3,9 @@ package sh
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os/exec"
+	"strings"
 )
 
 var _ execer = &Exec{}
@@ -23,6 +25,19 @@ func (x *Exec) exec(ctx context.Context, t *Target) error {
 func (x *Exec) Check() error {
 	if len(x.Args) < 1 {
 		return errors.New("too few args")
+	}
+	return validateArg0(x.Args[0])
+}
+
+func validateArg0(arg0 string) error {
+	switch {
+	case !strings.Contains(arg0, "/"):
+	case strings.HasPrefix(arg0, "/"):
+	case strings.HasPrefix(arg0, "./"):
+	case strings.HasPrefix(arg0, "../"):
+		break
+	default:
+		return fmt.Errorf("illegal command: %q", arg0)
 	}
 	return nil
 }
