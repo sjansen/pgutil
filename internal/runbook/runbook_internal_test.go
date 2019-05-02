@@ -33,9 +33,9 @@ func TestScheduler(t *testing.T) {
 	ready := startScheduler(targets, tasks, completed)
 
 	seen := map[TaskID]struct{}{}
-	for taskID := range ready {
-		seen[taskID] = struct{}{}
-		completed <- taskID
+	for r := range ready {
+		seen[r.taskID] = struct{}{}
+		completed <- r.taskID
 	}
 
 	expected := map[TaskID]struct{}{
@@ -52,13 +52,13 @@ func TestSchedulerEarlyTermination(t *testing.T) {
 	ready := startScheduler(targets, tasks, completed)
 
 	seen := map[TaskID]struct{}{}
-	for taskID := range ready {
-		seen[taskID] = struct{}{}
-		if taskID == "e" {
+	for r := range ready {
+		seen[r.taskID] = struct{}{}
+		if r.taskID == "e" {
 			close(completed)
 			break
 		} else {
-			completed <- taskID
+			completed <- r.taskID
 		}
 	}
 

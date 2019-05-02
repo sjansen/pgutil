@@ -3,6 +3,7 @@ package runbook
 import (
 	"context"
 	"io"
+	"sync"
 
 	"github.com/sjansen/pgutil/internal/runbook/parser"
 	"github.com/sjansen/pgutil/internal/runbook/scheduler"
@@ -16,6 +17,17 @@ type TargetID string
 
 // TaskID uniquely identifies a task
 type TaskID string
+
+type readyTask struct {
+	target TargetID
+	taskID TaskID
+	task   types.TaskConfig
+}
+
+type endedTask struct {
+	taskID TaskID
+	err    error
+}
 
 // List enumerates a runbook's tasks and their targets
 func List(filename string) (map[TaskID]TargetID, error) {
@@ -44,17 +56,15 @@ func Run(filename string, stdout, stderr io.Writer) error {
 	completed := newCompletedChan(runbook.Targets)
 	defer close(completed)
 
-	ready := startScheduler(runbook.Targets, runbook.Tasks, completed)
-
 	ctx := context.TODO()
-	for taskID := range ready {
-		task := runbook.Tasks[string(taskID)]
-		target := runbook.Targets[task.Target]
-		err = target.Handle(ctx, task.Config)
-		if err != nil {
+	ready := startScheduler(runbook.Targets, runbook.Tasks, completed)
+	ended := startTargets(ctx, runbook.Targets, ready)
+
+	for x := range ended {
+		if x.err != nil {
 			return err
 		}
-		completed <- taskID
+		completed <- x.taskID
 	}
 
 	return nil
@@ -83,23 +93,34 @@ func newParser(stdout, stderr io.Writer) *parser.Parser {
 	}
 }
 
-func startScheduler(targets types.Targets, tasks types.Tasks, completed <-chan TaskID) <-chan TaskID {
+func startScheduler(targets types.Targets, tasks types.Tasks, completed <-chan TaskID) <-chan *readyTask {
 	capacity := 0
 	for _, t := range targets {
 		capacity += t.ConcurrencyLimit()
 	}
 	capacity *= 2
-	ch := make(chan TaskID, capacity)
+	ch := make(chan *readyTask, capacity)
 
-	go func(ch chan<- TaskID) {
+	go func(ch chan<- *readyTask) {
+		defer func() {
+			close(ch)
+			for range completed {
+				// drain completed
+			}
+		}()
+
 		s, ready, err := scheduler.New(targets, tasks)
 		for {
 			if err != nil {
 				break
 			}
-			for _, taskIDs := range ready {
+			for targetID, taskIDs := range ready {
 				for _, taskID := range taskIDs {
-					ch <- TaskID(taskID)
+					ch <- &readyTask{
+						target: TargetID(targetID),
+						taskID: TaskID(taskID),
+						task:   tasks[taskID].Config,
+					}
 				}
 			}
 			if taskID, ok := <-completed; ok {
@@ -108,11 +129,58 @@ func startScheduler(targets types.Targets, tasks types.Tasks, completed <-chan T
 				break
 			}
 		}
-		close(ch)
-		for range completed {
-			// drain completed
-		}
 	}(ch)
 
 	return ch
+}
+
+func startTarget(
+	ctx context.Context, wg *sync.WaitGroup, target types.Target,
+	ready <-chan *readyTask, ended chan<- *endedTask,
+) {
+	go func() {
+		target.Start()
+		defer target.Stop()
+		defer wg.Done()
+
+		for r := range ready {
+			err := target.Handle(ctx, r.task)
+			if err != nil {
+				ended <- &endedTask{taskID: r.taskID, err: err}
+				break
+			}
+			ended <- &endedTask{taskID: r.taskID}
+		}
+
+		for range ready {
+			// drain ready
+		}
+	}()
+}
+
+func startTargets(ctx context.Context, targets types.Targets, ready <-chan *readyTask) <-chan *endedTask {
+	ended := make(chan *endedTask)
+
+	var wg sync.WaitGroup
+	channels := make(map[TargetID]chan<- *readyTask)
+	for targetID, target := range targets {
+		ready := make(chan *readyTask)
+		channels[TargetID(targetID)] = ready
+		startTarget(ctx, &wg, target, ready, ended)
+		wg.Add(1)
+	}
+
+	go func() {
+		for r := range ready {
+			ch := channels[r.target]
+			ch <- r
+		}
+		for _, ch := range channels {
+			close(ch)
+		}
+		wg.Wait()
+		close(ended)
+	}()
+
+	return ended
 }
