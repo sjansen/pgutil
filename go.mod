@@ -4,18 +4,17 @@ require (
 	github.com/Masterminds/semver v1.4.2
 	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc // indirect
 	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fortytw2/leaktest v1.3.0
 	github.com/go-pg/pg v8.0.3+incompatible
 	github.com/golang/protobuf v1.3.0 // indirect
 	github.com/google/go-jsonnet v0.12.1
+	github.com/hashicorp/hcl v1.0.0
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mattn/go-isatty v0.0.7
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.4.3 // indirect
+	github.com/pkg/errors v0.8.1 // indirect
 	github.com/sergi/go-diff v1.0.0 // indirect
-	github.com/stretchr/objx v0.1.1 // indirect
 	github.com/stretchr/testify v1.3.0
 	go.uber.org/atomic v1.3.2 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
