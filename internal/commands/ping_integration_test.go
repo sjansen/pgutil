@@ -7,21 +7,23 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/commands"
+	"github.com/sjansen/pgutil/internal/logger"
 )
 
-func TestVersion(t *testing.T) {
+func TestPing(t *testing.T) {
 	require := require.New(t)
 
-	expected := "pgmagic 1.0-test\n"
-	cmd := &commands.VersionCmd{
-		App:   "pgmagic",
-		Build: "1.0-test",
-	}
+	cmd := &commands.PingCmd{}
 
 	var stdout, stderr bytes.Buffer
-	base := &commands.Base{Stdout: &stdout, Stderr: &stderr}
+	base := &commands.Base{
+		Log:    logger.Discard(),
+		Stdout: &stdout,
+		Stderr: &stderr,
+	}
+
 	err := cmd.Run(base)
 	require.NoError(err)
-	require.Equal(expected, stdout.String())
+	require.NotEmpty(stdout.String())
 	require.Empty(stderr.String())
 }
