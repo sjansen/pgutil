@@ -15,9 +15,7 @@ type ArgParser struct {
 	cmd  command
 }
 
-type Command interface {
-	Run(stdout, stderr io.Writer) error
-}
+type Command func(stdout, stderr io.Writer) error
 
 type command interface {
 	Run(base *commands.Base) error
@@ -28,19 +26,17 @@ func (p *ArgParser) Parse(args []string) (Command, error) {
 	if err != nil {
 		return nil, err
 	}
-	thunk := &thunk{
-		fn: func(stdout, stderr io.Writer) error {
-			if p.base.Debug == nil {
-				p.base.Log = logger.New(p.base.Verbosity, stderr, nil)
-			} else {
-				p.base.Log = logger.New(p.base.Verbosity, stderr, p.base.Debug)
-			}
-			p.base.Stdout = stdout
-			p.base.Stderr = stderr
-			return p.cmd.Run(p.base)
-		},
+	fn := func(stdout, stderr io.Writer) error {
+		if p.base.Debug == nil {
+			p.base.Log = logger.New(p.base.Verbosity, stderr, nil)
+		} else {
+			p.base.Log = logger.New(p.base.Verbosity, stderr, p.base.Debug)
+		}
+		p.base.Stdout = stdout
+		p.base.Stderr = stderr
+		return p.cmd.Run(p.base)
 	}
-	return thunk, nil
+	return fn, nil
 }
 
 func (p *ArgParser) addCommand(cmd command, name, help string) *kingpin.CmdClause {
@@ -63,12 +59,4 @@ func (p *ArgParser) addSubCommand(parent *kingpin.CmdClause, cmd command, name, 
 		return nil
 	})
 	return clause
-}
-
-type thunk struct {
-	fn func(stdout, stderr io.Writer) error
-}
-
-func (x *thunk) Run(stdout, stderr io.Writer) error {
-	return x.fn(stdout, stderr)
 }

@@ -50,7 +50,7 @@ func TestVersion(t *testing.T) {
 			require.NoError(err)
 
 			var stdout, stderr bytes.Buffer
-			err = cmd.Run(&stdout, &stderr)
+			err = cmd(&stdout, &stderr)
 			require.NoError(err)
 
 			require.Contains(stdout.String(), "test-version")
