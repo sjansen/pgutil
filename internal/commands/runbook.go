@@ -1,8 +1,6 @@
 package commands
 
 import (
-	"io"
-
 	"github.com/sjansen/pgutil/internal/runbook"
 )
 
@@ -15,6 +13,6 @@ type RunBookRunCmd struct {
 	//Tasks       []string
 }
 
-func (c *RunBookRunCmd) Run(stdout, stderr io.Writer, impl *Dependencies) error {
-	return runbook.Run(c.File, stdout, stderr)
+func (c *RunBookRunCmd) Run(base *Base) error {
+	return runbook.Run(c.File, base.Stdout, base.Stderr)
 }

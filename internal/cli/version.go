@@ -8,7 +8,8 @@ import (
 	"github.com/sjansen/pgutil/internal/commands"
 )
 
-func registerVersion(p *ArgParser, build string, info *debug.BuildInfo) {
+func registerVersion(p *ArgParser, build string) {
+	info, _ := debug.ReadBuildInfo()
 	c := &commands.VersionCmd{
 		App:   "pgutil",
 		Build: build,
@@ -17,5 +18,5 @@ func registerVersion(p *ArgParser, build string, info *debug.BuildInfo) {
 		Verbose:   false,
 	}
 	cmd := p.addCommand(c, "version", "Print pgutil's version")
-	cmd.Flag("verbose", "include build details").Short('v').BoolVar(&c.Verbose)
+	cmd.Flag("long", "include build details").Short('l').BoolVar(&c.Verbose)
 }

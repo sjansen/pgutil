@@ -2,10 +2,7 @@ package commands
 
 import (
 	"fmt"
-	"io"
-	"os"
 
-	"github.com/sjansen/pgutil/internal/logger"
 	"github.com/sjansen/pgutil/internal/pg"
 )
 
@@ -14,13 +11,12 @@ type PingCmd struct {
 	Port     string
 	DBName   string
 	Username string
-
-	Debug     *os.File
-	Verbosity int
 }
 
-func (c *PingCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
-	p, err := pg.New(c.pgOptions())
+func (c *PingCmd) Run(base *Base) error {
+	opts := c.pgOptions()
+	opts.Log = base.Log
+	p, err := pg.New(opts)
 	if err != nil {
 		return err
 	}
@@ -28,19 +24,13 @@ func (c *PingCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
 
 	version, err := p.ServerVersion()
 	if err == nil {
-		fmt.Fprintln(stdout, version)
+		fmt.Fprintln(base.Stdout, version)
 	}
 	return err
 }
 
 func (c *PingCmd) pgOptions() *pg.Options {
 	options := &pg.Options{}
-	if c.Debug != nil {
-		options.Log = logger.New(c.Verbosity, os.Stderr, c.Debug)
-	} else {
-		options.Log = logger.New(c.Verbosity, os.Stderr, nil)
-	}
-
 	if c.Host != "" {
 		if c.Port != "" {
 			options.Address = c.Host + ":" + c.Port

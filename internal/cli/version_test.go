@@ -3,6 +3,7 @@
 package cli_test
 
 import (
+	"bytes"
 	"runtime/debug"
 	"testing"
 
@@ -16,10 +17,10 @@ func TestVersion(t *testing.T) {
 	require := require.New(t)
 
 	info, _ := debug.ReadBuildInfo()
-	parser := cli.RegisterCommands("test")
+	parser := cli.RegisterCommands("test-version")
 	for _, tc := range []struct {
 		args        []string
-		expected    cli.Command
+		expected    interface{}
 		expectError bool
 	}{{
 		args: []string{
@@ -33,7 +34,7 @@ func TestVersion(t *testing.T) {
 		},
 	}, {
 		args: []string{
-			"version", "--verbose",
+			"version", "--long",
 		},
 		expected: &commands.VersionCmd{
 			App:       "pgutil",
@@ -42,12 +43,18 @@ func TestVersion(t *testing.T) {
 			Verbose:   true,
 		},
 	}} {
-		actual, err := parser.Parse(tc.args)
+		cmd, err := parser.Parse(tc.args)
 		if tc.expectError {
 			require.Error(err)
 		} else {
 			require.NoError(err)
-			require.Equal(tc.expected, actual)
+
+			var stdout, stderr bytes.Buffer
+			err = cmd.Run(&stdout, &stderr)
+			require.NoError(err)
+
+			require.Contains(stdout.String(), "test-version")
+			require.Empty(stderr)
 		}
 	}
 }

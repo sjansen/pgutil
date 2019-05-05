@@ -1,21 +1,30 @@
-// +build go1.12
-
 package cli
 
 import (
-	"runtime/debug"
+	"os"
 
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/sjansen/pgutil/internal/commands"
 )
 
 func RegisterCommands(version string) *ArgParser {
-	info, _ := debug.ReadBuildInfo()
 	app := kingpin.
 		New("pgutil", "Tools for PostgreSQL").
 		UsageTemplate(kingpin.CompactUsageTemplate)
-	parser := &ArgParser{app: app}
+
+	base := &commands.Base{}
+	app.Flag("debug", "debug log").
+		OpenFileVar(&base.Debug, os.O_CREATE|os.O_WRONLY, 0644)
+	app.Flag("verbose", "verbose mode, repeat to increase verbosity").
+		Short('v').CounterVar(&base.Verbosity)
+
+	parser := &ArgParser{
+		app:  app,
+		base: base,
+	}
 	registerPing(parser)
 	registerRunbook(parser)
-	registerVersion(parser, version, info)
+	registerVersion(parser, version)
 	return parser
 }

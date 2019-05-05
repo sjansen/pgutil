@@ -4,7 +4,6 @@ package commands
 
 import (
 	"fmt"
-	"io"
 	"runtime/debug"
 )
 
@@ -16,9 +15,9 @@ type VersionCmd struct {
 	Verbose   bool
 }
 
-func (c *VersionCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
-	fmt.Fprintln(stdout, c.App, c.Build)
-	if c.Verbose {
+func (c *VersionCmd) Run(base *Base) error {
+	fmt.Fprintln(base.Stdout, c.App, c.Build)
+	if c.Verbose && c.BuildInfo != nil {
 		fmt.Println("")
 		for _, m := range c.BuildInfo.Deps {
 			fmt.Printf("%-40s %-35s\n", m.Path, m.Version)

@@ -17,7 +17,8 @@ func TestVersion(t *testing.T) {
 	}
 
 	var stdout, stderr bytes.Buffer
-	err := cmd.Run(&stdout, &stderr, nil)
+	base := &Base{Stdout: &stdout, Stderr: &stderr}
+	err := cmd.Run(base)
 	require.NoError(err)
 	require.Equal(expected, stdout.String())
 	require.Empty(stderr.String())

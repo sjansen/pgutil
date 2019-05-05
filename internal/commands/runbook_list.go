@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"io"
 	"sort"
 
 	"github.com/sjansen/pgutil/internal/runbook"
@@ -12,7 +11,7 @@ type RunBookListCmd struct {
 	File string
 }
 
-func (c *RunBookListCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
+func (c *RunBookListCmd) Run(base *Base) error {
 	tasks, err := runbook.List(c.File)
 	if err != nil {
 		return err
@@ -29,10 +28,10 @@ func (c *RunBookListCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error
 	}
 	sort.Strings(sorted)
 
-	fmt.Fprintln(stdout, "Tasks & Targets:")
+	fmt.Fprintln(base.Stdout, "Tasks & Targets:")
 	for _, task := range sorted {
 		target := tasks[runbook.TaskID(task)]
-		fmt.Fprintf(stdout, "  %-*s  %s\n", longest, task, target)
+		fmt.Fprintf(base.Stdout, "  %-*s  %s\n", longest, task, target)
 	}
 	return nil
 }

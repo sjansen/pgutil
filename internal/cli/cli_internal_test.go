@@ -1,21 +1,20 @@
-package cli_test
+package cli
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/cli"
 	"github.com/sjansen/pgutil/internal/commands"
 )
 
 func TestArgParser(t *testing.T) {
 	require := require.New(t)
 
-	parser := cli.RegisterCommands("test")
+	parser := RegisterCommands("test")
 	for _, tc := range []struct {
 		args        []string
-		expected    cli.Command
+		expected    interface{}
 		expectError bool
 	}{{
 		args: []string{
@@ -82,12 +81,12 @@ func TestArgParser(t *testing.T) {
 		},
 		expectError: true,
 	}} {
-		actual, err := parser.Parse(tc.args)
+		_, err := parser.Parse(tc.args)
 		if tc.expectError {
 			require.Error(err)
 		} else {
 			require.NoError(err)
-			require.Equal(tc.expected, actual)
+			require.Equal(tc.expected, parser.cmd)
 		}
 	}
 }

@@ -4,7 +4,6 @@ package commands
 
 import (
 	"fmt"
-	"io"
 )
 
 type VersionCmd struct {
@@ -12,7 +11,7 @@ type VersionCmd struct {
 	Build string
 }
 
-func (c *VersionCmd) Run(stdout, stderr io.Writer, deps *Dependencies) error {
-	fmt.Fprintln(stdout, c.App, c.Build)
+func (c *VersionCmd) Run(base *Base) error {
+	fmt.Fprintln(base.Stdout, c.App, c.Build)
 	return nil
 }

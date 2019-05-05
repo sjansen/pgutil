@@ -22,7 +22,8 @@ func TestRunBookList(t *testing.T) {
 		File: "testdata/message.jsonnet",
 	}
 	var stdout, stderr bytes.Buffer
-	err := cmd.Run(&stdout, &stderr, nil)
+	base := &commands.Base{Stdout: &stdout, Stderr: &stderr}
+	err := cmd.Run(base)
 	require.NoError(err)
 	require.Equal(expected, stdout.String())
 	require.Empty(stderr.String())
@@ -30,7 +31,7 @@ func TestRunBookList(t *testing.T) {
 	cmd.File = "non-existent-runbook-file"
 	stdout.Reset()
 	stderr.Reset()
-	err = cmd.Run(&stdout, &stderr, nil)
+	err = cmd.Run(base)
 	require.Error(err)
 	require.Empty(stdout.String())
 	require.Empty(stderr.String())
