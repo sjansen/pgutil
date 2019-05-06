@@ -27,7 +27,7 @@ func TestArgParser(t *testing.T) {
 		},
 		expected: &commands.PingCmd{
 			Host:     "ssh.example.com",
-			Port:     "2222",
+			Port:     2222,
 			DBName:   "template1",
 			Username: "postgres",
 		},
@@ -38,7 +38,7 @@ func TestArgParser(t *testing.T) {
 		},
 		expected: &commands.PingCmd{
 			Host:     "ssh.example.com",
-			Port:     "2222",
+			Port:     2222,
 			DBName:   "template1",
 			Username: "postgres",
 		},

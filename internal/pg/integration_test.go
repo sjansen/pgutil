@@ -12,12 +12,12 @@ import (
 	"github.com/sjansen/pgutil/internal/pg"
 )
 
-func connect() (p *pg.Pool, err error) {
+func connect() (c *pg.Conn, err error) {
 	options := &pg.Options{
 		Log: logger.Discard(),
 	}
 	for retries := 0; retries < 5; retries++ {
-		if p, err = pg.New(options); err == nil {
+		if c, err = pg.New(options); err == nil {
 			return
 		}
 		time.Sleep(1 * time.Second)
@@ -28,11 +28,11 @@ func connect() (p *pg.Pool, err error) {
 func TestConnectAndQuery(t *testing.T) {
 	require := require.New(t)
 
-	p, err := connect()
+	c, err := connect()
 	require.NoError(err)
-	defer p.Close()
+	defer c.Close()
 
-	version, err := p.ServerVersion()
+	version, err := c.ServerVersion()
 	require.NoError(err)
 	require.NotEmpty(version)
 }
@@ -40,9 +40,9 @@ func TestConnectAndQuery(t *testing.T) {
 func TestExec(t *testing.T) {
 	require := require.New(t)
 
-	p, err := connect()
+	c, err := connect()
 	require.NoError(err)
-	defer p.Close()
+	defer c.Close()
 
 	query := `
 CREATE TABLE IF NOT EXISTS measurements (
@@ -65,6 +65,6 @@ VALUES
     (now(), random())
 ;
 `
-	err = p.Exec(query)
+	err = c.Exec(query)
 	require.NoError(err)
 }

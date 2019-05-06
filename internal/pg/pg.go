@@ -1,103 +1,77 @@
 package pg
 
 import (
-	"os"
-	"os/user"
-
-	gopg "github.com/go-pg/pg"
+	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/log/zapadapter"
 	"go.uber.org/zap"
 )
 
 type Options struct {
 	Log *zap.SugaredLogger
 
-	Network  string
-	Address  string
+	Host     string
+	Port     uint16
 	Username string
 	Password string
 	Database string
 }
 
-type Pool struct {
-	conn *gopg.DB
+type Conn struct {
+	conn *pgx.Conn
 	log  *zap.SugaredLogger
 }
 
-func New(o *Options) (*Pool, error) {
-	options, err := mergeOptions(o)
+func New(o *Options) (*Conn, error) {
+	cfg, err := pgx.ParseEnvLibpq()
 	if err != nil {
 		return nil, err
 	}
 
-	p := &Pool{
-		conn: gopg.Connect(
-			options,
+	cfg = cfg.Merge(pgx.ConnConfig{
+		Logger: zapadapter.NewLogger(
+			o.Log.Desugar(),
 		),
-		log: o.Log,
-	}
-	return p, nil
-}
 
-func mergeOptions(o *Options) (*gopg.Options, error) {
-	result := &gopg.Options{
-		ApplicationName: "pgutil",
-	}
+		Host:     o.Host,
+		Port:     o.Port,
+		User:     o.Username,
+		Password: o.Password,
+		Database: o.Database,
+	})
 
-	if o != nil && o.Address != "" {
-		result.Addr = o.Address
-	} else if host := os.Getenv("PGHOST"); host != "" {
-		if port := os.Getenv("PGPORT"); port != "" {
-			result.Addr = host + ":" + port
-		} else {
-			result.Addr = host + ":5432"
-		}
-	}
-
-	if o != nil && o.Username != "" {
-		result.User = o.Username
-	} else if username := os.Getenv("PGUSER"); username != "" {
-		result.User = username
-	} else if u, err := user.Current(); err != nil {
+	conn, err := pgx.Connect(cfg)
+	if err != nil {
 		return nil, err
-	} else {
-		result.User = u.Username
 	}
 
-	if o != nil && o.Password != "" {
-		result.Password = o.Password
-	} else if password := os.Getenv("PGPASSWORD"); password != "" {
-		result.Password = password
+	c := &Conn{
+		conn: conn,
+		log:  o.Log,
 	}
-
-	if o != nil && o.Database != "" {
-		result.Database = o.Database
-	} else if database := os.Getenv("PGDATABASE"); database != "" {
-		result.Database = database
-	}
-
-	return result, nil
+	return c, nil
 }
 
-func (p *Pool) Close() error {
-	return p.conn.Close()
+func (c *Conn) Close() error {
+	return c.conn.Close()
 }
 
-func (p *Pool) Exec(query string) error {
-	p.log.Debugw("executing query", "query", query)
-	_, err := p.conn.Exec(query)
+func (c *Conn) Exec(query string) error {
+	c.log.Debugw("executing query", "query", query)
+	tag, err := c.conn.Exec(query)
+	c.log.Debugf("rows affected = %d", tag.RowsAffected())
 	return err
 }
 
-func (p *Pool) ServerVersion() (string, error) {
-	p.log.Infow("requesting server version")
+func (c *Conn) ServerVersion() (string, error) {
+	c.log.Infow("requesting server version")
 
 	var version string
-	p.log.Debugw("executing query", "query", "SELECT VERSION()")
-	_, err := p.conn.Query(gopg.Scan(&version), "SELECT VERSION()")
+	c.log.Debugw("executing query", "query", "SELECT VERSION()")
+	err := c.conn.QueryRow("SELECT VERSION()").Scan(&version)
 	if err != nil {
 		return "", err
 	}
 
-	p.log.Debugf("server version = %q", version)
+	c.log.Debugf("server version = %q", version)
 	return version, nil
 }
