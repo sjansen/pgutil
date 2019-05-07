@@ -5,6 +5,8 @@ import (
 	"io"
 	"sync"
 
+	dot "github.com/awalterschulze/gographviz"
+
 	"github.com/sjansen/pgutil/internal/logger"
 	"github.com/sjansen/pgutil/internal/runbook/parser"
 	"github.com/sjansen/pgutil/internal/runbook/pg"
@@ -29,6 +31,40 @@ type readyTask struct {
 type endedTask struct {
 	taskID TaskID
 	err    error
+}
+
+// Generate a GraphViz compatible description of a runbook's tasks
+func Dot(filename string, w io.Writer, splines string) error {
+	parser := newParser(nil, nil)
+	runbook, err := parser.Parse(filename)
+	if err != nil {
+		return err
+	}
+
+	g := dot.NewEscape()
+	g.SetDir(true)
+	g.SetName("runbook")
+	g.AddAttr("runbook", "newrank", "true")
+	if splines != "" {
+		g.AddAttr("runbook", "splines", splines)
+	}
+
+	for targetID := range runbook.Targets {
+		graphID := "cluster_" + targetID
+		g.AddSubGraph("runbook", graphID, nil)
+		g.AddAttr(graphID, "label", targetID)
+	}
+
+	for dstID, task := range runbook.Tasks {
+		graphID := "cluster_" + task.Target
+		g.AddNode(graphID, dstID, nil)
+		for _, srcID := range task.After {
+			g.AddEdge(srcID, dstID, true, nil)
+		}
+	}
+
+	w.Write([]byte(g.String()))
+	return nil
 }
 
 // List enumerates a runbook's tasks and their targets

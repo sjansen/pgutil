@@ -9,3 +9,5 @@ coverage.txt
 
 # Patterns
 .*.sw[op]
+*.dot
+*.pdf
