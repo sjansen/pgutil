@@ -5,7 +5,9 @@ import (
 	"io"
 	"sync"
 
+	"github.com/sjansen/pgutil/internal/logger"
 	"github.com/sjansen/pgutil/internal/runbook/parser"
+	"github.com/sjansen/pgutil/internal/runbook/pg"
 	"github.com/sjansen/pgutil/internal/runbook/scheduler"
 	"github.com/sjansen/pgutil/internal/runbook/sh"
 	"github.com/sjansen/pgutil/internal/runbook/strbuf"
@@ -82,6 +84,9 @@ func newCompletedChan(targets types.Targets) chan TaskID {
 func newParser(stdout, stderr io.Writer) *parser.Parser {
 	return &parser.Parser{
 		Targets: map[string]types.TargetFactory{
+			"pg": &pg.TargetFactory{
+				Log: logger.Discard(), // TODO
+			},
 			"sh": &sh.TargetFactory{
 				Stdout: stdout,
 				Stderr: stderr,
