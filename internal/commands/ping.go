@@ -11,6 +11,8 @@ type PingCmd struct {
 	Port     uint16
 	DBName   string
 	Username string
+
+	RequireTLS bool
 }
 
 func (c *PingCmd) Run(base *Base) error {
@@ -21,6 +23,8 @@ func (c *PingCmd) Run(base *Base) error {
 		Port:     c.Port,
 		Username: c.Username,
 		Database: c.DBName,
+
+		RequireTLS: c.RequireTLS,
 	})
 	if err != nil {
 		return err

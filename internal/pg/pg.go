@@ -1,6 +1,9 @@
 package pg
 
 import (
+	"crypto/tls"
+	"errors"
+
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/log/zapadapter"
 	"go.uber.org/zap"
@@ -14,6 +17,8 @@ type Options struct {
 	Username string
 	Password string
 	Database string
+
+	RequireTLS bool
 }
 
 type Conn struct {
@@ -21,10 +26,22 @@ type Conn struct {
 	log  *zap.SugaredLogger
 }
 
+var ErrNoHostForTLS = errors.New("host server name must be provided when TLS is required")
+
 func New(o *Options) (*Conn, error) {
 	cfg, err := pgx.ParseEnvLibpq()
 	if err != nil {
 		return nil, err
+	}
+
+	var TLSConfig *tls.Config
+	if o.RequireTLS {
+		if o.Host == "" {
+			return nil, ErrNoHostForTLS
+		}
+		TLSConfig = &tls.Config{
+			ServerName: o.Host,
+		}
 	}
 
 	cfg = cfg.Merge(pgx.ConnConfig{
@@ -37,6 +54,9 @@ func New(o *Options) (*Conn, error) {
 		User:     o.Username,
 		Password: o.Password,
 		Database: o.Database,
+
+		TLSConfig:      TLSConfig,
+		UseFallbackTLS: false,
 	})
 
 	conn, err := pgx.Connect(cfg)
