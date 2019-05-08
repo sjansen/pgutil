@@ -68,3 +68,51 @@ VALUES
 	err = c.Exec(query)
 	require.NoError(err)
 }
+
+func TestListColumns(t *testing.T) {
+	require := require.New(t)
+
+	c, err := connect()
+	require.NoError(err)
+	defer c.Close()
+
+	columns, err := c.ListColumns("pg_catalog", "pg_class")
+	require.NoError(err)
+	require.NotEmpty(columns)
+}
+
+func TestListFunctions(t *testing.T) {
+	require := require.New(t)
+
+	c, err := connect()
+	require.NoError(err)
+	defer c.Close()
+
+	functions, err := c.ListFunctions()
+	require.NoError(err)
+	require.NotEmpty(functions)
+}
+
+func TestListSchemas(t *testing.T) {
+	require := require.New(t)
+
+	c, err := connect()
+	require.NoError(err)
+	defer c.Close()
+
+	schemas, err := c.ListSchemas()
+	require.NoError(err)
+	require.NotEmpty(schemas)
+}
+
+func TestListTables(t *testing.T) {
+	require := require.New(t)
+
+	c, err := connect()
+	require.NoError(err)
+	defer c.Close()
+
+	tables, err := c.ListTables()
+	require.NoError(err)
+	require.NotEmpty(tables)
+}

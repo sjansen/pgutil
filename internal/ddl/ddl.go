@@ -14,12 +14,16 @@ type Parameters struct {
 }
 
 type Schema struct {
-	Name string `hcl:",key"`
+	Name    string `hcl:",key"`
+	Owner   string
+	Comment string
 }
 
 type Function struct {
-	Schema string
-	Name   string `hcl:",key"`
+	Schema  string
+	Name    string `hcl:",key"`
+	Owner   string
+	Comment string
 
 	Returns    string
 	Language   string
@@ -27,19 +31,21 @@ type Function struct {
 }
 
 type Table struct {
-	Schema string
-	Name   string `hcl:",key"`
+	Schema  string
+	Name    string `hcl:",key"`
+	Owner   string
+	Comment string
 
 	Columns []string
 }
 
 type Trigger struct {
 	Schema string
+	Table  string
 	Name   string `hcl:",key"`
 
 	When     string
 	Events   []string
-	Table    string
 	ForEach  string `hcl:"for_each"`
 	Function string
 }

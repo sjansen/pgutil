@@ -22,3 +22,5 @@ services:
       POSTGRES_DB:   "pgutil"
       POSTGRES_USER: "docker"
       POSTGRES_PASSWORD: ""
+    volumes:
+     - ./scripts/initdb.d:/docker-entrypoint-initdb.d
