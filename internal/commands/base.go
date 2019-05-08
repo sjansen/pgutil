@@ -1,17 +1,14 @@
 package commands
 
 import (
-	"io"
 	"os"
 
-	"go.uber.org/zap"
+	"github.com/sjansen/pgutil/internal/sys"
 )
 
 type Base struct {
+	sys.IO
+
 	Debug     *os.File
 	Verbosity int
-
-	Log    *zap.SugaredLogger
-	Stdout io.Writer
-	Stderr io.Writer
 }

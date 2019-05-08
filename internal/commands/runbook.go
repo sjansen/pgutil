@@ -14,5 +14,5 @@ type RunBookRunCmd struct {
 }
 
 func (c *RunBookRunCmd) Run(base *Base) error {
-	return runbook.Run(c.File, base.Stdout, base.Stderr)
+	return runbook.Run(&base.IO, c.File)
 }

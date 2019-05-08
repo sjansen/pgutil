@@ -12,7 +12,7 @@ type RunBookListCmd struct {
 }
 
 func (c *RunBookListCmd) Run(base *Base) error {
-	tasks, err := runbook.List(c.File)
+	tasks, err := runbook.List(&base.IO, c.File)
 	if err != nil {
 		return err
 	}

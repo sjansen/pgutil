@@ -32,5 +32,5 @@ func (c *RunBookDotCmd) Run(base *Base) (err error) {
 			return err
 		}
 	}
-	return runbook.Dot(c.File, w, c.Splines)
+	return runbook.Dot(&base.IO, c.File, w, c.Splines)
 }

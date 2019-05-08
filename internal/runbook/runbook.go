@@ -7,13 +7,13 @@ import (
 
 	dot "github.com/awalterschulze/gographviz"
 
-	"github.com/sjansen/pgutil/internal/logger"
 	"github.com/sjansen/pgutil/internal/runbook/parser"
 	"github.com/sjansen/pgutil/internal/runbook/pg"
 	"github.com/sjansen/pgutil/internal/runbook/scheduler"
 	"github.com/sjansen/pgutil/internal/runbook/sh"
 	"github.com/sjansen/pgutil/internal/runbook/strbuf"
 	"github.com/sjansen/pgutil/internal/runbook/types"
+	"github.com/sjansen/pgutil/internal/sys"
 )
 
 // TargetID uniquely identifies a target
@@ -34,8 +34,8 @@ type endedTask struct {
 }
 
 // Generate a GraphViz compatible description of a runbook's tasks
-func Dot(filename string, w io.Writer, splines string) error {
-	parser := newParser(nil, nil)
+func Dot(sys *sys.IO, filename string, w io.Writer, splines string) error {
+	parser := newParser(sys)
 	runbook, err := parser.Parse(filename)
 	if err != nil {
 		return err
@@ -68,8 +68,8 @@ func Dot(filename string, w io.Writer, splines string) error {
 }
 
 // List enumerates a runbook's tasks and their targets
-func List(filename string) (map[TaskID]TargetID, error) {
-	parser := newParser(nil, nil)
+func List(sys *sys.IO, filename string) (map[TaskID]TargetID, error) {
+	parser := newParser(sys)
 	runbook, err := parser.Parse(filename)
 	if err != nil {
 		return nil, err
@@ -84,8 +84,8 @@ func List(filename string) (map[TaskID]TargetID, error) {
 }
 
 // Run executes the tasks in a runbook
-func Run(filename string, stdout, stderr io.Writer) error {
-	parser := newParser(stdout, stderr)
+func Run(sys *sys.IO, filename string) error {
+	parser := newParser(sys)
 	runbook, err := parser.Parse(filename)
 	if err != nil {
 		return err
@@ -117,18 +117,18 @@ func newCompletedChan(targets types.Targets) chan TaskID {
 	return make(chan TaskID, capacity)
 }
 
-func newParser(stdout, stderr io.Writer) *parser.Parser {
+func newParser(sys *sys.IO) *parser.Parser {
 	return &parser.Parser{
 		Targets: map[string]types.TargetFactory{
 			"pg": &pg.TargetFactory{
-				Log: logger.Discard(), // TODO
+				Log: sys.Log,
 			},
 			"sh": &sh.TargetFactory{
-				Stdout: stdout,
-				Stderr: stderr,
+				Stdout: sys.Stdout,
+				Stderr: sys.Stderr,
 			},
 			"strbuf": &strbuf.TargetFactory{
-				Stdout: stdout,
+				Stdout: sys.Stdout,
 			},
 		},
 	}

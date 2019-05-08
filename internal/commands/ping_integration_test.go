@@ -8,6 +8,7 @@ import (
 
 	"github.com/sjansen/pgutil/internal/commands"
 	"github.com/sjansen/pgutil/internal/logger"
+	"github.com/sjansen/pgutil/internal/sys"
 )
 
 func TestPing(t *testing.T) {
@@ -17,9 +18,11 @@ func TestPing(t *testing.T) {
 
 	var stdout, stderr bytes.Buffer
 	base := &commands.Base{
-		Log:    logger.Discard(),
-		Stdout: &stdout,
-		Stderr: &stderr,
+		IO: sys.IO{
+			Log:    logger.Discard(),
+			Stdout: &stdout,
+			Stderr: &stderr,
+		},
 	}
 
 	err := cmd.Run(base)

@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/commands"
+	"github.com/sjansen/pgutil/internal/logger"
+	"github.com/sjansen/pgutil/internal/sys"
 )
 
 func TestVersion(t *testing.T) {
@@ -19,7 +21,13 @@ func TestVersion(t *testing.T) {
 	}
 
 	var stdout, stderr bytes.Buffer
-	base := &commands.Base{Stdout: &stdout, Stderr: &stderr}
+	base := &commands.Base{
+		IO: sys.IO{
+			Log:    logger.Discard(),
+			Stdout: &stdout,
+			Stderr: &stderr,
+		},
+	}
 	err := cmd.Run(base)
 	require.NoError(err)
 	require.Equal(expected, stdout.String())
