@@ -81,17 +81,3 @@ func (c *Conn) Exec(query string) error {
 	c.log.Debugf("rows affected = %d", tag.RowsAffected())
 	return err
 }
-
-func (c *Conn) ServerVersion() (string, error) {
-	c.log.Infow("requesting server version")
-
-	var version string
-	c.log.Debugw("executing query", "query", "SELECT VERSION()")
-	err := c.conn.QueryRow("SELECT VERSION()").Scan(&version)
-	if err != nil {
-		return "", err
-	}
-
-	c.log.Debugf("server version = %q", version)
-	return version, nil
-}
