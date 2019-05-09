@@ -14,11 +14,10 @@ type Options struct {
 
 	Host     string
 	Port     uint16
+	SSLMode  string
 	Username string
 	Password string
 	Database string
-
-	RequireTLS bool
 }
 
 type Conn struct {
@@ -34,30 +33,26 @@ func New(o *Options) (*Conn, error) {
 		return nil, err
 	}
 
-	var TLSConfig *tls.Config
-	if o.RequireTLS {
-		if o.Host == "" {
-			return nil, ErrNoHostForTLS
-		}
-		TLSConfig = &tls.Config{
-			ServerName: o.Host,
+	cfg.Host = firstOfString(o.Host, cfg.Host)
+	cfg.Port = firstOfUint16(o.Port, cfg.Port)
+	cfg.User = firstOfString(o.Username, cfg.User)
+	cfg.Password = firstOfString(o.Password, cfg.Password)
+	cfg.Database = firstOfString(o.Database, cfg.Database)
+
+	sslmode := o.SSLMode
+	if sslmode == "" && cfg.Password != "" {
+		sslmode = "verify-full"
+	}
+	if sslmode != "" {
+		err = applySSLMode(&cfg, sslmode)
+		if err != nil {
+			return nil, err
 		}
 	}
 
-	cfg = cfg.Merge(pgx.ConnConfig{
-		Logger: zapadapter.NewLogger(
-			o.Log.Desugar(),
-		),
-
-		Host:     o.Host,
-		Port:     o.Port,
-		User:     o.Username,
-		Password: o.Password,
-		Database: o.Database,
-
-		TLSConfig:      TLSConfig,
-		UseFallbackTLS: false,
-	})
+	cfg.Logger = zapadapter.NewLogger(
+		o.Log.Desugar(),
+	)
 
 	conn, err := pgx.Connect(cfg)
 	if err != nil {
@@ -80,4 +75,46 @@ func (c *Conn) Exec(query string) error {
 	tag, err := c.conn.Exec(query)
 	c.log.Debugf("rows affected = %d", tag.RowsAffected())
 	return err
+}
+
+func applySSLMode(cfg *pgx.ConnConfig, sslmode string) error {
+	switch sslmode {
+	case "disable":
+		cfg.UseFallbackTLS = false
+		cfg.TLSConfig = nil
+		cfg.FallbackTLSConfig = nil
+	case "allow":
+		cfg.UseFallbackTLS = true
+		cfg.TLSConfig = nil
+		cfg.FallbackTLSConfig = &tls.Config{InsecureSkipVerify: true}
+	case "prefer":
+		cfg.UseFallbackTLS = true
+		cfg.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+		cfg.FallbackTLSConfig = nil
+	case "require":
+		cfg.UseFallbackTLS = false
+		cfg.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+		cfg.FallbackTLSConfig = nil
+	case "verify-full":
+		cfg.UseFallbackTLS = false
+		cfg.TLSConfig = &tls.Config{ServerName: cfg.Host}
+		cfg.FallbackTLSConfig = nil
+	default:
+		return errors.New("invalid sslmode")
+	}
+	return nil
+}
+
+func firstOfString(a, b string) string {
+	if a != "" {
+		return a
+	}
+	return b
+}
+
+func firstOfUint16(a, b uint16) uint16 {
+	if a != 0 {
+		return a
+	}
+	return b
 }

@@ -9,10 +9,9 @@ import (
 type PingCmd struct {
 	Host     string
 	Port     uint16
+	SSLMode  string
 	DBName   string
 	Username string
-
-	RequireTLS bool
 }
 
 func (c *PingCmd) Run(base *Base) error {
@@ -21,10 +20,9 @@ func (c *PingCmd) Run(base *Base) error {
 
 		Host:     c.Host,
 		Port:     c.Port,
+		SSLMode:  c.SSLMode,
 		Username: c.Username,
 		Database: c.DBName,
-
-		RequireTLS: c.RequireTLS,
 	})
 	if err != nil {
 		return err
