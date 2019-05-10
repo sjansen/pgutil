@@ -18,22 +18,7 @@ Despite all my rage I am still just a rat in a cage
 Someone will say what is lost can never be saved
 Despite all my rage I am still just a rat in a cage`
 
-func TestSh(t *testing.T) {
-	require := require.New(t)
-
-	err := os.Setenv("PGUTIL_CHORUS", chorus)
-	require.NoError(err)
-
-	var stdout, stderr bytes.Buffer
-	sys := &sys.IO{
-		Log:    logger.Discard(),
-		Stdout: &stdout,
-		Stderr: &stderr,
-	}
-	err = runbook.Run(sys, "testdata/sh.jsonnet")
-	require.NoError(err)
-
-	expected := `The world is a vampire, sent to drain
+var expected = `The world is a vampire, sent to drain
 Secret destroyers, hold you up to the flames
 And what do I get, for my pain?
 Betrayed desires, and a piece of the game
@@ -46,6 +31,22 @@ Despite all my rage I am still just a rat in a cage
 Someone will say what is lost can never be saved
 Despite all my rage I am still just a rat in a cage
 `
+
+func TestSh(t *testing.T) {
+	require := require.New(t)
+
+	err := os.Setenv("PGUTIL_CHORUS", chorus)
+	require.NoError(err)
+
+	var stdout, stderr bytes.Buffer
+	sys := &sys.IO{
+		Log:    logger.Discard(),
+		Stdout: &stdout,
+		Stderr: &stderr,
+	}
+
+	err = runbook.Run(sys, "testdata/sh.jsonnet")
+	require.NoError(err)
 	require.Equal(expected, stdout.String())
 	require.Equal("", stderr.String())
 }
