@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"io"
+	"os"
 
 	"github.com/sjansen/pgutil/internal/runbook/types"
 	"go.uber.org/zap"
@@ -16,11 +17,13 @@ type TargetFactory struct {
 }
 
 type Target struct {
-	log    *zap.SugaredLogger
-	stdout io.Writer
-	stderr io.Writer
+	log     *zap.SugaredLogger
+	stdout  io.Writer
+	stderr  io.Writer
+	environ []string
 
 	Concurrency int
+	Env         Env
 }
 
 type execer interface {
@@ -64,6 +67,7 @@ func (t *Target) NewTaskConfig(class string) (types.TaskConfig, error) {
 }
 
 func (t *Target) Start() error {
+	t.environ = t.Env.Apply(os.Environ())
 	return nil
 }
 

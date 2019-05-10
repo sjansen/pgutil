@@ -10,12 +10,17 @@ import (
 
 var _ execer = &Exec{}
 
+// Exec describes how to run a command
 type Exec struct {
+	// Args specifies the command
 	Args []string
+	// Env specifies the environment of the command
+	Env Env
 }
 
 func (x *Exec) exec(ctx context.Context, t *Target) error {
 	cmd := exec.CommandContext(ctx, x.Args[0], x.Args[1:]...)
+	cmd.Env = x.Env.Apply(t.environ)
 	cmd.Stdin = nil
 	cmd.Stdout = t.stdout
 	cmd.Stderr = t.stderr

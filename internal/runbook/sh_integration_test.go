@@ -2,6 +2,7 @@ package runbook_test
 
 import (
 	"bytes"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -11,8 +12,17 @@ import (
 	"github.com/sjansen/pgutil/internal/sys"
 )
 
+var chorus = `
+Despite all my rage I am still just a rat in a cage
+Despite all my rage I am still just a rat in a cage
+Someone will say what is lost can never be saved
+Despite all my rage I am still just a rat in a cage`
+
 func TestSh(t *testing.T) {
 	require := require.New(t)
+
+	err := os.Setenv("PGUTIL_CHORUS", chorus)
+	require.NoError(err)
 
 	var stdout, stderr bytes.Buffer
 	sys := &sys.IO{
@@ -20,13 +30,21 @@ func TestSh(t *testing.T) {
 		Stdout: &stdout,
 		Stderr: &stderr,
 	}
-	err := runbook.Run(sys, "testdata/sh.jsonnet")
+	err = runbook.Run(sys, "testdata/sh.jsonnet")
 	require.NoError(err)
 
 	expected := `The world is a vampire, sent to drain
 Secret destroyers, hold you up to the flames
 And what do I get, for my pain?
 Betrayed desires, and a piece of the game
+
+Even though I know, I suppose I'll show
+All my cool and cold--like old Job
+
+Despite all my rage I am still just a rat in a cage
+Despite all my rage I am still just a rat in a cage
+Someone will say what is lost can never be saved
+Despite all my rage I am still just a rat in a cage
 `
 	require.Equal(expected, stdout.String())
 	require.Equal("", stderr.String())
