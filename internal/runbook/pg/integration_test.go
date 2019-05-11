@@ -1,6 +1,6 @@
 // +build integration
 
-package runbook_test
+package pg_test
 
 import (
 	"bytes"

@@ -1,4 +1,6 @@
-package runbook_test
+// +build integration
+
+package sh_test
 
 import (
 	"bytes"
