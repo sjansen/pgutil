@@ -3,6 +3,7 @@ package pg
 import (
 	"crypto/tls"
 	"errors"
+	"time"
 
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/log/zapadapter"
@@ -18,6 +19,8 @@ type Options struct {
 	Username string
 	Password string
 	Database string
+
+	ConnectRetries int
 }
 
 type Conn struct {
@@ -54,9 +57,18 @@ func New(o *Options) (*Conn, error) {
 		o.Log.Desugar(),
 	)
 
-	conn, err := pgx.Connect(cfg)
-	if err != nil {
-		return nil, err
+	delay := 100 * time.Millisecond
+	var conn *pgx.Conn
+	for retries := 0; retries <= o.ConnectRetries; retries++ {
+		conn, err = pgx.Connect(cfg)
+		if err != nil {
+			if retries < o.ConnectRetries {
+				time.Sleep(delay)
+				delay = time.Duration(2^retries) * 100 * time.Millisecond
+			} else {
+				return nil, err
+			}
+		}
 	}
 
 	c := &Conn{

@@ -4,7 +4,6 @@ package pg_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
 
@@ -15,14 +14,10 @@ import (
 func connect() (c *pg.Conn, err error) {
 	options := &pg.Options{
 		Log: logger.Discard(),
+
+		ConnectRetries: 3,
 	}
-	for retries := 0; retries < 5; retries++ {
-		if c, err = pg.New(options); err == nil {
-			return
-		}
-		time.Sleep(1 * time.Second)
-	}
-	return
+	return pg.New(options)
 }
 
 func TestConnectAndQuery(t *testing.T) {

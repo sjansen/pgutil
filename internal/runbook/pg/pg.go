@@ -22,9 +22,12 @@ type Target struct {
 
 	Host     string
 	Port     uint16
+	SSLMode  string `json:"sslmode"`
 	Username string
 	Password string
 	Database string
+
+	ConnectRetries int `json:"connect_retries"`
 }
 
 type execer interface {
@@ -71,9 +74,12 @@ func (t *Target) Start() error {
 
 		Host:     t.Host,
 		Port:     t.Port,
+		SSLMode:  t.SSLMode,
 		Username: t.Username,
 		Password: t.Password,
 		Database: t.Database,
+
+		ConnectRetries: t.ConnectRetries,
 	})
 	if err == nil {
 		t.conn = conn

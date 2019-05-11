@@ -1,3 +1,5 @@
+// +build integration
+
 package runbook_test
 
 import (
@@ -21,10 +23,9 @@ func TestPg(t *testing.T) {
 		Stderr: &stderr,
 	}
 
-	err := runbook.Run(sys, "testdata/pg.jsonnet")
-	require.NoError(err)
-	require.Equal("", stdout.String())
-	require.Equal("", stderr.String())
+	filename := "testdata/pg.jsonnet"
+	err := runbook.Run(sys, filename)
+	require.NoError(err, filename)
 }
 
 func TestPgErrors(t *testing.T) {
@@ -41,6 +42,6 @@ func TestPgErrors(t *testing.T) {
 		"testdata/pg-invalid-task-field.jsonnet",
 	} {
 		err := runbook.Run(sys, filename)
-		require.Error(err)
+		require.Error(err, filename)
 	}
 }

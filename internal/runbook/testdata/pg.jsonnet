@@ -1,6 +1,11 @@
 {
   targets: {
-    pg: { class: 'pg' },
+    pg: {
+      class: 'pg',
+      config: {
+        connect_retries: 5,
+      },
+    },
   },
   tasks: {
     timestamp: {
