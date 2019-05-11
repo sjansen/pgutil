@@ -16,6 +16,7 @@ func connect() (c *pg.Conn, err error) {
 		Log: logger.Discard(),
 
 		ConnectRetries: 3,
+		SSLMode:        "prefer",
 	}
 	return pg.New(options)
 }

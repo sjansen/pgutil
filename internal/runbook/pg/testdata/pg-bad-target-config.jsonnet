@@ -3,8 +3,11 @@
     pg: {
       class: 'pg',
       config: {
-        connect_retries: 5,
-        sslmode: 'disable',
+        host: 'invalid-hostname',
+        database: 'invalid-database',
+
+        connect_retries: 1,
+        sslmode: 'allow',
       },
     },
   },
