@@ -29,13 +29,13 @@ var tasks = types.Tasks{
 func TestScheduler(t *testing.T) {
 	require := require.New(t)
 
-	completed := newCompletedChan(targets)
-	ready := startScheduler(targets, tasks, completed)
+	r := newRunner(targets, tasks)
+	r.startScheduler()
 
 	seen := map[TaskID]struct{}{}
-	for r := range ready {
-		seen[r.taskID] = struct{}{}
-		completed <- r.taskID
+	for x := range r.ready {
+		seen[x.taskID] = struct{}{}
+		r.done <- x.taskID
 	}
 
 	expected := map[TaskID]struct{}{
@@ -48,17 +48,17 @@ func TestScheduler(t *testing.T) {
 func TestSchedulerEarlyTermination(t *testing.T) {
 	require := require.New(t)
 
-	completed := newCompletedChan(targets)
-	ready := startScheduler(targets, tasks, completed)
+	r := newRunner(targets, tasks)
+	r.startScheduler()
 
 	seen := map[TaskID]struct{}{}
-	for r := range ready {
-		seen[r.taskID] = struct{}{}
-		if r.taskID == "e" {
-			close(completed)
+	for x := range r.ready {
+		seen[x.taskID] = struct{}{}
+		if x.taskID == "e" {
+			close(r.done)
 			break
 		} else {
-			completed <- r.taskID
+			r.done <- x.taskID
 		}
 	}
 
