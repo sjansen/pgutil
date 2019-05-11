@@ -1,5 +1,6 @@
 package ddl
 
+// Database describes a PostgreSQL database
 type Database struct {
 	Parameters *Parameters
 
@@ -9,16 +10,19 @@ type Database struct {
 	Triggers  []*Trigger  `hcl:"trigger,expand"`
 }
 
+// Parameters describes database-level configuration options
 type Parameters struct {
 	SearchPath []string `hcl:"search_path"`
 }
 
+// A Schema is a database namespace
 type Schema struct {
 	Name    string `hcl:",key"`
 	Owner   string
 	Comment string
 }
 
+// A Function describes reusable behavior run on the server
 type Function struct {
 	Schema  string
 	Name    string `hcl:",key"`
@@ -30,6 +34,7 @@ type Function struct {
 	Definition string
 }
 
+// A Table is a collection of similar data divided into rows
 type Table struct {
 	Schema  string
 	Name    string `hcl:",key"`
@@ -39,6 +44,7 @@ type Table struct {
 	Columns []string
 }
 
+// A Trigger executes a function when a specific event happens
 type Trigger struct {
 	Schema string
 	Table  string

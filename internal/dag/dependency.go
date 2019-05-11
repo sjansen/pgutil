@@ -11,6 +11,7 @@ type pendingTask struct {
 	next *pendingTask
 }
 
+// NewDependencyGraph converts a list of tasks and dependencies into a graph
 func NewDependencyGraph(nodes map[string][]string) (*DependencyGraph, error) {
 	digraph, err := NewDirectedGraph(nodes)
 	if err != nil {
@@ -51,10 +52,13 @@ func NewDependencyGraph(nodes map[string][]string) (*DependencyGraph, error) {
 	return g, nil
 }
 
+// HasPending checks if any unstarted tasks remain in the graph
 func (g *DependencyGraph) HasPending() bool {
 	return g.pending != nil
 }
 
+// Next registers the completion of a a task and returns a list of tasks
+// that can be started given previously completed tasks
 func (g *DependencyGraph) Next(completed string) []string {
 	var ready []string
 	for id := range g.dependents[completed] {

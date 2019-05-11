@@ -2,6 +2,7 @@ package dag
 
 import "sort"
 
+// TSort produces a topological sort of a directed graph
 func TSort(g *DirectedGraph) (result, cycle []string) {
 	digraph := *g
 	nodes := make([]string, 0, len(digraph))
