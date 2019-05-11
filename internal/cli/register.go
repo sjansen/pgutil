@@ -8,6 +8,7 @@ import (
 	"github.com/sjansen/pgutil/internal/commands"
 )
 
+// RegisterCommands creates the app's standard ArgParser
 func RegisterCommands(version string) *ArgParser {
 	app := kingpin.
 		New("pgutil", "Tools for PostgreSQL").

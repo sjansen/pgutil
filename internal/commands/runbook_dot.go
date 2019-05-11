@@ -7,6 +7,7 @@ import (
 	"github.com/sjansen/pgutil/internal/runbook"
 )
 
+// A RunBookDotCmd is a request to describe how a runbook's tasks are related
 type RunBookDotCmd struct {
 	File    string
 	Output  string
@@ -14,6 +15,7 @@ type RunBookDotCmd struct {
 	Splines string
 }
 
+// Run executes the command
 func (c *RunBookDotCmd) Run(base *Base) (err error) {
 	output := "-"
 	switch {

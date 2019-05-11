@@ -7,6 +7,7 @@ import (
 	"runtime/debug"
 )
 
+// A VersionCmd is a request to reports the app's version
 type VersionCmd struct {
 	App   string
 	Build string
@@ -15,6 +16,7 @@ type VersionCmd struct {
 	Verbose   bool
 }
 
+// Run executes the command
 func (c *VersionCmd) Run(base *Base) error {
 	fmt.Fprintln(base.Stdout, c.App, c.Build)
 	if c.Verbose && c.BuildInfo != nil {

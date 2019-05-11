@@ -6,6 +6,7 @@ import (
 	"github.com/sjansen/pgutil/internal/pg"
 )
 
+// A PingCmd is a request to test database connection options
 type PingCmd struct {
 	Host     string
 	Port     uint16
@@ -14,6 +15,7 @@ type PingCmd struct {
 	Username string
 }
 
+// Run executes the command
 func (c *PingCmd) Run(base *Base) error {
 	conn, err := pg.New(&pg.Options{
 		Log: base.Log,

@@ -9,18 +9,21 @@ import (
 	"github.com/sjansen/pgutil/internal/logger"
 )
 
+// An ArgParser contains the definitions of flags, arguments and commands for an application
 type ArgParser struct {
 	app  *kingpin.Application
 	base *commands.Base
 	cmd  command
 }
 
+// Command is an abstraction for a function that produces human readable output when run
 type Command func(stdout, stderr io.Writer) error
 
 type command interface {
 	Run(base *commands.Base) error
 }
 
+// Parse converts command line arguments into a Command
 func (p *ArgParser) Parse(args []string) (Command, error) {
 	_, err := p.app.Parse(args)
 	if err != nil {

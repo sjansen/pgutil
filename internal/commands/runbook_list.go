@@ -7,10 +7,12 @@ import (
 	"github.com/sjansen/pgutil/internal/runbook"
 )
 
+// A RunBookListCmd is a request to list the targets & tasks in a runbook
 type RunBookListCmd struct {
 	File string
 }
 
+// Run executes the command
 func (c *RunBookListCmd) Run(base *Base) error {
 	tasks, err := runbook.List(&base.IO, c.File)
 	if err != nil {
