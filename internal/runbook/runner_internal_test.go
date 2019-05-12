@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/sjansen/pgutil/internal/logger"
 	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
@@ -29,7 +30,7 @@ var tasks = types.Tasks{
 func TestScheduler(t *testing.T) {
 	require := require.New(t)
 
-	r := newRunner(targets, tasks)
+	r := newRunner(logger.Discard(), targets, tasks)
 	r.startScheduler()
 
 	seen := map[TaskID]struct{}{}
@@ -48,7 +49,7 @@ func TestScheduler(t *testing.T) {
 func TestSchedulerEarlyTermination(t *testing.T) {
 	require := require.New(t)
 
-	r := newRunner(targets, tasks)
+	r := newRunner(logger.Discard(), targets, tasks)
 	r.startScheduler()
 
 	seen := map[TaskID]struct{}{}

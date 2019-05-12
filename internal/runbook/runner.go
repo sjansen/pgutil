@@ -6,6 +6,7 @@ import (
 
 	"github.com/sjansen/pgutil/internal/runbook/scheduler"
 	"github.com/sjansen/pgutil/internal/runbook/types"
+	"github.com/sjansen/pgutil/internal/sys"
 )
 
 type readyMsg struct {
@@ -20,7 +21,9 @@ type endedMsg struct {
 }
 
 type runner struct {
-	ctx     context.Context
+	ctx context.Context
+	log sys.Logger
+
 	targets types.Targets
 	tasks   types.Tasks
 
@@ -29,7 +32,7 @@ type runner struct {
 	ready chan *readyMsg // tasks that can be started
 }
 
-func newRunner(targets types.Targets, tasks types.Tasks) *runner {
+func newRunner(log sys.Logger, targets types.Targets, tasks types.Tasks) *runner {
 	capacity := 0
 	for _, t := range targets {
 		capacity += t.ConcurrencyLimit()
@@ -38,6 +41,7 @@ func newRunner(targets types.Targets, tasks types.Tasks) *runner {
 
 	return &runner{
 		ctx:     context.TODO(),
+		log:     log,
 		targets: targets,
 		tasks:   tasks,
 
@@ -58,6 +62,7 @@ func (r *runner) run() error {
 	}
 
 	for x := range r.ended {
+		r.log.Debugw("runner: task ended", "task", x.taskID, "err", x.err != nil)
 		if x.err != nil {
 			return err
 		}
@@ -71,6 +76,7 @@ func (r *runner) startScheduler() {
 	go func(readyChan chan<- *readyMsg) {
 		defer close(readyChan)
 
+		r.log.Debug("scheduler: started")
 		s, ready, err := scheduler.New(r.targets, r.tasks)
 		for {
 			if err != nil {
@@ -78,6 +84,7 @@ func (r *runner) startScheduler() {
 			}
 			for targetID, taskIDs := range ready {
 				for _, taskID := range taskIDs {
+					r.log.Debugw("scheduler: task ready", "task", taskID, "target", targetID)
 					readyChan <- &readyMsg{
 						target: TargetID(targetID),
 						taskID: TaskID(taskID),
@@ -85,12 +92,14 @@ func (r *runner) startScheduler() {
 					}
 				}
 			}
+			r.log.Debug("scheduler: checking for finished tasks")
 			if taskID, ok := <-r.done; ok {
 				ready, err = s.Next(string(taskID))
 			} else {
 				break
 			}
 		}
+		r.log.Debug("scheduler: stopped")
 	}(r.ready)
 }
 
@@ -98,6 +107,7 @@ func (r *runner) startTargets() (err error) {
 	wg := &sync.WaitGroup{}
 	var channels = make(map[TargetID]chan<- *readyMsg)
 	for targetID, target := range r.targets {
+		r.log.Debugw("target: starting", "task", targetID)
 		err = target.Start()
 		if err != nil {
 			break
@@ -107,20 +117,25 @@ func (r *runner) startTargets() (err error) {
 		ch := make(chan *readyMsg)
 		startTargetGoroutine(r.ctx, wg, target, ch, r.ended)
 		channels[TargetID(targetID)] = ch
+		r.log.Debugw("target: started", "task", targetID)
 	}
 
 	// start goroutine, even if there's an error, because it's
 	// responsible for closing channels
 	go func() {
-		for r := range r.ready {
-			ch := channels[r.target]
-			ch <- r
+		r.log.Debug("router: started")
+		for x := range r.ready {
+			r.log.Debugw("router: task ready", "task", x.taskID, "target", x.target)
+			ch := channels[x.target]
+			ch <- x
 		}
+		r.log.Debug("router: stopping targets")
 		for _, ch := range channels {
 			close(ch)
 		}
 		wg.Wait()
 		close(r.ended)
+		r.log.Debug("router: stopped")
 	}()
 
 	return err

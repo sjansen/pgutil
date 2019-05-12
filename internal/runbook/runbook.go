@@ -94,6 +94,6 @@ func Run(sys *sys.IO, filename string) error {
 		return err
 	}
 
-	r := newRunner(runbook.Targets, runbook.Tasks)
+	r := newRunner(sys.Log, runbook.Targets, runbook.Tasks)
 	return r.run()
 }
