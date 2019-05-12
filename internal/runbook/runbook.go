@@ -38,8 +38,8 @@ func newParser(sys *sys.IO) *parser.Parser {
 
 // Dot generates a GraphViz compatible description of a runbook's tasks
 func Dot(sys *sys.IO, filename string, w io.Writer, splines string) error {
-	parser := newParser(sys)
-	runbook, err := parser.Parse(filename)
+	p := newParser(sys)
+	runbook, err := p.Parse(filename)
 	if err != nil {
 		return err
 	}
@@ -72,8 +72,8 @@ func Dot(sys *sys.IO, filename string, w io.Writer, splines string) error {
 
 // List enumerates a runbook's tasks and their targets
 func List(sys *sys.IO, filename string) (map[TaskID]TargetID, error) {
-	parser := newParser(sys)
-	runbook, err := parser.Parse(filename)
+	p := newParser(sys)
+	runbook, err := p.Parse(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -88,8 +88,8 @@ func List(sys *sys.IO, filename string) (map[TaskID]TargetID, error) {
 
 // Run executes the tasks in a runbook
 func Run(sys *sys.IO, filename string) error {
-	parser := newParser(sys)
-	runbook, err := parser.Parse(filename)
+	p := newParser(sys)
+	runbook, err := p.Parse(filename)
 	if err != nil {
 		return err
 	}

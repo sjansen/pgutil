@@ -85,7 +85,9 @@ func (c *Conn) Close() error {
 func (c *Conn) Exec(query string) error {
 	c.log.Debugw("executing query", "query", query)
 	tag, err := c.conn.Exec(query)
-	c.log.Debugf("rows affected = %d", tag.RowsAffected())
+	if err != nil {
+		c.log.Debugf("rows affected = %d", tag.RowsAffected())
+	}
 	return err
 }
 
