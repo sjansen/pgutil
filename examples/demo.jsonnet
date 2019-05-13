@@ -12,7 +12,7 @@ local decrypt(target) = {
 };
 
 local message(data) = {
-  class: 'strbuf',
+  class: 'demo',
   config: {
     data: data,
   },

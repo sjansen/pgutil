@@ -1,4 +1,4 @@
-package strbuf
+package demo
 
 import (
 	"context"

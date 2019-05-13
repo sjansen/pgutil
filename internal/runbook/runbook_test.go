@@ -9,8 +9,8 @@ import (
 
 	"github.com/sjansen/pgutil/internal/logger"
 	"github.com/sjansen/pgutil/internal/runbook"
+	"github.com/sjansen/pgutil/internal/runbook/demo"
 	"github.com/sjansen/pgutil/internal/runbook/parser"
-	"github.com/sjansen/pgutil/internal/runbook/strbuf"
 	"github.com/sjansen/pgutil/internal/runbook/types"
 	"github.com/sjansen/pgutil/internal/sys"
 )
@@ -20,35 +20,35 @@ func TestParse(t *testing.T) {
 
 	p := parser.Parser{
 		Targets: map[string]types.TargetFactory{
-			"strbuf": &strbuf.TargetFactory{},
+			"demo": &demo.TargetFactory{},
 		},
 	}
 
 	expected := &types.Runbook{
 		Targets: types.Targets{
-			"strbuf": &strbuf.Target{
+			"demo": &demo.Target{
 				Data: ".ravgyniB ehbl xaveq bg rehf rO",
 			},
 		},
 		Tasks: types.Tasks{
 			"encrypted": {
-				Target: "strbuf",
-				Config: &strbuf.Echo{},
+				Target: "demo",
+				Config: &demo.Echo{},
 			},
 			"decrypted": {
 				After:  []string{"reverse", "rotate"},
-				Target: "strbuf",
-				Config: &strbuf.Echo{},
+				Target: "demo",
+				Config: &demo.Echo{},
 			},
 			"reverse": {
 				After:  []string{"encrypted"},
-				Target: "strbuf",
-				Config: &strbuf.Rev{},
+				Target: "demo",
+				Config: &demo.Rev{},
 			},
 			"rotate": {
 				After:  []string{"encrypted"},
-				Target: "strbuf",
-				Config: &strbuf.Rot13{},
+				Target: "demo",
+				Config: &demo.Rot13{},
 			},
 		},
 	}

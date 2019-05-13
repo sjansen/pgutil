@@ -5,10 +5,10 @@ import (
 
 	dot "github.com/awalterschulze/gographviz"
 
+	"github.com/sjansen/pgutil/internal/runbook/demo"
 	"github.com/sjansen/pgutil/internal/runbook/parser"
 	"github.com/sjansen/pgutil/internal/runbook/pg"
 	"github.com/sjansen/pgutil/internal/runbook/sh"
-	"github.com/sjansen/pgutil/internal/runbook/strbuf"
 	"github.com/sjansen/pgutil/internal/runbook/types"
 	"github.com/sjansen/pgutil/internal/sys"
 )
@@ -29,7 +29,7 @@ func newParser(sys *sys.IO) *parser.Parser {
 				Stdout: sys.Stdout,
 				Stderr: sys.Stderr,
 			},
-			"strbuf": &strbuf.TargetFactory{
+			"demo": &demo.TargetFactory{
 				Stdout: sys.Stdout,
 			},
 		},

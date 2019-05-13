@@ -1,5 +1,5 @@
 local target(s) = {
-  class: 'strbuf',
+  class: 'demo',
   config: {
     data: s,
   },

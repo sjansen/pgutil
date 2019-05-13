@@ -15,10 +15,10 @@ func TestRunBookList(t *testing.T) {
 	require := require.New(t)
 
 	expected := `Tasks & Targets:
-  decrypted  strbuf
-  encrypted  strbuf
-  reverse    strbuf
-  rotate     strbuf
+  decrypted  demo
+  encrypted  demo
+  reverse    demo
+  rotate     demo
 `
 	cmd := &commands.RunBookListCmd{
 		File: "testdata/message.jsonnet",

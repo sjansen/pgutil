@@ -1,7 +1,7 @@
 {
   targets: {
-    strbuf: {
-      class: 'strbuf',
+    demo: {
+      class: 'demo',
       config: {
         data: '.ravgyniB ehbl xaveq bg rehf rO',
       },
@@ -9,19 +9,19 @@
   },
   tasks: {
     decrypted: {
-      target: 'strbuf/echo',
+      target: 'demo/echo',
       after: ['reverse', 'rotate'],
     },
     encrypted: {
-      target: 'strbuf/echo',
+      target: 'demo/echo',
     },
     reverse: {
       after: ['encrypted'],
-      target: 'strbuf/rev',
+      target: 'demo/rev',
     },
     rotate: {
       after: ['encrypted'],
-      target: 'strbuf/rot13',
+      target: 'demo/rot13',
     },
   },
 }

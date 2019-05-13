@@ -1,4 +1,4 @@
-package strbuf_test
+package demo_test
 
 import (
 	"bytes"
@@ -7,45 +7,45 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/runbook/strbuf"
+	"github.com/sjansen/pgutil/internal/runbook/demo"
 )
 
 func TestStrBuf(t *testing.T) {
 	require := require.New(t)
 
 	buffer := &bytes.Buffer{}
-	factory := &strbuf.TargetFactory{
+	factory := &demo.TargetFactory{
 		Stdout: buffer,
 	}
 	target := factory.NewTarget()
 
 	ctx := context.TODO()
-	target.(*strbuf.Target).Data = "!abbcF"
+	target.(*demo.Target).Data = "!abbcF"
 	require.NoError(target.Analyze())
 	require.Equal("", buffer.String())
 
-	t1 := &strbuf.Echo{}
+	t1 := &demo.Echo{}
 	require.NoError(t1.Check())
 	require.NoError(
 		target.Handle(ctx, t1),
 	)
 	require.Equal("!abbcF\n", buffer.String())
 
-	t2 := &strbuf.Rev{}
+	t2 := &demo.Rev{}
 	require.NoError(t2.Check())
 	require.NoError(
 		target.Handle(ctx, t2),
 	)
-	require.Equal("Fcbba!", target.(*strbuf.Target).Data)
+	require.Equal("Fcbba!", target.(*demo.Target).Data)
 
-	t3 := &strbuf.Rot13{}
+	t3 := &demo.Rot13{}
 	require.NoError(t3.Check())
 	require.NoError(
 		target.Handle(ctx, t3),
 	)
-	require.Equal("Spoon!", target.(*strbuf.Target).Data)
+	require.Equal("Spoon!", target.(*demo.Target).Data)
 
-	t4 := &strbuf.Echo{}
+	t4 := &demo.Echo{}
 	require.NoError(t4.Check())
 	require.NoError(
 		target.Handle(ctx, t4),
