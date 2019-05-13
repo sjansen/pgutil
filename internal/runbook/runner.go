@@ -47,13 +47,20 @@ func newRunner(log sys.Logger, targets types.Targets, tasks types.Tasks) *runner
 
 		// producers are responsible for closing
 		done:  make(chan TaskID, capacity),    // closed by run()
-		ended: make(chan *endedMsg),           // closed by startTargets()
+		ended: make(chan *endedMsg, capacity), // closed by startTargets()
 		ready: make(chan *readyMsg, capacity), // closed by startScheduler()
 	}
 }
 
+func (r *runner) closeDone() {
+	if r.done != nil {
+		close(r.done)
+		r.done = nil
+	}
+}
+
 func (r *runner) run() error {
-	defer close(r.done)
+	defer r.closeDone()
 
 	r.startScheduler()
 	err := r.startTargets()
@@ -61,19 +68,29 @@ func (r *runner) run() error {
 		return err
 	}
 
+	r.log.Debug("runner: started")
 	for x := range r.ended {
 		r.log.Debugw("runner: task ended", "task", x.taskID, "err", x.err != nil)
 		if x.err != nil {
-			return err
+			err = x.err
+			r.closeDone()
+			break
+		} else {
+			r.done <- x.taskID
 		}
-		r.done <- x.taskID
 	}
 
-	return nil
+	r.log.Debug("runner: stopping...")
+	for x := range r.ended {
+		r.log.Debugw("runner: task ended", "task", x.taskID, "err", x.err != nil)
+	}
+
+	r.log.Debug("runner: stopped")
+	return err
 }
 
 func (r *runner) startScheduler() {
-	go func(readyChan chan<- *readyMsg) {
+	go func(readyChan chan<- *readyMsg, doneChan <-chan TaskID) {
 		defer close(readyChan)
 
 		r.log.Debug("scheduler: started")
@@ -93,14 +110,14 @@ func (r *runner) startScheduler() {
 				}
 			}
 			r.log.Debug("scheduler: checking for finished tasks")
-			if taskID, ok := <-r.done; ok {
+			if taskID, ok := <-doneChan; ok {
 				ready, err = s.Next(string(taskID))
 			} else {
 				break
 			}
 		}
 		r.log.Debug("scheduler: stopped")
-	}(r.ready)
+	}(r.ready, r.done)
 }
 
 func (r *runner) startTargets() (err error) {
@@ -129,7 +146,7 @@ func (r *runner) startTargets() (err error) {
 			ch := channels[x.target]
 			ch <- x
 		}
-		r.log.Debug("router: stopping targets")
+		r.log.Debug("router: stopping...")
 		for _, ch := range channels {
 			close(ch)
 		}

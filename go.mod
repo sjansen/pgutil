@@ -6,6 +6,7 @@ require (
 	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf // indirect
 	github.com/awalterschulze/gographviz v0.0.0-20190221210632-1e9ccb565bca
 	github.com/cockroachdb/apd v1.1.0 // indirect
+	github.com/fortytw2/leaktest v1.3.0
 	github.com/google/go-jsonnet v0.12.1
 	github.com/hashicorp/hcl v1.0.0
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect

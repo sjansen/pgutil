@@ -16,7 +16,7 @@ func RegisterCommands(version string) *ArgParser {
 
 	base := &commands.Base{}
 	app.Flag("debug", "debug log").
-		OpenFileVar(&base.Debug, os.O_CREATE|os.O_WRONLY, 0644)
+		OpenFileVar(&base.Debug, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	app.Flag("verbose", "verbose mode, repeat to increase verbosity").
 		Short('v').CounterVar(&base.Verbosity)
 

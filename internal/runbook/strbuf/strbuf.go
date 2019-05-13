@@ -50,10 +50,14 @@ func (t *Target) NewTaskConfig(class string) (types.TaskConfig, error) {
 	switch class {
 	case "echo":
 		return &Echo{}, nil
+	case "fail":
+		return &Fail{}, nil
 	case "rev":
 		return &Rev{}, nil
 	case "rot13":
 		return &Rot13{}, nil
+	case "sleep":
+		return &Sleep{}, nil
 	}
 	return nil, errors.New("invalid task class") // TODO
 }

@@ -1,6 +1,10 @@
 package strbuf
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"time"
+)
 
 var _ munger = &Echo{}
 
@@ -12,6 +16,20 @@ func (x *Echo) munge(t *Target) error {
 }
 
 func (x *Echo) Check() error {
+	return nil
+}
+
+var _ munger = &Fail{}
+
+type Fail struct{}
+
+var ErrFail = errors.New("fail task executed")
+
+func (x *Fail) munge(t *Target) error {
+	return ErrFail
+}
+
+func (x *Fail) Check() error {
 	return nil
 }
 
@@ -57,5 +75,25 @@ func (x *Rot13) munge(t *Target) error {
 }
 
 func (x *Rot13) Check() error {
+	return nil
+}
+
+var _ munger = &Sleep{}
+
+type Sleep struct {
+	Seconds int
+}
+
+func (x *Sleep) munge(t *Target) error {
+	time.Sleep(
+		time.Duration(x.Seconds) * time.Second,
+	)
+	return nil
+}
+
+func (x *Sleep) Check() error {
+	if x.Seconds < 1 {
+		x.Seconds = 1
+	}
 	return nil
 }
