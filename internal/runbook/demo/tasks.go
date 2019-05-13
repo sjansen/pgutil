@@ -11,7 +11,7 @@ var _ munger = &Echo{}
 type Echo struct{}
 
 func (x *Echo) munge(t *Target) error {
-	_, err := fmt.Fprintln(t.stdout, t.Data)
+	_, err := fmt.Fprintln(t.stdout, t.String)
 	return err
 }
 
@@ -38,13 +38,13 @@ var _ munger = &Rev{}
 type Rev struct{}
 
 func (x *Rev) munge(t *Target) error {
-	runes := []rune(t.Data)
+	runes := []rune(t.String)
 	n := len(runes)
 	for i := 0; i < n/2; i++ {
 		j := n - i - 1
 		runes[i], runes[j] = runes[j], runes[i]
 	}
-	t.Data = string(runes)
+	t.String = string(runes)
 	return nil
 }
 
@@ -57,7 +57,7 @@ var _ munger = &Rot13{}
 type Rot13 struct{}
 
 func (x *Rot13) munge(t *Target) error {
-	runes := []rune(t.Data)
+	runes := []rune(t.String)
 	for i, r := range runes {
 		switch {
 		case 'a' <= r && r <= 'm':
@@ -70,7 +70,7 @@ func (x *Rot13) munge(t *Target) error {
 			runes[i] = r - 13
 		}
 	}
-	t.Data = string(runes)
+	t.String = string(runes)
 	return nil
 }
 

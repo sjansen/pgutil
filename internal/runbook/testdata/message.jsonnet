@@ -3,7 +3,7 @@
     demo: {
       class: 'demo',
       config: {
-        data: '.ravgyniB ehbl xaveq bg rehf rO',
+        string: '.ravgyniB ehbl xaveq bg rehf rO',
       },
     },
   },

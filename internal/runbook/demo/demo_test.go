@@ -20,7 +20,7 @@ func TestStrBuf(t *testing.T) {
 	target := factory.NewTarget()
 
 	ctx := context.TODO()
-	target.(*demo.Target).Data = "!abbcF"
+	target.(*demo.Target).String = "!abbcF"
 	require.NoError(target.Analyze())
 	require.Equal("", buffer.String())
 
@@ -36,14 +36,14 @@ func TestStrBuf(t *testing.T) {
 	require.NoError(
 		target.Handle(ctx, t2),
 	)
-	require.Equal("Fcbba!", target.(*demo.Target).Data)
+	require.Equal("Fcbba!", target.(*demo.Target).String)
 
 	t3 := &demo.Rot13{}
 	require.NoError(t3.Check())
 	require.NoError(
 		target.Handle(ctx, t3),
 	)
-	require.Equal("Spoon!", target.(*demo.Target).Data)
+	require.Equal("Spoon!", target.(*demo.Target).String)
 
 	t4 := &demo.Echo{}
 	require.NoError(t4.Check())

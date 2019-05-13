@@ -27,7 +27,7 @@ func TestParse(t *testing.T) {
 	expected := &types.Runbook{
 		Targets: types.Targets{
 			"demo": &demo.Target{
-				Data: ".ravgyniB ehbl xaveq bg rehf rO",
+				String: ".ravgyniB ehbl xaveq bg rehf rO",
 			},
 		},
 		Tasks: types.Tasks{

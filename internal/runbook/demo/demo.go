@@ -17,7 +17,7 @@ type TargetFactory struct {
 type Target struct {
 	log    *zap.SugaredLogger
 	stdout io.Writer
-	Data   string
+	String string
 }
 
 type munger interface {

@@ -11,10 +11,10 @@ local decrypt(target) = {
   },
 };
 
-local message(data) = {
+local message(msg) = {
   class: 'demo',
   config: {
-    data: data,
+    string: msg,
   },
 };
 

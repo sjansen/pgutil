@@ -1,7 +1,7 @@
 local target(s) = {
   class: 'demo',
   config: {
-    data: s,
+    string: s,
   },
 };
 
