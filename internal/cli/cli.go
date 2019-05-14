@@ -11,9 +11,10 @@ import (
 
 // An ArgParser contains the definitions of flags, arguments and commands for an application
 type ArgParser struct {
-	app  *kingpin.Application
-	base *commands.Base
-	cmd  command
+	app     *kingpin.Application
+	base    *commands.Base
+	cmd     command
+	version string
 }
 
 // Command is an abstraction for a function that produces human readable output when run
@@ -37,6 +38,7 @@ func (p *ArgParser) Parse(args []string) (Command, error) {
 		}
 		p.base.Stdout = stdout
 		p.base.Stderr = stderr
+		p.base.Log.Infof("pgutil version=%s", p.version)
 		return p.cmd.Run(p.base)
 	}
 	return fn, nil
