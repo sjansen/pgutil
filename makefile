@@ -26,5 +26,5 @@ test-docker:
 
 test-release:
 	git stash -u -k
-	goreleaser release --skip-publish --rm-dist
-	git stash pop
+	goreleaser release --rm-dist --skip-publish
+	-git stash pop

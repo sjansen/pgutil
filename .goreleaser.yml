@@ -1,4 +1,5 @@
-archive:
+archives:
+- id: default
   format_overrides:
     - goos: windows
       format: zip
