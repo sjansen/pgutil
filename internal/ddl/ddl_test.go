@@ -17,6 +17,7 @@ parameters {
 schema "public" {}
 
 function "update_modified_column" {
+  schema = "public"
   returns = "trigger"
   language = "plpgsql"
   definition = <<EOF
@@ -28,13 +29,15 @@ EOF
 }
 
 table "foo" {
+  schema = "public"
   columns = ["id", "created", "modified", "key", "value"]
 }
 
 trigger "update_foo_modified" {
-  when = "before"
-  events = ["update"]
+  schema = "public"
   table = "foo"
+  called = "before"
+  event "update" {}
   for_each = "row"
   function = "update_modified_column"
 }
@@ -60,6 +63,7 @@ func TestHCL(t *testing.T) {
 		},
 		Functions: []*ddl.Function{
 			{
+				Schema:     "public",
 				Name:       "update_modified_column",
 				Returns:    "trigger",
 				Language:   "plpgsql",
@@ -68,7 +72,8 @@ func TestHCL(t *testing.T) {
 		},
 		Tables: []*ddl.Table{
 			{
-				Name: "foo",
+				Schema: "public",
+				Name:   "foo",
 				Columns: []string{
 					"id", "created", "modified", "key", "value",
 				},
@@ -76,10 +81,13 @@ func TestHCL(t *testing.T) {
 		},
 		Triggers: []*ddl.Trigger{
 			{
-				Name:     "update_foo_modified",
-				When:     "before",
-				Events:   []string{"update"},
-				Table:    "foo",
+				Schema: "public",
+				Table:  "foo",
+				Name:   "update_foo_modified",
+				Called: "before",
+				Events: []*ddl.TriggerEvent{
+					{Event: "update"},
+				},
 				ForEach:  "row",
 				Function: "update_modified_column",
 			},
