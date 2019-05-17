@@ -1,5 +1,7 @@
 package ddl
 
+//go:generate ragel-go -G2 -o trigger_parser.go trigger_parser.rl
+
 // Database describes a PostgreSQL database
 type Database struct {
 	Parameters *Parameters
