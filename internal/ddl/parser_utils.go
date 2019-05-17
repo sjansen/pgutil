@@ -27,7 +27,7 @@ OUTER:
 			data = data[:idx]
 			break OUTER
 		default:
-			idx += 1
+			idx++
 			cs -= idx
 			data = data[idx:]
 		}
