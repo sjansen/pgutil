@@ -1524,7 +1524,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_ctr45:
 		{
 			trigger.Called = strings.ToUpper(
-				buffer.String(),
+				collapseWhitespace(buffer.String()),
 			)
 			buffer.Reset()
 		}
@@ -1846,7 +1846,9 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_ctr85:
 		{
 			trigger.Events = append(trigger.Events,
-				&TriggerEvent{Event: buffer.String()},
+				&TriggerEvent{Event: strings.ToUpper(
+					buffer.String(),
+				)},
 			)
 			buffer.Reset()
 		}
@@ -3879,6 +3881,12 @@ func ParseTrigger(data string) (*Trigger, error) {
 			}
 
 		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _ctr150
+			}
+
+		}
 		{
 			goto _st0
 		}
@@ -3908,6 +3916,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_90:
 		switch data[p] {
+		case 32:
+			{
+				goto _ctr150
+			}
 		case 79:
 			{
 				goto _ctr152
@@ -3915,6 +3927,12 @@ func ParseTrigger(data string) (*Trigger, error) {
 		case 111:
 			{
 				goto _ctr152
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _ctr150
 			}
 
 		}

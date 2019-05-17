@@ -4,7 +4,6 @@
 package ddl
 
 import (
-	"regexp"
 	"testing"
 
 	"github.com/alecthomas/participle"
@@ -35,8 +34,6 @@ var (
 		participle.Unquote("String"),
 		participle.Upper("Keyword"),
 	)
-
-	whitespace = regexp.MustCompile(`\s+`)
 )
 
 func CollapseWhitespace(token lexer.Token) (lexer.Token, error) {

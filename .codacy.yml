@@ -1,0 +1,2 @@
+exclude_paths:
+- 'internal/ddl/trigger_parser.go'

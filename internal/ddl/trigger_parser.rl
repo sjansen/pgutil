@@ -24,7 +24,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	action match_constraint   { trigger.Constraint = true }
 	action set_called {
 		trigger.Called = strings.ToUpper(
-			buffer.String(),
+			collapseWhitespace(buffer.String()),
 		)
 		buffer.Reset()
 	}
@@ -38,7 +38,9 @@ func ParseTrigger(data string) (*Trigger, error) {
 	}
 	action add_event {
 		trigger.Events = append(trigger.Events,
-			&TriggerEvent{Event: buffer.String()},
+			&TriggerEvent{Event: strings.ToUpper(
+				buffer.String(),
+			)},
 		)
 		buffer.Reset()
 	}
@@ -57,7 +59,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	main := space*
 		'CREATE'i ws ( 'CONSTRAINT'i@match_constraint ws )?  'TRIGGER'i
 		ws ( ident $ buffer_fc % set_name )
-		ws ( ('BEFORE'i | 'AFTER'i | 'INSTEAD OF'i) $ buffer_fc % set_called )
+		ws ( ('BEFORE'i | 'AFTER'i | ('INSTEAD'i ws 'OF'i)) $ buffer_fc % set_called )
 		ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % set_event )
 		(ws 'OR'i ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % add_event ))*
 		ws 'ON'i ws ( ident $ buffer_fc % set_table )

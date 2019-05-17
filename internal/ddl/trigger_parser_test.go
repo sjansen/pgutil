@@ -52,7 +52,7 @@ func TestParseTrigger(t *testing.T) {
 		},
 	}, {Stmt: `
 		  create  trigger  TRIGGER3
-		  instead of  update  on  VIEW3
+		  instead  of  update  on  VIEW3
 		`,
 		Expected: &Trigger{
 			Table:  "VIEW3",

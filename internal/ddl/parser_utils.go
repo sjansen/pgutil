@@ -2,8 +2,17 @@ package ddl
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
+
+var whitespace = regexp.MustCompile(`\s+`)
+
+func collapseWhitespace(before string) string {
+	after := whitespace.ReplaceAllString(before, " ")
+	fmt.Printf("before=%q after=%q\n", before, after)
+	return after
+}
 
 type parseError struct {
 	cs   int
