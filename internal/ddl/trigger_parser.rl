@@ -4,6 +4,7 @@ package ddl
 
 import (
 	"bytes"
+	"strings"
 )
 
 %%{
@@ -14,7 +15,6 @@ import (
 func ParseTrigger(data string) (*Trigger, error) {
 	trigger := &Trigger{}
 
-
 	buffer := &bytes.Buffer{}
 	cs, p, pe, eof := 0, 0, len(data), -1
 	%%{
@@ -22,8 +22,32 @@ func ParseTrigger(data string) (*Trigger, error) {
 		buffer.WriteByte(fc)
 	}
 	action match_constraint   { trigger.Constraint = true }
-	action match_name         {
+	action set_called {
+		trigger.Called = strings.ToUpper(
+			buffer.String(),
+		)
+		buffer.Reset()
+	}
+	action set_event {
+		trigger.Events = []*TriggerEvent{
+			{Event: strings.ToUpper(
+				buffer.String(),
+			)},
+		}
+		buffer.Reset()
+	}
+	action add_event {
+		trigger.Events = append(trigger.Events,
+			&TriggerEvent{Event: buffer.String()},
+		)
+		buffer.Reset()
+	}
+	action set_name {
 		trigger.Name = buffer.String()
+		buffer.Reset()
+	}
+	action set_table {
+		trigger.Table = buffer.String()
 		buffer.Reset()
 	}
 
@@ -32,9 +56,12 @@ func ParseTrigger(data string) (*Trigger, error) {
 
 	main := space*
 		'CREATE'i ws ( 'CONSTRAINT'i@match_constraint ws )?  'TRIGGER'i
-		ws ( ident $ buffer_fc % match_name )
+		ws ( ident $ buffer_fc % set_name )
+		ws ( ('BEFORE'i | 'AFTER'i | 'INSTEAD OF'i) $ buffer_fc % set_called )
+		ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % set_event )
+		(ws 'OR'i ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % add_event ))*
+		ws 'ON'i ws ( ident $ buffer_fc % set_table )
 		space*
-		'\n'?
 		;
 
 	write init;

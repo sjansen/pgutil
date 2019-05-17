@@ -14,29 +14,53 @@ func TestParseTrigger(t *testing.T) {
 		Expected *Trigger
 	}{{Stmt: `
 		  CREATE TRIGGER update_foo_modified
+		  BEFORE UPDATE ON foo
 		`,
 		Expected: &Trigger{
-			Name: "update_foo_modified",
+			Table:  "foo",
+			Name:   "update_foo_modified",
+			Called: "BEFORE",
+			Events: []*TriggerEvent{
+				{Event: "UPDATE"},
+			},
 		},
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger1
+		  AFTER INSERT OR DELETE ON table1
 		`,
 		Expected: &Trigger{
+			Table:      "table1",
 			Name:       "trigger1",
 			Constraint: true,
+			Called:     "AFTER",
+			Events: []*TriggerEvent{
+				{Event: "INSERT"},
+				{Event: "DELETE"},
+			},
 		},
 	}, {Stmt: `
 		  CREATE TRIGGER trigger2
+		  BEFORE TRUNCATE ON table2
 		`,
 		Expected: &Trigger{
-			Name: "trigger2",
+			Table:  "table2",
+			Name:   "trigger2",
+			Called: "BEFORE",
+			Events: []*TriggerEvent{
+				{Event: "TRUNCATE"},
+			},
 		},
 	}, {Stmt: `
-		  create  constraint  trigger  TRIGGER3
+		  create  trigger  TRIGGER3
+		  instead of  update  on  VIEW3
 		`,
 		Expected: &Trigger{
-			Name:       "TRIGGER3",
-			Constraint: true,
+			Table:  "VIEW3",
+			Name:   "TRIGGER3",
+			Called: "INSTEAD OF",
+			Events: []*TriggerEvent{
+				{Event: "UPDATE"},
+			},
 		},
 	}} {
 		actual, err := ParseTrigger(tc.Stmt)
