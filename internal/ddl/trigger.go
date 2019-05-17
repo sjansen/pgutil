@@ -23,6 +23,10 @@ func (t *Trigger) setCalled(called string) {
 	t.Called = called
 }
 
+func (t *Trigger) setForEach(forEach string) {
+	t.ForEach = strings.ToUpper(forEach)
+}
+
 func (t *Trigger) setName(name string) {
 	t.Name = name
 }

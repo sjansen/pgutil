@@ -15,6 +15,7 @@ func TestParseTrigger(t *testing.T) {
 	}{{Stmt: `
 		  CREATE TRIGGER update_foo_modified
 		  BEFORE UPDATE ON foo
+		  FOR EACH ROW
 		`,
 		Expected: &Trigger{
 			Table:  "foo",
@@ -23,11 +24,13 @@ func TestParseTrigger(t *testing.T) {
 			Events: []*TriggerEvent{
 				{Event: "UPDATE"},
 			},
+			ForEach: "ROW",
 		},
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger1
 		  AFTER INSERT OR DELETE ON table1
 		  DEFERRABLE INITIALLY DEFERRED
+		  FOR EACH ROW
 		`,
 		Expected: &Trigger{
 			Table:      "table1",
@@ -39,10 +42,12 @@ func TestParseTrigger(t *testing.T) {
 				{Event: "INSERT"},
 				{Event: "DELETE"},
 			},
+			ForEach: "ROW",
 		},
 	}, {Stmt: `
 		  CREATE TRIGGER trigger2
 		  BEFORE TRUNCATE ON table2
+		  FOR EACH STATEMENT
 		`,
 		Expected: &Trigger{
 			Table:  "table2",
@@ -51,6 +56,7 @@ func TestParseTrigger(t *testing.T) {
 			Events: []*TriggerEvent{
 				{Event: "TRUNCATE"},
 			},
+			ForEach: "STATEMENT",
 		},
 	}, {Stmt: `
 		  create  trigger  TRIGGER3
@@ -70,6 +76,7 @@ func TestParseTrigger(t *testing.T) {
 		  After Update On
 		  Table4
 		  NOT	Deferrable
+		  For	Each	Statement
 		`,
 		Expected: &Trigger{
 			Table:      "Table4",
@@ -80,11 +87,13 @@ func TestParseTrigger(t *testing.T) {
 			Events: []*TriggerEvent{
 				{Event: "UPDATE"},
 			},
+			ForEach: "STATEMENT",
 		},
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger5
-		  AFTER TRUNCATE ON table5
+		  AFTER INSERT OR UPDATE OR DELETE ON table5
 		  INITIALLY IMMEDIATE
+		  FOR ROW
 		`,
 		Expected: &Trigger{
 			Table:      "table5",
@@ -93,8 +102,11 @@ func TestParseTrigger(t *testing.T) {
 			Timing:     "INITIALLY IMMEDIATE",
 			Called:     "AFTER",
 			Events: []*TriggerEvent{
-				{Event: "TRUNCATE"},
+				{Event: "INSERT"},
+				{Event: "UPDATE"},
+				{Event: "DELETE"},
 			},
+			ForEach: "ROW",
 		},
 	}} {
 		actual, err := ParseTrigger(tc.Stmt)

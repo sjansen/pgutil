@@ -8,7 +8,7 @@ import (
 
 var trigger_start int = 1
 var _ = trigger_start
-var trigger_first_final int = 121
+var trigger_first_final int = 140
 var _ = trigger_first_final
 var trigger_error int = 0
 var _ = trigger_error
@@ -121,10 +121,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 			goto st_case_44
 		case 45:
 			goto st_case_45
-		case 121:
-			goto st_case_121
-		case 122:
-			goto st_case_122
+		case 140:
+			goto st_case_140
+		case 141:
+			goto st_case_141
 		case 46:
 			goto st_case_46
 		case 47:
@@ -181,10 +181,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 			goto st_case_72
 		case 73:
 			goto st_case_73
-		case 123:
-			goto st_case_123
-		case 124:
-			goto st_case_124
+		case 142:
+			goto st_case_142
+		case 143:
+			goto st_case_143
 		case 74:
 			goto st_case_74
 		case 75:
@@ -207,6 +207,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 			goto st_case_83
 		case 84:
 			goto st_case_84
+		case 144:
+			goto st_case_144
+		case 145:
+			goto st_case_145
 		case 85:
 			goto st_case_85
 		case 86:
@@ -279,13 +283,51 @@ func ParseTrigger(data string) (*Trigger, error) {
 			goto st_case_119
 		case 120:
 			goto st_case_120
+		case 121:
+			goto st_case_121
+		case 122:
+			goto st_case_122
+		case 123:
+			goto st_case_123
+		case 124:
+			goto st_case_124
+		case 125:
+			goto st_case_125
+		case 126:
+			goto st_case_126
+		case 127:
+			goto st_case_127
+		case 128:
+			goto st_case_128
+		case 129:
+			goto st_case_129
+		case 130:
+			goto st_case_130
+		case 131:
+			goto st_case_131
+		case 132:
+			goto st_case_132
+		case 133:
+			goto st_case_133
+		case 134:
+			goto st_case_134
+		case 135:
+			goto st_case_135
+		case 136:
+			goto st_case_136
+		case 137:
+			goto st_case_137
+		case 138:
+			goto st_case_138
+		case 139:
+			goto st_case_139
 
 		}
 		goto st_out
 	_st1:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -332,7 +374,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st2:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -365,7 +407,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st3:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -398,7 +440,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st4:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -431,7 +473,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st5:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -464,7 +506,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st6:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -497,7 +539,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st7:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -531,7 +573,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st8:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -582,7 +624,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st9:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -615,7 +657,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st10:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -648,7 +690,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st11:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -681,7 +723,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st12:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -714,7 +756,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st13:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -747,7 +789,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st14:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -780,7 +822,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st15:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -813,7 +855,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st16:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -846,7 +888,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st17:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -885,7 +927,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st18:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -919,7 +961,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st19:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -962,7 +1004,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st20:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -995,7 +1037,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st21:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1028,7 +1070,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st22:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1061,7 +1103,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st23:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1094,7 +1136,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st24:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1127,7 +1169,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st25:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1160,7 +1202,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st26:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1194,7 +1236,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st27:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1254,7 +1296,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st28:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1330,7 +1372,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st29:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1395,7 +1437,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st30:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1434,7 +1476,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st31:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1473,7 +1515,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st32:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1512,7 +1554,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st33:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1551,7 +1593,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st34:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1592,7 +1634,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st35:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1665,7 +1707,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st36:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1704,7 +1746,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st37:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1743,7 +1785,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st38:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1782,7 +1824,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st39:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1821,7 +1863,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st40:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1860,7 +1902,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st41:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1901,7 +1943,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st42:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1944,7 +1986,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st43:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -1967,7 +2009,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 			}
 		case 82:
 			{
-				goto _st94
+				goto _st113
 			}
 		case 110:
 			{
@@ -1975,7 +2017,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 			}
 		case 114:
 			{
-				goto _st94
+				goto _st113
 			}
 
 		}
@@ -1985,7 +2027,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st44:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2019,7 +2061,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st45:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2075,18 +2117,18 @@ func ParseTrigger(data string) (*Trigger, error) {
 			buffer.WriteByte((data[p]))
 		}
 
-		goto _st121
-	_ctr201:
+		goto _st140
+	_ctr231:
 		{
 			trigger.setTable(buffer.String())
 			buffer.Reset()
 		}
 
-		goto _st121
-	_st121:
+		goto _st140
+	_st140:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2098,14 +2140,14 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof121
+			goto _test_eof140
 
 		}
-	st_case_121:
+	st_case_140:
 		switch data[p] {
 		case 32:
 			{
-				goto _ctr202
+				goto _ctr232
 			}
 		case 95:
 			{
@@ -2117,7 +2159,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 			{
 				if 9 <= (data[p]) && (data[p]) <= 13 {
 					{
-						goto _ctr202
+						goto _ctr232
 					}
 
 				}
@@ -2152,17 +2194,17 @@ func ParseTrigger(data string) (*Trigger, error) {
 		{
 			goto _st0
 		}
-	_ctr202:
+	_ctr232:
 		{
 			trigger.setTable(buffer.String())
 			buffer.Reset()
 		}
 
-		goto _st122
-	_st122:
+		goto _st141
+	_st141:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2174,18 +2216,22 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof122
+			goto _test_eof141
 
 		}
-	st_case_122:
+	st_case_141:
 		switch data[p] {
 		case 32:
 			{
-				goto _st122
+				goto _st141
 			}
 		case 68:
 			{
 				goto _st46
+			}
+		case 70:
+			{
+				goto _st74
 			}
 		case 73:
 			{
@@ -2193,11 +2239,15 @@ func ParseTrigger(data string) (*Trigger, error) {
 			}
 		case 78:
 			{
-				goto _ctr204
+				goto _ctr234
 			}
 		case 100:
 			{
 				goto _st46
+			}
+		case 102:
+			{
+				goto _st74
 			}
 		case 105:
 			{
@@ -2205,13 +2255,13 @@ func ParseTrigger(data string) (*Trigger, error) {
 			}
 		case 110:
 			{
-				goto _ctr204
+				goto _ctr234
 			}
 
 		}
 		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				goto _st122
+				goto _st141
 			}
 
 		}
@@ -2221,7 +2271,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st46:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2254,7 +2304,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st47:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2287,7 +2337,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st48:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2320,7 +2370,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st49:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2353,7 +2403,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st50:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2386,7 +2436,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st51:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2419,7 +2469,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st52:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2452,7 +2502,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st53:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2485,7 +2535,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st54:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2518,7 +2568,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st55:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2552,7 +2602,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st56:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2601,7 +2651,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st57:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2640,7 +2690,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st58:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2679,7 +2729,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st59:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2718,7 +2768,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st60:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2757,7 +2807,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st61:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2796,7 +2846,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st62:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2835,7 +2885,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st63:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2874,7 +2924,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st64:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2913,7 +2963,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st65:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -2953,7 +3003,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st66:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3010,7 +3060,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st67:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3049,7 +3099,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st68:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3088,7 +3138,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st69:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3127,7 +3177,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st70:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3166,7 +3216,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st71:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3205,7 +3255,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st72:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3244,7 +3294,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st73:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3279,18 +3329,18 @@ func ParseTrigger(data string) (*Trigger, error) {
 			buffer.WriteByte((data[p]))
 		}
 
-		goto _st123
-	_ctr205:
+		goto _st142
+	_ctr235:
 		{
 			trigger.setTiming(buffer.String())
 			buffer.Reset()
 		}
 
-		goto _st123
-	_st123:
+		goto _st142
+	_st142:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3302,36 +3352,36 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof123
+			goto _test_eof142
 
 		}
-	st_case_123:
+	st_case_142:
 		if (data[p]) == 32 {
 			{
-				goto _ctr206
+				goto _ctr236
 			}
 
 		}
 		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				goto _ctr206
+				goto _ctr236
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr206:
+	_ctr236:
 		{
 			trigger.setTiming(buffer.String())
 			buffer.Reset()
 		}
 
-		goto _st124
-	_st124:
+		goto _st143
+	_st143:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3343,35 +3393,38 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof124
+			goto _test_eof143
 
 		}
-	st_case_124:
-		if (data[p]) == 32 {
+	st_case_143:
+		switch data[p] {
+		case 32:
 			{
-				goto _st124
+				goto _st143
+			}
+		case 70:
+			{
+				goto _st74
+			}
+		case 102:
+			{
+				goto _st74
 			}
 
 		}
 		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				goto _st124
+				goto _st143
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr101:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st74
 	_st74:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3388,29 +3441,23 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_74:
 		switch data[p] {
-		case 77:
+		case 79:
 			{
-				goto _ctr117
+				goto _st75
 			}
-		case 109:
+		case 111:
 			{
-				goto _ctr117
+				goto _st75
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr117:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st75
 	_st75:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3427,29 +3474,23 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_75:
 		switch data[p] {
-		case 77:
+		case 82:
 			{
-				goto _ctr119
+				goto _st76
 			}
-		case 109:
+		case 114:
 			{
-				goto _ctr119
+				goto _st76
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr119:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st76
 	_st76:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3465,30 +3506,25 @@ func ParseTrigger(data string) (*Trigger, error) {
 
 		}
 	st_case_76:
-		switch data[p] {
-		case 69:
+		if (data[p]) == 32 {
 			{
-				goto _ctr121
+				goto _st77
 			}
-		case 101:
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				goto _ctr121
+				goto _st77
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr121:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st77
 	_st77:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3505,29 +3541,49 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_77:
 		switch data[p] {
-		case 68:
+		case 32:
 			{
-				goto _ctr123
+				goto _st77
 			}
-		case 100:
+		case 69:
 			{
-				goto _ctr123
+				goto _st78
+			}
+		case 82:
+			{
+				goto _ctr121
+			}
+		case 83:
+			{
+				goto _ctr122
+			}
+		case 101:
+			{
+				goto _st78
+			}
+		case 114:
+			{
+				goto _ctr121
+			}
+		case 115:
+			{
+				goto _ctr122
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _st77
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr123:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st78
 	_st78:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3544,29 +3600,23 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_78:
 		switch data[p] {
-		case 73:
+		case 65:
 			{
-				goto _ctr125
+				goto _st79
 			}
-		case 105:
+		case 97:
 			{
-				goto _ctr125
+				goto _st79
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr125:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st79
 	_st79:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3583,29 +3633,23 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_79:
 		switch data[p] {
-		case 65:
+		case 67:
 			{
-				goto _ctr127
+				goto _st80
 			}
-		case 97:
+		case 99:
 			{
-				goto _ctr127
+				goto _st80
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr127:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st80
 	_st80:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3622,29 +3666,23 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_80:
 		switch data[p] {
-		case 84:
+		case 72:
 			{
-				goto _ctr129
+				goto _st81
 			}
-		case 116:
+		case 104:
 			{
-				goto _ctr129
+				goto _st81
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr129:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st81
 	_st81:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3660,30 +3698,25 @@ func ParseTrigger(data string) (*Trigger, error) {
 
 		}
 	st_case_81:
-		switch data[p] {
-		case 69:
+		if (data[p]) == 32 {
 			{
-				goto _ctr115
+				goto _st82
 			}
-		case 101:
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				goto _ctr115
+				goto _st82
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr204:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st82
 	_st82:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3700,20 +3733,38 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_82:
 		switch data[p] {
-		case 79:
+		case 32:
 			{
-				goto _ctr132
+				goto _st82
 			}
-		case 111:
+		case 82:
 			{
-				goto _ctr132
+				goto _ctr121
+			}
+		case 83:
+			{
+				goto _ctr122
+			}
+		case 114:
+			{
+				goto _ctr121
+			}
+		case 115:
+			{
+				goto _ctr122
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _st82
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr132:
+	_ctr121:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -3722,7 +3773,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st83:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3739,20 +3790,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_83:
 		switch data[p] {
-		case 84:
+		case 79:
 			{
-				goto _ctr134
+				goto _ctr128
 			}
-		case 116:
+		case 111:
 			{
-				goto _ctr134
+				goto _ctr128
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr134:
+	_ctr128:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -3761,7 +3812,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st84:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3777,22 +3828,109 @@ func ParseTrigger(data string) (*Trigger, error) {
 
 		}
 	st_case_84:
-		if (data[p]) == 32 {
+		switch data[p] {
+		case 87:
 			{
-				goto _ctr136
+				goto _ctr130
 			}
-
-		}
-		if 9 <= (data[p]) && (data[p]) <= 13 {
+		case 119:
 			{
-				goto _ctr136
+				goto _ctr130
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr136:
+	_ctr130:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st144
+	_ctr238:
+		{
+			trigger.setForEach(buffer.String())
+			buffer.Reset()
+		}
+
+		goto _st144
+	_st144:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof144
+
+		}
+	st_case_144:
+		if (data[p]) == 32 {
+			{
+				goto _ctr239
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _ctr239
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr239:
+		{
+			trigger.setForEach(buffer.String())
+			buffer.Reset()
+		}
+
+		goto _st145
+	_st145:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof145
+
+		}
+	st_case_145:
+		if (data[p]) == 32 {
+			{
+				goto _st145
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _st145
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr122:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -3801,7 +3939,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st85:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3818,30 +3956,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_85:
 		switch data[p] {
-		case 32:
+		case 84:
 			{
-				goto _ctr136
+				goto _ctr132
 			}
-		case 68:
+		case 116:
 			{
-				goto _ctr138
-			}
-		case 100:
-			{
-				goto _ctr138
-			}
-
-		}
-		if 9 <= (data[p]) && (data[p]) <= 13 {
-			{
-				goto _ctr136
+				goto _ctr132
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr138:
+	_ctr132:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -3850,7 +3978,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st86:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3867,20 +3995,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_86:
 		switch data[p] {
-		case 69:
+		case 65:
 			{
-				goto _ctr140
+				goto _ctr134
 			}
-		case 101:
+		case 97:
 			{
-				goto _ctr140
+				goto _ctr134
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr140:
+	_ctr134:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -3889,7 +4017,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st87:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3906,20 +4034,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_87:
 		switch data[p] {
-		case 70:
+		case 84:
 			{
-				goto _ctr142
+				goto _ctr136
 			}
-		case 102:
+		case 116:
 			{
-				goto _ctr142
+				goto _ctr136
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr142:
+	_ctr136:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -3928,7 +4056,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st88:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3947,18 +4075,18 @@ func ParseTrigger(data string) (*Trigger, error) {
 		switch data[p] {
 		case 69:
 			{
-				goto _ctr144
+				goto _ctr138
 			}
 		case 101:
 			{
-				goto _ctr144
+				goto _ctr138
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr144:
+	_ctr138:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -3967,7 +4095,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st89:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -3984,20 +4112,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_89:
 		switch data[p] {
-		case 82:
+		case 77:
 			{
-				goto _ctr146
+				goto _ctr140
 			}
-		case 114:
+		case 109:
 			{
-				goto _ctr146
+				goto _ctr140
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr146:
+	_ctr140:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -4006,7 +4134,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st90:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -4023,20 +4151,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_90:
 		switch data[p] {
-		case 82:
+		case 69:
 			{
-				goto _ctr148
+				goto _ctr142
 			}
-		case 114:
+		case 101:
 			{
-				goto _ctr148
+				goto _ctr142
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr148:
+	_ctr142:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -4045,7 +4173,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st91:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -4062,20 +4190,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_91:
 		switch data[p] {
-		case 65:
+		case 78:
 			{
-				goto _ctr150
+				goto _ctr144
 			}
-		case 97:
+		case 110:
 			{
-				goto _ctr150
+				goto _ctr144
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr150:
+	_ctr144:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -4084,7 +4212,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st92:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -4101,20 +4229,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_92:
 		switch data[p] {
-		case 66:
+		case 84:
 			{
-				goto _ctr152
+				goto _ctr130
 			}
-		case 98:
+		case 116:
 			{
-				goto _ctr152
+				goto _ctr130
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr152:
+	_ctr101:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -4123,7 +4251,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st93:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -4140,23 +4268,29 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_93:
 		switch data[p] {
-		case 76:
+		case 77:
 			{
-				goto _ctr129
+				goto _ctr147
 			}
-		case 108:
+		case 109:
 			{
-				goto _ctr129
+				goto _ctr147
 			}
 
 		}
 		{
 			goto _st0
 		}
+	_ctr147:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st94
 	_st94:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -4172,6 +4306,752 @@ func ParseTrigger(data string) (*Trigger, error) {
 
 		}
 	st_case_94:
+		switch data[p] {
+		case 77:
+			{
+				goto _ctr149
+			}
+		case 109:
+			{
+				goto _ctr149
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr149:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st95
+	_st95:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof95
+
+		}
+	st_case_95:
+		switch data[p] {
+		case 69:
+			{
+				goto _ctr151
+			}
+		case 101:
+			{
+				goto _ctr151
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr151:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st96
+	_st96:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof96
+
+		}
+	st_case_96:
+		switch data[p] {
+		case 68:
+			{
+				goto _ctr153
+			}
+		case 100:
+			{
+				goto _ctr153
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr153:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st97
+	_st97:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof97
+
+		}
+	st_case_97:
+		switch data[p] {
+		case 73:
+			{
+				goto _ctr155
+			}
+		case 105:
+			{
+				goto _ctr155
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr155:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st98
+	_st98:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof98
+
+		}
+	st_case_98:
+		switch data[p] {
+		case 65:
+			{
+				goto _ctr157
+			}
+		case 97:
+			{
+				goto _ctr157
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr157:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st99
+	_st99:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof99
+
+		}
+	st_case_99:
+		switch data[p] {
+		case 84:
+			{
+				goto _ctr159
+			}
+		case 116:
+			{
+				goto _ctr159
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr159:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st100
+	_st100:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof100
+
+		}
+	st_case_100:
+		switch data[p] {
+		case 69:
+			{
+				goto _ctr115
+			}
+		case 101:
+			{
+				goto _ctr115
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr234:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st101
+	_st101:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof101
+
+		}
+	st_case_101:
+		switch data[p] {
+		case 79:
+			{
+				goto _ctr162
+			}
+		case 111:
+			{
+				goto _ctr162
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr162:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st102
+	_st102:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof102
+
+		}
+	st_case_102:
+		switch data[p] {
+		case 84:
+			{
+				goto _ctr164
+			}
+		case 116:
+			{
+				goto _ctr164
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr164:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st103
+	_st103:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof103
+
+		}
+	st_case_103:
+		if (data[p]) == 32 {
+			{
+				goto _ctr166
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _ctr166
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr166:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st104
+	_st104:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof104
+
+		}
+	st_case_104:
+		switch data[p] {
+		case 32:
+			{
+				goto _ctr166
+			}
+		case 68:
+			{
+				goto _ctr168
+			}
+		case 100:
+			{
+				goto _ctr168
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _ctr166
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr168:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st105
+	_st105:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof105
+
+		}
+	st_case_105:
+		switch data[p] {
+		case 69:
+			{
+				goto _ctr170
+			}
+		case 101:
+			{
+				goto _ctr170
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr170:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st106
+	_st106:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof106
+
+		}
+	st_case_106:
+		switch data[p] {
+		case 70:
+			{
+				goto _ctr172
+			}
+		case 102:
+			{
+				goto _ctr172
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr172:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st107
+	_st107:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof107
+
+		}
+	st_case_107:
+		switch data[p] {
+		case 69:
+			{
+				goto _ctr174
+			}
+		case 101:
+			{
+				goto _ctr174
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr174:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st108
+	_st108:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof108
+
+		}
+	st_case_108:
+		switch data[p] {
+		case 82:
+			{
+				goto _ctr176
+			}
+		case 114:
+			{
+				goto _ctr176
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr176:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st109
+	_st109:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof109
+
+		}
+	st_case_109:
+		switch data[p] {
+		case 82:
+			{
+				goto _ctr178
+			}
+		case 114:
+			{
+				goto _ctr178
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr178:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st110
+	_st110:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof110
+
+		}
+	st_case_110:
+		switch data[p] {
+		case 65:
+			{
+				goto _ctr180
+			}
+		case 97:
+			{
+				goto _ctr180
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr180:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st111
+	_st111:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof111
+
+		}
+	st_case_111:
+		switch data[p] {
+		case 66:
+			{
+				goto _ctr182
+			}
+		case 98:
+			{
+				goto _ctr182
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr182:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st112
+	_st112:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof112
+
+		}
+	st_case_112:
+		switch data[p] {
+		case 76:
+			{
+				goto _ctr159
+			}
+		case 108:
+			{
+				goto _ctr159
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_st113:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof113
+
+		}
+	st_case_113:
 		if (data[p]) == 32 {
 			{
 				goto _st35
@@ -4192,11 +5072,11 @@ func ParseTrigger(data string) (*Trigger, error) {
 			buffer.WriteByte((data[p]))
 		}
 
-		goto _st95
-	_st95:
+		goto _st114
+	_st114:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -4208,673 +5088,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof95
+			goto _test_eof114
 
 		}
-	st_case_95:
-		switch data[p] {
-		case 78:
-			{
-				goto _ctr155
-			}
-		case 110:
-			{
-				goto _ctr155
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr155:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st96
-	_st96:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof96
-
-		}
-	st_case_96:
-		switch data[p] {
-		case 83:
-			{
-				goto _ctr157
-			}
-		case 115:
-			{
-				goto _ctr157
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr157:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st97
-	_st97:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof97
-
-		}
-	st_case_97:
-		switch data[p] {
-		case 69:
-			{
-				goto _ctr159
-			}
-		case 101:
-			{
-				goto _ctr159
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr159:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st98
-	_st98:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof98
-
-		}
-	st_case_98:
-		switch data[p] {
-		case 82:
-			{
-				goto _ctr161
-			}
-		case 114:
-			{
-				goto _ctr161
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr161:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st99
-	_st99:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof99
-
-		}
-	st_case_99:
-		switch data[p] {
-		case 84:
-			{
-				goto _ctr60
-			}
-		case 116:
-			{
-				goto _ctr60
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr49:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st100
-	_st100:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof100
-
-		}
-	st_case_100:
-		switch data[p] {
-		case 82:
-			{
-				goto _ctr164
-			}
-		case 114:
-			{
-				goto _ctr164
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr164:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st101
-	_st101:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof101
-
-		}
-	st_case_101:
-		switch data[p] {
-		case 85:
-			{
-				goto _ctr166
-			}
-		case 117:
-			{
-				goto _ctr166
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr166:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st102
-	_st102:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof102
-
-		}
-	st_case_102:
-		switch data[p] {
-		case 78:
-			{
-				goto _ctr168
-			}
-		case 110:
-			{
-				goto _ctr168
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr168:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st103
-	_st103:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof103
-
-		}
-	st_case_103:
-		switch data[p] {
-		case 67:
-			{
-				goto _ctr170
-			}
-		case 99:
-			{
-				goto _ctr170
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr170:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st104
-	_st104:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof104
-
-		}
-	st_case_104:
-		switch data[p] {
-		case 65:
-			{
-				goto _ctr56
-			}
-		case 97:
-			{
-				goto _ctr56
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr50:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st105
-	_st105:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof105
-
-		}
-	st_case_105:
-		switch data[p] {
-		case 80:
-			{
-				goto _ctr173
-			}
-		case 112:
-			{
-				goto _ctr173
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr173:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st106
-	_st106:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof106
-
-		}
-	st_case_106:
-		switch data[p] {
-		case 68:
-			{
-				goto _ctr170
-			}
-		case 100:
-			{
-				goto _ctr170
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr34:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st107
-	_st107:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof107
-
-		}
-	st_case_107:
-		switch data[p] {
-		case 69:
-			{
-				goto _ctr176
-			}
-		case 101:
-			{
-				goto _ctr176
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr176:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st108
-	_st108:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof108
-
-		}
-	st_case_108:
-		switch data[p] {
-		case 70:
-			{
-				goto _ctr178
-			}
-		case 102:
-			{
-				goto _ctr178
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr178:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st109
-	_st109:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof109
-
-		}
-	st_case_109:
-		switch data[p] {
-		case 79:
-			{
-				goto _ctr180
-			}
-		case 111:
-			{
-				goto _ctr180
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr180:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st110
-	_st110:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof110
-
-		}
-	st_case_110:
-		switch data[p] {
-		case 82:
-			{
-				goto _ctr182
-			}
-		case 114:
-			{
-				goto _ctr182
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr182:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st111
-	_st111:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof111
-
-		}
-	st_case_111:
-		switch data[p] {
-		case 69:
-			{
-				goto _ctr43
-			}
-		case 101:
-			{
-				goto _ctr43
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr35:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st112
-	_st112:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof112
-
-		}
-	st_case_112:
+	st_case_114:
 		switch data[p] {
 		case 78:
 			{
@@ -4894,11 +5111,11 @@ func ParseTrigger(data string) (*Trigger, error) {
 			buffer.WriteByte((data[p]))
 		}
 
-		goto _st113
-	_st113:
+		goto _st115
+	_st115:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -4910,10 +5127,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof113
+			goto _test_eof115
 
 		}
-	st_case_113:
+	st_case_115:
 		switch data[p] {
 		case 83:
 			{
@@ -4933,89 +5150,11 @@ func ParseTrigger(data string) (*Trigger, error) {
 			buffer.WriteByte((data[p]))
 		}
 
-		goto _st114
-	_st114:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof114
-
-		}
-	st_case_114:
-		switch data[p] {
-		case 84:
-			{
-				goto _ctr189
-			}
-		case 116:
-			{
-				goto _ctr189
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr189:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st115
-	_st115:
-		if p == eof {
-			{
-				if cs >= 121 {
-					goto _out
-
-				} else {
-					goto _pop
-
-				}
-			}
-
-		}
-		p += 1
-		if p == pe {
-			goto _test_eof115
-
-		}
-	st_case_115:
-		switch data[p] {
-		case 69:
-			{
-				goto _ctr191
-			}
-		case 101:
-			{
-				goto _ctr191
-			}
-
-		}
-		{
-			goto _st0
-		}
-	_ctr191:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
 		goto _st116
 	_st116:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -5032,20 +5171,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_116:
 		switch data[p] {
-		case 65:
+		case 69:
 			{
-				goto _ctr193
+				goto _ctr189
 			}
-		case 97:
+		case 101:
 			{
-				goto _ctr193
+				goto _ctr189
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr193:
+	_ctr189:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -5054,7 +5193,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st117:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -5071,20 +5210,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_117:
 		switch data[p] {
-		case 68:
+		case 82:
 			{
-				goto _ctr195
+				goto _ctr191
 			}
-		case 100:
+		case 114:
 			{
-				goto _ctr195
+				goto _ctr191
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr195:
+	_ctr191:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -5093,7 +5232,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st118:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -5109,22 +5248,21 @@ func ParseTrigger(data string) (*Trigger, error) {
 
 		}
 	st_case_118:
-		if (data[p]) == 32 {
+		switch data[p] {
+		case 84:
 			{
-				goto _ctr197
+				goto _ctr60
 			}
-
-		}
-		if 9 <= (data[p]) && (data[p]) <= 13 {
+		case 116:
 			{
-				goto _ctr197
+				goto _ctr60
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr197:
+	_ctr49:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -5133,7 +5271,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st119:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -5150,30 +5288,20 @@ func ParseTrigger(data string) (*Trigger, error) {
 		}
 	st_case_119:
 		switch data[p] {
-		case 32:
+		case 82:
 			{
-				goto _ctr197
+				goto _ctr194
 			}
-		case 79:
+		case 114:
 			{
-				goto _ctr199
-			}
-		case 111:
-			{
-				goto _ctr199
-			}
-
-		}
-		if 9 <= (data[p]) && (data[p]) <= 13 {
-			{
-				goto _ctr197
+				goto _ctr194
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr199:
+	_ctr194:
 		{
 			buffer.WriteByte((data[p]))
 		}
@@ -5182,7 +5310,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_st120:
 		if p == eof {
 			{
-				if cs >= 121 {
+				if cs >= 140 {
 					goto _out
 
 				} else {
@@ -5198,6 +5326,758 @@ func ParseTrigger(data string) (*Trigger, error) {
 
 		}
 	st_case_120:
+		switch data[p] {
+		case 85:
+			{
+				goto _ctr196
+			}
+		case 117:
+			{
+				goto _ctr196
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr196:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st121
+	_st121:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof121
+
+		}
+	st_case_121:
+		switch data[p] {
+		case 78:
+			{
+				goto _ctr198
+			}
+		case 110:
+			{
+				goto _ctr198
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr198:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st122
+	_st122:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof122
+
+		}
+	st_case_122:
+		switch data[p] {
+		case 67:
+			{
+				goto _ctr200
+			}
+		case 99:
+			{
+				goto _ctr200
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr200:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st123
+	_st123:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof123
+
+		}
+	st_case_123:
+		switch data[p] {
+		case 65:
+			{
+				goto _ctr56
+			}
+		case 97:
+			{
+				goto _ctr56
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr50:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st124
+	_st124:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof124
+
+		}
+	st_case_124:
+		switch data[p] {
+		case 80:
+			{
+				goto _ctr203
+			}
+		case 112:
+			{
+				goto _ctr203
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr203:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st125
+	_st125:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof125
+
+		}
+	st_case_125:
+		switch data[p] {
+		case 68:
+			{
+				goto _ctr200
+			}
+		case 100:
+			{
+				goto _ctr200
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr34:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st126
+	_st126:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof126
+
+		}
+	st_case_126:
+		switch data[p] {
+		case 69:
+			{
+				goto _ctr206
+			}
+		case 101:
+			{
+				goto _ctr206
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr206:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st127
+	_st127:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof127
+
+		}
+	st_case_127:
+		switch data[p] {
+		case 70:
+			{
+				goto _ctr208
+			}
+		case 102:
+			{
+				goto _ctr208
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr208:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st128
+	_st128:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof128
+
+		}
+	st_case_128:
+		switch data[p] {
+		case 79:
+			{
+				goto _ctr210
+			}
+		case 111:
+			{
+				goto _ctr210
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr210:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st129
+	_st129:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof129
+
+		}
+	st_case_129:
+		switch data[p] {
+		case 82:
+			{
+				goto _ctr212
+			}
+		case 114:
+			{
+				goto _ctr212
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr212:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st130
+	_st130:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof130
+
+		}
+	st_case_130:
+		switch data[p] {
+		case 69:
+			{
+				goto _ctr43
+			}
+		case 101:
+			{
+				goto _ctr43
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr35:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st131
+	_st131:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof131
+
+		}
+	st_case_131:
+		switch data[p] {
+		case 78:
+			{
+				goto _ctr215
+			}
+		case 110:
+			{
+				goto _ctr215
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr215:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st132
+	_st132:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof132
+
+		}
+	st_case_132:
+		switch data[p] {
+		case 83:
+			{
+				goto _ctr217
+			}
+		case 115:
+			{
+				goto _ctr217
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr217:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st133
+	_st133:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof133
+
+		}
+	st_case_133:
+		switch data[p] {
+		case 84:
+			{
+				goto _ctr219
+			}
+		case 116:
+			{
+				goto _ctr219
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr219:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st134
+	_st134:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof134
+
+		}
+	st_case_134:
+		switch data[p] {
+		case 69:
+			{
+				goto _ctr221
+			}
+		case 101:
+			{
+				goto _ctr221
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr221:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st135
+	_st135:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof135
+
+		}
+	st_case_135:
+		switch data[p] {
+		case 65:
+			{
+				goto _ctr223
+			}
+		case 97:
+			{
+				goto _ctr223
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr223:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st136
+	_st136:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof136
+
+		}
+	st_case_136:
+		switch data[p] {
+		case 68:
+			{
+				goto _ctr225
+			}
+		case 100:
+			{
+				goto _ctr225
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr225:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st137
+	_st137:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof137
+
+		}
+	st_case_137:
+		if (data[p]) == 32 {
+			{
+				goto _ctr227
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _ctr227
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr227:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st138
+	_st138:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof138
+
+		}
+	st_case_138:
+		switch data[p] {
+		case 32:
+			{
+				goto _ctr227
+			}
+		case 79:
+			{
+				goto _ctr229
+			}
+		case 111:
+			{
+				goto _ctr229
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _ctr227
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr229:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st139
+	_st139:
+		if p == eof {
+			{
+				if cs >= 140 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof139
+
+		}
+	st_case_139:
 		switch data[p] {
 		case 70:
 			{
@@ -5348,11 +6228,11 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_test_eof45:
 		cs = 45
 		goto _test_eof
-	_test_eof121:
-		cs = 121
+	_test_eof140:
+		cs = 140
 		goto _test_eof
-	_test_eof122:
-		cs = 122
+	_test_eof141:
+		cs = 141
 		goto _test_eof
 	_test_eof46:
 		cs = 46
@@ -5438,11 +6318,11 @@ func ParseTrigger(data string) (*Trigger, error) {
 	_test_eof73:
 		cs = 73
 		goto _test_eof
-	_test_eof123:
-		cs = 123
+	_test_eof142:
+		cs = 142
 		goto _test_eof
-	_test_eof124:
-		cs = 124
+	_test_eof143:
+		cs = 143
 		goto _test_eof
 	_test_eof74:
 		cs = 74
@@ -5476,6 +6356,12 @@ func ParseTrigger(data string) (*Trigger, error) {
 		goto _test_eof
 	_test_eof84:
 		cs = 84
+		goto _test_eof
+	_test_eof144:
+		cs = 144
+		goto _test_eof
+	_test_eof145:
+		cs = 145
 		goto _test_eof
 	_test_eof85:
 		cs = 85
@@ -5584,6 +6470,63 @@ func ParseTrigger(data string) (*Trigger, error) {
 		goto _test_eof
 	_test_eof120:
 		cs = 120
+		goto _test_eof
+	_test_eof121:
+		cs = 121
+		goto _test_eof
+	_test_eof122:
+		cs = 122
+		goto _test_eof
+	_test_eof123:
+		cs = 123
+		goto _test_eof
+	_test_eof124:
+		cs = 124
+		goto _test_eof
+	_test_eof125:
+		cs = 125
+		goto _test_eof
+	_test_eof126:
+		cs = 126
+		goto _test_eof
+	_test_eof127:
+		cs = 127
+		goto _test_eof
+	_test_eof128:
+		cs = 128
+		goto _test_eof
+	_test_eof129:
+		cs = 129
+		goto _test_eof
+	_test_eof130:
+		cs = 130
+		goto _test_eof
+	_test_eof131:
+		cs = 131
+		goto _test_eof
+	_test_eof132:
+		cs = 132
+		goto _test_eof
+	_test_eof133:
+		cs = 133
+		goto _test_eof
+	_test_eof134:
+		cs = 134
+		goto _test_eof
+	_test_eof135:
+		cs = 135
+		goto _test_eof
+	_test_eof136:
+		cs = 136
+		goto _test_eof
+	_test_eof137:
+		cs = 137
+		goto _test_eof
+	_test_eof138:
+		cs = 138
+		goto _test_eof
+	_test_eof139:
+		cs = 139
 		goto _test_eof
 
 	_test_eof:
@@ -5776,11 +6719,11 @@ func ParseTrigger(data string) (*Trigger, error) {
 					{
 						break
 					}
-				case 121:
+				case 140:
 					{
 						break
 					}
-				case 122:
+				case 141:
 					{
 						break
 					}
@@ -5896,11 +6839,11 @@ func ParseTrigger(data string) (*Trigger, error) {
 					{
 						break
 					}
-				case 123:
+				case 142:
 					{
 						break
 					}
-				case 124:
+				case 143:
 					{
 						break
 					}
@@ -5945,6 +6888,14 @@ func ParseTrigger(data string) (*Trigger, error) {
 						break
 					}
 				case 84:
+					{
+						break
+					}
+				case 144:
+					{
+						break
+					}
+				case 145:
 					{
 						break
 					}
@@ -6089,6 +7040,82 @@ func ParseTrigger(data string) (*Trigger, error) {
 						break
 					}
 				case 120:
+					{
+						break
+					}
+				case 121:
+					{
+						break
+					}
+				case 122:
+					{
+						break
+					}
+				case 123:
+					{
+						break
+					}
+				case 124:
+					{
+						break
+					}
+				case 125:
+					{
+						break
+					}
+				case 126:
+					{
+						break
+					}
+				case 127:
+					{
+						break
+					}
+				case 128:
+					{
+						break
+					}
+				case 129:
+					{
+						break
+					}
+				case 130:
+					{
+						break
+					}
+				case 131:
+					{
+						break
+					}
+				case 132:
+					{
+						break
+					}
+				case 133:
+					{
+						break
+					}
+				case 134:
+					{
+						break
+					}
+				case 135:
+					{
+						break
+					}
+				case 136:
+					{
+						break
+					}
+				case 137:
+					{
+						break
+					}
+				case 138:
+					{
+						break
+					}
+				case 139:
 					{
 						break
 					}
@@ -6190,10 +7217,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 					goto _st44
 				case 45:
 					goto _st45
-				case 121:
-					goto _ctr201
-				case 122:
-					goto _st122
+				case 140:
+					goto _ctr231
+				case 141:
+					goto _st141
 				case 46:
 					goto _st46
 				case 47:
@@ -6250,10 +7277,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 					goto _st72
 				case 73:
 					goto _st73
-				case 123:
-					goto _ctr205
-				case 124:
-					goto _st124
+				case 142:
+					goto _ctr235
+				case 143:
+					goto _st143
 				case 74:
 					goto _st74
 				case 75:
@@ -6276,6 +7303,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 					goto _st83
 				case 84:
 					goto _st84
+				case 144:
+					goto _ctr238
+				case 145:
+					goto _st145
 				case 85:
 					goto _st85
 				case 86:
@@ -6348,11 +7379,49 @@ func ParseTrigger(data string) (*Trigger, error) {
 					goto _st119
 				case 120:
 					goto _st120
+				case 121:
+					goto _st121
+				case 122:
+					goto _st122
+				case 123:
+					goto _st123
+				case 124:
+					goto _st124
+				case 125:
+					goto _st125
+				case 126:
+					goto _st126
+				case 127:
+					goto _st127
+				case 128:
+					goto _st128
+				case 129:
+					goto _st129
+				case 130:
+					goto _st130
+				case 131:
+					goto _st131
+				case 132:
+					goto _st132
+				case 133:
+					goto _st133
+				case 134:
+					goto _st134
+				case 135:
+					goto _st135
+				case 136:
+					goto _st136
+				case 137:
+					goto _st137
+				case 138:
+					goto _st138
+				case 139:
+					goto _st139
 				}
 			}
 
 		}
-		if cs >= 121 {
+		if cs >= 140 {
 			goto _out
 		}
 	_pop:

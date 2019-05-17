@@ -29,6 +29,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 		trigger.addEvent(buffer.String())
 		buffer.Reset()
 	}
+	action set_for_each {
+		trigger.setForEach(buffer.String())
+		buffer.Reset()
+	}
 	action set_name {
 		trigger.setName(buffer.String())
 		buffer.Reset()
@@ -55,6 +59,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 		( ws (('NOT'i ws 'DEFERRABLE'i) $ buffer_fc % set_timing )
 		| ws ('DEFERRABLE'i ws)? ( ('INITIALLY'i ws 'DEFERRED'i | 'INITIALLY'i ws 'IMMEDIATE'i) $ buffer_fc % set_timing )
 		)?
+		( ws 'FOR'i ws ('EACH'i ws)? (('ROW'i | 'STATEMENT'i) $ buffer_fc % set_for_each ))?
 		space*
 		;
 
