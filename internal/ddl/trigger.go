@@ -27,6 +27,10 @@ func (t *Trigger) setForEach(forEach string) {
 	t.ForEach = strings.ToUpper(forEach)
 }
 
+func (t *Trigger) setFunction(function string) {
+	t.Function = function
+}
+
 func (t *Trigger) setName(name string) {
 	t.Name = name
 }

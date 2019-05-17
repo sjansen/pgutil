@@ -16,6 +16,7 @@ func TestParseTrigger(t *testing.T) {
 		  CREATE TRIGGER update_foo_modified
 		  BEFORE UPDATE ON foo
 		  FOR EACH ROW
+		  EXECUTE PROCEDURE update_modified_column()
 		`,
 		Expected: &Trigger{
 			Table:  "foo",
@@ -24,13 +25,15 @@ func TestParseTrigger(t *testing.T) {
 			Events: []*TriggerEvent{
 				{Event: "UPDATE"},
 			},
-			ForEach: "ROW",
+			ForEach:  "ROW",
+			Function: "update_modified_column",
 		},
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger1
 		  AFTER INSERT OR DELETE ON table1
 		  DEFERRABLE INITIALLY DEFERRED
 		  FOR EACH ROW
+		  EXECUTE FUNCTION fn1()
 		`,
 		Expected: &Trigger{
 			Table:      "table1",
@@ -42,12 +45,14 @@ func TestParseTrigger(t *testing.T) {
 				{Event: "INSERT"},
 				{Event: "DELETE"},
 			},
-			ForEach: "ROW",
+			ForEach:  "ROW",
+			Function: "fn1",
 		},
 	}, {Stmt: `
 		  CREATE TRIGGER trigger2
 		  BEFORE TRUNCATE ON table2
 		  FOR EACH STATEMENT
+		  EXECUTE PROCEDURE fn2()
 		`,
 		Expected: &Trigger{
 			Table:  "table2",
@@ -56,11 +61,13 @@ func TestParseTrigger(t *testing.T) {
 			Events: []*TriggerEvent{
 				{Event: "TRUNCATE"},
 			},
-			ForEach: "STATEMENT",
+			ForEach:  "STATEMENT",
+			Function: "fn2",
 		},
 	}, {Stmt: `
 		  create  trigger  TRIGGER3
 		  instead  of  update  on  VIEW3
+		  execute  procedure  FN3()
 		`,
 		Expected: &Trigger{
 			Table:  "VIEW3",
@@ -69,6 +76,7 @@ func TestParseTrigger(t *testing.T) {
 			Events: []*TriggerEvent{
 				{Event: "UPDATE"},
 			},
+			Function: "FN3",
 		},
 	}, {Stmt: `
 		  Create Constraint Trigger
@@ -77,6 +85,8 @@ func TestParseTrigger(t *testing.T) {
 		  Table4
 		  NOT	Deferrable
 		  For	Each	Statement
+		  Execute   Procedure
+		  Func4()
 		`,
 		Expected: &Trigger{
 			Table:      "Table4",
@@ -87,13 +97,15 @@ func TestParseTrigger(t *testing.T) {
 			Events: []*TriggerEvent{
 				{Event: "UPDATE"},
 			},
-			ForEach: "STATEMENT",
+			ForEach:  "STATEMENT",
+			Function: "Func4",
 		},
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger5
 		  AFTER INSERT OR UPDATE OR DELETE ON table5
 		  INITIALLY IMMEDIATE
 		  FOR ROW
+		  EXECUTE PROCEDURE proc5()
 		`,
 		Expected: &Trigger{
 			Table:      "table5",
@@ -106,7 +118,8 @@ func TestParseTrigger(t *testing.T) {
 				{Event: "UPDATE"},
 				{Event: "DELETE"},
 			},
-			ForEach: "ROW",
+			ForEach:  "ROW",
+			Function: "proc5",
 		},
 	}} {
 		actual, err := ParseTrigger(tc.Stmt)

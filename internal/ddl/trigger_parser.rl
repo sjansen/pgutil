@@ -15,7 +15,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 	trigger := &Trigger{}
 
 	buffer := &bytes.Buffer{}
-	cs, p, pe, eof := 0, 0, len(data), -1
+	cs, p, pe := 0, 0, len(data)
 	%%{
 	action buffer_fc       {
 		buffer.WriteByte(fc)
@@ -31,6 +31,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 	}
 	action set_for_each {
 		trigger.setForEach(buffer.String())
+		buffer.Reset()
+	}
+	action set_function {
+		trigger.setFunction(buffer.String())
 		buffer.Reset()
 	}
 	action set_name {
@@ -60,6 +64,7 @@ func ParseTrigger(data string) (*Trigger, error) {
 		| ws ('DEFERRABLE'i ws)? ( ('INITIALLY'i ws 'DEFERRED'i | 'INITIALLY'i ws 'IMMEDIATE'i) $ buffer_fc % set_timing )
 		)?
 		( ws 'FOR'i ws ('EACH'i ws)? (('ROW'i | 'STATEMENT'i) $ buffer_fc % set_for_each ))?
+		ws 'EXECUTE'i ws ('FUNCTION'i | 'PROCEDURE'i) ws ( ident $ buffer_fc % set_function ) '()'
 		space*
 		;
 
