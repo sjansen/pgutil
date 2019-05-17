@@ -30,3 +30,10 @@ func (t *Trigger) setName(name string) {
 func (t *Trigger) setTable(table string) {
 	t.Table = table
 }
+
+func (t *Trigger) setTiming(timing string) {
+	timing = strings.ToUpper(
+		collapseWhitespace(timing),
+	)
+	t.Timing = timing
+}

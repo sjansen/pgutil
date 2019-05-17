@@ -37,6 +37,10 @@ func ParseTrigger(data string) (*Trigger, error) {
 		trigger.setTable(buffer.String())
 		buffer.Reset()
 	}
+	action set_timing {
+		trigger.setTiming(buffer.String())
+		buffer.Reset()
+	}
 
 	ws = space+;
 	ident = [a-zA-Z][_a-zA-Z0-9]*;
@@ -46,8 +50,11 @@ func ParseTrigger(data string) (*Trigger, error) {
 		ws ( ident $ buffer_fc % set_name )
 		ws ( ('BEFORE'i | 'AFTER'i | ('INSTEAD'i ws 'OF'i)) $ buffer_fc % set_called )
 		ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % add_event )
-		(ws 'OR'i ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % add_event ))*
+		( ws 'OR'i ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % add_event ))*
 		ws 'ON'i ws ( ident $ buffer_fc % set_table )
+		( ws (('NOT'i ws 'DEFERRABLE'i) $ buffer_fc % set_timing )
+		| ws ('DEFERRABLE'i ws)? ( ('INITIALLY'i ws 'DEFERRED'i | 'INITIALLY'i ws 'IMMEDIATE'i) $ buffer_fc % set_timing )
+		)?
 		space*
 		;
 

@@ -27,11 +27,13 @@ func TestParseTrigger(t *testing.T) {
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger1
 		  AFTER INSERT OR DELETE ON table1
+		  DEFERRABLE INITIALLY DEFERRED
 		`,
 		Expected: &Trigger{
 			Table:      "table1",
 			Name:       "trigger1",
 			Constraint: true,
+			Timing:     "INITIALLY DEFERRED",
 			Called:     "AFTER",
 			Events: []*TriggerEvent{
 				{Event: "INSERT"},
@@ -60,6 +62,38 @@ func TestParseTrigger(t *testing.T) {
 			Called: "INSTEAD OF",
 			Events: []*TriggerEvent{
 				{Event: "UPDATE"},
+			},
+		},
+	}, {Stmt: `
+		  Create Constraint Trigger
+		  Trigger4
+		  After Update On
+		  Table4
+		  NOT	Deferrable
+		`,
+		Expected: &Trigger{
+			Table:      "Table4",
+			Name:       "Trigger4",
+			Constraint: true,
+			Timing:     "NOT DEFERRABLE",
+			Called:     "AFTER",
+			Events: []*TriggerEvent{
+				{Event: "UPDATE"},
+			},
+		},
+	}, {Stmt: `
+		  CREATE CONSTRAINT TRIGGER trigger5
+		  AFTER TRUNCATE ON table5
+		  INITIALLY IMMEDIATE
+		`,
+		Expected: &Trigger{
+			Table:      "table5",
+			Name:       "trigger5",
+			Constraint: true,
+			Timing:     "INITIALLY IMMEDIATE",
+			Called:     "AFTER",
+			Events: []*TriggerEvent{
+				{Event: "TRUNCATE"},
 			},
 		},
 	}} {
