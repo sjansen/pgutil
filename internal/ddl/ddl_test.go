@@ -34,12 +34,12 @@ table "foo" {
 }
 
 trigger "update_foo_modified" {
-  schema = "public"
-  table = "foo"
-  called = "before"
-  event "update" {}
-  for_each = "row"
-  function = "update_modified_column"
+  schema       = "public"
+  table        = "foo"
+  function     = "update_modified_column"
+  when         = "before"
+  update       = true
+  for_each_row = true
 }
 `
 
@@ -81,15 +81,13 @@ func TestHCL(t *testing.T) {
 		},
 		Triggers: []*ddl.Trigger{
 			{
-				Schema: "public",
-				Table:  "foo",
-				Name:   "update_foo_modified",
-				Called: "before",
-				Events: []*ddl.TriggerEvent{
-					{Event: "update"},
-				},
-				ForEach:  "row",
-				Function: "update_modified_column",
+				Schema:     "public",
+				Table:      "foo",
+				Name:       "update_foo_modified",
+				Function:   "update_modified_column",
+				When:       "before",
+				Update:     true,
+				ForEachRow: true,
 			},
 		},
 	}

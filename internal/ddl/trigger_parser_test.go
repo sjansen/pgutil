@@ -19,14 +19,12 @@ func TestParseTrigger(t *testing.T) {
 		  EXECUTE PROCEDURE update_modified_column()
 		`,
 		Expected: &Trigger{
-			Table:  "foo",
-			Name:   "update_foo_modified",
-			Called: "BEFORE",
-			Events: []*TriggerEvent{
-				{Event: "UPDATE"},
-			},
-			ForEach:  "ROW",
-			Function: "update_modified_column",
+			Table:      "foo",
+			Name:       "update_foo_modified",
+			Function:   "update_modified_column",
+			When:       "BEFORE",
+			ForEachRow: true,
+			Update:     true,
 		},
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger1
@@ -36,17 +34,16 @@ func TestParseTrigger(t *testing.T) {
 		  EXECUTE FUNCTION fn1()
 		`,
 		Expected: &Trigger{
-			Table:      "table1",
-			Name:       "trigger1",
-			Constraint: true,
-			Timing:     "INITIALLY DEFERRED",
-			Called:     "AFTER",
-			Events: []*TriggerEvent{
-				{Event: "INSERT"},
-				{Event: "DELETE"},
-			},
-			ForEach:  "ROW",
-			Function: "fn1",
+			Table:             "table1",
+			Name:              "trigger1",
+			Function:          "fn1",
+			When:              "AFTER",
+			Constraint:        true,
+			Deferrable:        true,
+			InitiallyDeferred: true,
+			ForEachRow:        true,
+			Insert:            true,
+			Delete:            true,
 		},
 	}, {Stmt: `
 		  CREATE TRIGGER trigger2
@@ -55,14 +52,11 @@ func TestParseTrigger(t *testing.T) {
 		  EXECUTE PROCEDURE fn2()
 		`,
 		Expected: &Trigger{
-			Table:  "table2",
-			Name:   "trigger2",
-			Called: "BEFORE",
-			Events: []*TriggerEvent{
-				{Event: "TRUNCATE"},
-			},
-			ForEach:  "STATEMENT",
+			Table:    "table2",
+			Name:     "trigger2",
 			Function: "fn2",
+			When:     "BEFORE",
+			Truncate: true,
 		},
 	}, {Stmt: `
 		  create  trigger  TRIGGER3
@@ -70,13 +64,11 @@ func TestParseTrigger(t *testing.T) {
 		  execute  procedure  FN3()
 		`,
 		Expected: &Trigger{
-			Table:  "VIEW3",
-			Name:   "TRIGGER3",
-			Called: "INSTEAD OF",
-			Events: []*TriggerEvent{
-				{Event: "UPDATE"},
-			},
+			Table:    "VIEW3",
+			Name:     "TRIGGER3",
 			Function: "FN3",
+			When:     "INSTEAD OF",
+			Update:   true,
 		},
 	}, {Stmt: `
 		  Create Constraint Trigger
@@ -91,14 +83,10 @@ func TestParseTrigger(t *testing.T) {
 		Expected: &Trigger{
 			Table:      "Table4",
 			Name:       "Trigger4",
+			Function:   "Func4",
+			When:       "AFTER",
 			Constraint: true,
-			Timing:     "NOT DEFERRABLE",
-			Called:     "AFTER",
-			Events: []*TriggerEvent{
-				{Event: "UPDATE"},
-			},
-			ForEach:  "STATEMENT",
-			Function: "Func4",
+			Update:     true,
 		},
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger5
@@ -110,16 +98,13 @@ func TestParseTrigger(t *testing.T) {
 		Expected: &Trigger{
 			Table:      "table5",
 			Name:       "trigger5",
+			Function:   "proc5",
+			When:       "AFTER",
 			Constraint: true,
-			Timing:     "INITIALLY IMMEDIATE",
-			Called:     "AFTER",
-			Events: []*TriggerEvent{
-				{Event: "INSERT"},
-				{Event: "UPDATE"},
-				{Event: "DELETE"},
-			},
-			ForEach:  "ROW",
-			Function: "proc5",
+			ForEachRow: true,
+			Insert:     true,
+			Update:     true,
+			Delete:     true,
 		},
 	}} {
 		actual, err := ParseTrigger(tc.Stmt)

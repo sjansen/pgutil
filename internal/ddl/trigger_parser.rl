@@ -17,54 +17,60 @@ func ParseTrigger(data string) (*Trigger, error) {
 	buffer := &bytes.Buffer{}
 	cs, p, pe := 0, 0, len(data)
 	%%{
-	action buffer_fc       {
+
+	action addToBuffer       {
 		buffer.WriteByte(fc)
 	}
-	action match_constraint   { trigger.Constraint = true }
-	action set_called {
-		trigger.setCalled(buffer.String())
+
+	action addColumn {
+		trigger.addColumn(buffer.String())
 		buffer.Reset()
 	}
-	action add_event {
-		trigger.addEvent(buffer.String())
-		buffer.Reset()
-	}
-	action set_for_each {
-		trigger.setForEach(buffer.String())
-		buffer.Reset()
-	}
-	action set_function {
+	action setFunction {
 		trigger.setFunction(buffer.String())
 		buffer.Reset()
 	}
-	action set_name {
+	action setName {
 		trigger.setName(buffer.String())
 		buffer.Reset()
 	}
-	action set_table {
+	action setTable {
 		trigger.setTable(buffer.String())
 		buffer.Reset()
 	}
-	action set_timing {
-		trigger.setTiming(buffer.String())
+	action setWhen {
+		trigger.setWhen(buffer.String())
 		buffer.Reset()
 	}
+
+	action matchConstraint        { trigger.Constraint = true }
+	action matchDeferrable        { trigger.Deferrable = true }
+	action matchInitiallyDeferred { trigger.InitiallyDeferred = true }
+	action matchForEachRow        { trigger.ForEachRow = true }
+
+	action matchDelete   { trigger.Delete = true }
+	action matchInsert   { trigger.Insert = true }
+	action matchTruncate { trigger.Truncate = true }
+	action matchUpdate   { trigger.Update = true }
 
 	ws = space+;
 	ident = [a-zA-Z][_a-zA-Z0-9]*;
 
 	main := space*
-		'CREATE'i ws ( 'CONSTRAINT'i@match_constraint ws )?  'TRIGGER'i
-		ws ( ident $ buffer_fc % set_name )
-		ws ( ('BEFORE'i | 'AFTER'i | ('INSTEAD'i ws 'OF'i)) $ buffer_fc % set_called )
-		ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % add_event )
-		( ws 'OR'i ws ( ('DELETE'i | 'INSERT'i | 'TRUNCATE'i | 'UPDATE'i) $ buffer_fc % add_event ))*
-		ws 'ON'i ws ( ident $ buffer_fc % set_table )
-		( ws (('NOT'i ws 'DEFERRABLE'i) $ buffer_fc % set_timing )
-		| ws ('DEFERRABLE'i ws)? ( ('INITIALLY'i ws 'DEFERRED'i | 'INITIALLY'i ws 'IMMEDIATE'i) $ buffer_fc % set_timing )
+		'CREATE'i ws ( 'CONSTRAINT'i @ matchConstraint ws )?  'TRIGGER'i
+		ws ( ident $ addToBuffer % setName )
+		ws ( ('BEFORE'i | 'AFTER'i | ('INSTEAD'i ws 'OF'i)) $ addToBuffer % setWhen )
+		ws ( 'DELETE'i @ matchDelete | 'INSERT'i @ matchInsert | 'TRUNCATE'i @ matchTruncate | 'UPDATE'i @ matchUpdate )
+		( ws 'OR'i ws
+		   ( 'DELETE'i @ matchDelete | 'INSERT'i @ matchInsert | 'TRUNCATE'i @ matchTruncate | 'UPDATE'i @ matchUpdate )
+		)*
+		ws 'ON'i ws ( ident $ addToBuffer % setTable )
+		( ws ( 'NOT'i ws 'DEFERRABLE'i )
+		| ws ( 'DEFERRABLE'i ws @ matchDeferrable )?
+		   ( 'INITIALLY'i ws 'IMMEDIATE'i | 'INITIALLY'i ws 'DEFERRED'i @ matchInitiallyDeferred )?
 		)?
-		( ws 'FOR'i ws ('EACH'i ws)? (('ROW'i | 'STATEMENT'i) $ buffer_fc % set_for_each ))?
-		ws 'EXECUTE'i ws ('FUNCTION'i | 'PROCEDURE'i) ws ( ident $ buffer_fc % set_function ) '()'
+		( ws 'FOR'i ws ('EACH'i ws)? ('ROW'i @ matchForEachRow | 'STATEMENT'i) )?
+		ws 'EXECUTE'i ws ('FUNCTION'i | 'PROCEDURE'i) ws ( ident $ addToBuffer % setFunction ) '()'
 		space*
 		;
 

@@ -52,18 +52,17 @@ type Trigger struct {
 	Table  string
 	Name   string `hcl:",key"`
 
-	Constraint bool
-	Timing     string // NOT DEFERRABLE | INITIALLY IMMEDIATE | INITIALLY DEFERRED
-
-	Called   string
-	Events   []*TriggerEvent `hcl:"event,expand"`
-	From     string
-	ForEach  string `hcl:"for_each"`
 	Function string
-}
+	When     string
 
-// A TriggerEvent describes an event type that can activate a trigger
-type TriggerEvent struct {
-	Event   string `hcl:",key"`
-	Columns []string
+	Constraint        bool
+	Deferrable        bool
+	InitiallyDeferred bool
+	ForEachRow        bool `hcl:"for_each_row"`
+
+	Delete   bool
+	Insert   bool
+	Truncate bool
+	Update   bool
+	Columns  []string
 }
