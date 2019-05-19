@@ -56,13 +56,21 @@ func ParseTrigger(data string) (*Trigger, error) {
 	ws = space+;
 	ident = [a-zA-Z][_a-zA-Z0-9]*;
 
+	insert   = 'INSERT'i @ matchInsert;
+	update   = 'UPDATE'i @ matchUpdate (
+		ws 'OF'i ws ( ident $ addToBuffer % addColumn )
+		( ws? ',' ws? ( ident $ addToBuffer % addColumn ) )*
+	)?;
+	delete   = 'DELETE'i @ matchDelete;
+	truncate = 'TRUNCATE'i @ matchTruncate;
+
 	main := space*
 		'CREATE'i ws ( 'CONSTRAINT'i @ matchConstraint ws )?  'TRIGGER'i
 		ws ( ident $ addToBuffer % setName )
 		ws ( ('BEFORE'i | 'AFTER'i | ('INSTEAD'i ws 'OF'i)) $ addToBuffer % setWhen )
-		ws ( 'DELETE'i @ matchDelete | 'INSERT'i @ matchInsert | 'TRUNCATE'i @ matchTruncate | 'UPDATE'i @ matchUpdate )
+		ws ( insert | update | delete | truncate )
 		( ws 'OR'i ws
-		   ( 'DELETE'i @ matchDelete | 'INSERT'i @ matchInsert | 'TRUNCATE'i @ matchTruncate | 'UPDATE'i @ matchUpdate )
+		   ( insert | update | delete | truncate )
 		)*
 		ws 'ON'i ws ( ident $ addToBuffer % setTable )
 		( ws ( 'NOT'i ws 'DEFERRABLE'i )

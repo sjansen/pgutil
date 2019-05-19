@@ -73,7 +73,7 @@ func TestParseTrigger(t *testing.T) {
 	}, {Stmt: `
 		  Create Constraint Trigger
 		  Trigger4
-		  After Update On
+		  After Update Of col1, col2 On
 		  Table4
 		  NOT	Deferrable
 		  For	Each	Statement
@@ -87,6 +87,7 @@ func TestParseTrigger(t *testing.T) {
 			When:       "AFTER",
 			Constraint: true,
 			Update:     true,
+			Columns:    []string{"col1", "col2"},
 		},
 	}, {Stmt: `
 		  CREATE CONSTRAINT TRIGGER trigger5
