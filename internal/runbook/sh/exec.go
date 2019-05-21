@@ -20,6 +20,7 @@ type Exec struct {
 
 func (x *Exec) exec(ctx context.Context, t *Target) error {
 	cmd := exec.CommandContext(ctx, x.Args[0], x.Args[1:]...)
+	cmd.Dir = t.basedir
 	cmd.Env = x.Env.Apply(t.environ)
 	cmd.Stdin = nil
 	cmd.Stdout = t.stdout

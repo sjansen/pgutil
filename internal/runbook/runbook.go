@@ -2,6 +2,7 @@ package runbook
 
 import (
 	"io"
+	"path/filepath"
 
 	dot "github.com/awalterschulze/gographviz"
 
@@ -19,26 +20,35 @@ type TargetID string
 // TaskID uniquely identifies a task
 type TaskID string
 
-func newParser(sys *sys.IO) *parser.Parser {
-	return &parser.Parser{
+func newParser(sys *sys.IO, basedir string) (*parser.Parser, error) {
+	basedir, err := filepath.Abs(basedir)
+	if err != nil {
+		return nil, err
+	}
+	p := &parser.Parser{
 		Targets: map[string]types.TargetFactory{
 			"pg": &pg.TargetFactory{
 				Log: sys.Log,
 			},
 			"sh": &sh.TargetFactory{
-				Stdout: sys.Stdout,
-				Stderr: sys.Stderr,
+				Basedir: basedir,
+				Stdout:  sys.Stdout,
+				Stderr:  sys.Stderr,
 			},
 			"demo": &demo.TargetFactory{
 				Stdout: sys.Stdout,
 			},
 		},
 	}
+	return p, nil
 }
 
 // Dot generates a GraphViz compatible description of a runbook's tasks
 func Dot(sys *sys.IO, filename string, w io.Writer, splines string) error {
-	p := newParser(sys)
+	p, err := newParser(sys, filepath.Dir(filename))
+	if err != nil {
+		return err
+	}
 	runbook, err := p.Parse(filename)
 	if err != nil {
 		return err
@@ -72,7 +82,10 @@ func Dot(sys *sys.IO, filename string, w io.Writer, splines string) error {
 
 // List enumerates a runbook's tasks and their targets
 func List(sys *sys.IO, filename string) (map[TaskID]TargetID, error) {
-	p := newParser(sys)
+	p, err := newParser(sys, filepath.Dir(filename))
+	if err != nil {
+		return nil, err
+	}
 	runbook, err := p.Parse(filename)
 	if err != nil {
 		return nil, err
@@ -88,7 +101,10 @@ func List(sys *sys.IO, filename string) (map[TaskID]TargetID, error) {
 
 // Run executes the tasks in a runbook
 func Run(sys *sys.IO, filename string) error {
-	p := newParser(sys)
+	p, err := newParser(sys, filepath.Dir(filename))
+	if err != nil {
+		return err
+	}
 	runbook, err := p.Parse(filename)
 	if err != nil {
 		return err

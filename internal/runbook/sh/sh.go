@@ -11,16 +11,18 @@ import (
 )
 
 type TargetFactory struct {
-	Log    *zap.SugaredLogger
-	Stdout io.Writer
-	Stderr io.Writer
+	Log     *zap.SugaredLogger
+	Basedir string
+	Stdout  io.Writer
+	Stderr  io.Writer
 }
 
 type Target struct {
 	log     *zap.SugaredLogger
+	basedir string
+	environ []string
 	stdout  io.Writer
 	stderr  io.Writer
-	environ []string
 
 	Concurrency int
 	Env         Env
@@ -32,9 +34,10 @@ type execer interface {
 
 func (f *TargetFactory) NewTarget() types.Target {
 	return &Target{
-		log:    f.Log,
-		stdout: f.Stdout,
-		stderr: f.Stderr,
+		log:     f.Log,
+		basedir: f.Basedir,
+		stdout:  f.Stdout,
+		stderr:  f.Stderr,
 
 		Concurrency: 1,
 	}
