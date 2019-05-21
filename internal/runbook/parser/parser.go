@@ -30,12 +30,12 @@ type runbook struct {
 	}
 }
 
-// Parse load targets and task from a runbook file
-func (p *Parser) Parse(filename string) (*types.Runbook, error) {
+// Load evaluates a runbook file to convert it to JSON
+func (p *Parser) Load(filename string) (string, error) {
 	directory := filepath.Dir(filename)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	vm := jsonnet.MakeVM()
@@ -43,7 +43,12 @@ func (p *Parser) Parse(filename string) (*types.Runbook, error) {
 		JPaths: []string{directory},
 	})
 
-	evaluated, err := vm.EvaluateSnippet(filename, string(data))
+	return vm.EvaluateSnippet(filename, string(data))
+}
+
+// Parse loads targets and task from a runbook file
+func (p *Parser) Parse(filename string) (*types.Runbook, error) {
+	evaluated, err := p.Load(filename)
 	if err != nil {
 		return nil, err
 	}

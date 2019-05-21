@@ -1,10 +1,12 @@
 package runbook
 
 import (
+	"encoding/json"
 	"io"
 	"path/filepath"
 
 	dot "github.com/awalterschulze/gographviz"
+	"github.com/hokaccha/go-prettyjson"
 
 	"github.com/sjansen/pgutil/internal/runbook/demo"
 	"github.com/sjansen/pgutil/internal/runbook/parser"
@@ -78,6 +80,35 @@ func Dot(sys *sys.IO, filename string, w io.Writer, splines string) error {
 
 	w.Write([]byte(g.String()))
 	return nil
+}
+
+// Eval converts a runbook to JSON and pretty prints it
+func Eval(sys *sys.IO, filename string, w io.Writer, color bool) error {
+	p, err := newParser(sys, filepath.Dir(filename))
+	if err != nil {
+		return err
+	}
+
+	runbook, err := p.Load(filename)
+	if err != nil {
+		return err
+	}
+
+	var unformatted interface{}
+	err = json.Unmarshal([]byte(runbook), &unformatted)
+	if err != nil {
+		return err
+	}
+
+	formatter := prettyjson.NewFormatter()
+	formatter.DisabledColor = !color
+	formatted, err := formatter.Marshal(unformatted)
+	if err != nil {
+		return err
+	}
+
+	_, err = w.Write(formatted)
+	return err
 }
 
 // List enumerates a runbook's tasks and their targets

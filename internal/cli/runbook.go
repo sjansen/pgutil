@@ -32,6 +32,18 @@ func registerRunbook(p *ArgParser) {
 	cmd.Flag("splines", "Control how edges are represented").
 		EnumVar(&dot.Splines, "curved", "line", "ortho")
 
+	// == eval ==
+	eval := &commands.RunBookEvalCmd{}
+	cmd = p.addSubCommand(parent, eval, "eval",
+		"Convert a runbook to pretty-printed JSON",
+	)
+	cmd.Arg("FILE", "A run book filename").Required().
+		ExistingFileVar(&eval.File)
+	cmd.Flag("color", "Control how edges are represented").
+		Short('c').Default("auto").EnumVar(&eval.Color, "auto", "true", "false")
+	cmd.Flag("output", "Write to FILENAME instead of stdout").
+		Short('o').PlaceHolder("FILENAME").StringVar(&eval.Output)
+
 	// == run ==
 	run := &commands.RunBookRunCmd{}
 	cmd = p.addSubCommand(parent, run, "run", runbookHelp).
