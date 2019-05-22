@@ -15,6 +15,9 @@ type ArgParser struct {
 	base    *commands.Base
 	cmd     command
 	version string
+
+	brevity   int
+	verbosity int
 }
 
 // Command is an abstraction for a function that produces human readable output when run
@@ -31,10 +34,11 @@ func (p *ArgParser) Parse(args []string) (Command, error) {
 		return nil, err
 	}
 	fn := func(stdout, stderr io.Writer) error {
+		p.base.Verbosity = 1 + p.verbosity - p.brevity
 		if p.base.Debug == nil {
-			p.base.Log = logger.New(p.base.Verbosity, stderr, nil)
+			p.base.Log = logger.New(p.base.Verbosity, stdout, nil)
 		} else {
-			p.base.Log = logger.New(p.base.Verbosity, stderr, p.base.Debug)
+			p.base.Log = logger.New(p.base.Verbosity, stdout, p.base.Debug)
 		}
 		p.base.Stdout = stdout
 		p.base.Stderr = stderr

@@ -15,16 +15,18 @@ func RegisterCommands(version string) *ArgParser {
 		UsageTemplate(kingpin.CompactUsageTemplate)
 
 	base := &commands.Base{}
-	app.Flag("debug", "debug log").
-		OpenFileVar(&base.Debug, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
-	app.Flag("verbose", "verbose mode, repeat to increase verbosity").
-		Short('v').CounterVar(&base.Verbosity)
-
 	parser := &ArgParser{
 		app:     app,
 		base:    base,
 		version: version,
 	}
+	app.Flag("debug", "debug log").
+		OpenFileVar(&base.Debug, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	app.Flag("quiet", "quiet mode, repeat to decrease verbosity").
+		Short('q').CounterVar(&parser.brevity)
+	app.Flag("verbose", "verbose mode, repeat to increase verbosity").
+		Short('v').CounterVar(&parser.verbosity)
+
 	registerPing(parser)
 	registerRunbook(parser)
 	registerVersion(parser, version)
