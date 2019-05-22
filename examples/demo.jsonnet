@@ -11,7 +11,7 @@ local decrypt(target) = {
   },
 };
 
-local message(msg) = {
+local encrypted(msg) = {
   class: 'demo',
   config: {
     string: msg,
@@ -20,9 +20,9 @@ local message(msg) = {
 
 {
   targets: {
-    msg1: message('!abbcF'),
-    msg2: message('.rvy n fv rxnp ruG'),
-    msg3: message('.revczni n fv qyebj ruG'),
+    msg1: encrypted('!abbcF'),
+    msg2: encrypted('.rvy n fv rxnp ruG'),
+    msg3: encrypted('.revczni n fv qyebj ruG'),
   },
   tasks: decrypt('msg1')
          + decrypt('msg2')

@@ -24,9 +24,10 @@ type runbook struct {
 		Config json.RawMessage
 	}
 	Tasks map[string]*struct {
-		After  []string
-		Target string
-		Config json.RawMessage
+		After   []string
+		Target  string
+		Message string
+		Config  json.RawMessage
 	}
 }
 
@@ -137,9 +138,10 @@ func (p *Parser) loadTasks(tmp *runbook, book *types.Runbook) error {
 		}
 
 		book.Tasks[taskID] = &types.Task{
-			After:  task.After,
-			Target: targetID,
-			Config: taskConfig,
+			After:   task.After,
+			Target:  targetID,
+			Message: task.Message,
+			Config:  taskConfig,
 		}
 	}
 	return nil

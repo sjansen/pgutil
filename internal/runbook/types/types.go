@@ -33,9 +33,10 @@ type Tasks map[string]*Task
 
 // Task contains generic task data
 type Task struct {
-	After  []string
-	Target string
-	Config TaskConfig
+	Target  string
+	After   []string
+	Message string
+	Config  TaskConfig
 }
 
 // TaskConfig contains task-specific data

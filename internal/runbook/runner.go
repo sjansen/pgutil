@@ -10,9 +10,10 @@ import (
 )
 
 type readyMsg struct {
-	target TargetID
-	taskID TaskID
-	task   types.TaskConfig
+	target  TargetID
+	taskID  TaskID
+	message string
+	task    types.TaskConfig
 }
 
 type endedMsg struct {
@@ -102,10 +103,12 @@ func (r *runner) startScheduler() {
 			for targetID, taskIDs := range ready {
 				for _, taskID := range taskIDs {
 					r.log.Debugw("scheduler: task ready", "task", taskID, "target", targetID)
+					task := r.tasks[taskID]
 					readyChan <- &readyMsg{
-						target: TargetID(targetID),
-						taskID: TaskID(taskID),
-						task:   r.tasks[taskID].Config,
+						target:  TargetID(targetID),
+						taskID:  TaskID(taskID),
+						message: task.Message,
+						task:    task.Config,
 					}
 				}
 			}
@@ -132,7 +135,7 @@ func (r *runner) startTargets() (err error) {
 
 		wg.Add(1)
 		ch := make(chan *readyMsg)
-		startTargetGoroutine(r.ctx, wg, target, ch, r.ended)
+		startTargetGoroutine(r.ctx, r.log, wg, target, ch, r.ended)
 		channels[TargetID(targetID)] = ch
 		r.log.Debugw("target: started", "task", targetID)
 	}
@@ -160,6 +163,7 @@ func (r *runner) startTargets() (err error) {
 
 func startTargetGoroutine(
 	ctx context.Context,
+	log sys.Logger,
 	wg *sync.WaitGroup,
 	target types.Target,
 	ready <-chan *readyMsg,
@@ -167,6 +171,9 @@ func startTargetGoroutine(
 ) {
 	go func() {
 		for x := range ready {
+			if x.message != "" {
+				log.Info(x.message)
+			}
 			err := target.Handle(ctx, x.task)
 			ended <- &endedMsg{taskID: x.taskID, err: err}
 			if err != nil {
