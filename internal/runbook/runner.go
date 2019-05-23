@@ -127,7 +127,7 @@ func (r *runner) startTargets() (err error) {
 	wg := &sync.WaitGroup{}
 	var channels = make(map[TargetID]chan<- *readyMsg)
 	for targetID, target := range r.targets {
-		r.log.Debugw("target: starting", "task", targetID)
+		r.log.Debugf("starting target: %s", targetID)
 		err = target.Start()
 		if err != nil {
 			break
@@ -137,7 +137,7 @@ func (r *runner) startTargets() (err error) {
 		ch := make(chan *readyMsg)
 		startTargetGoroutine(r.ctx, r.log, wg, target, ch, r.ended)
 		channels[TargetID(targetID)] = ch
-		r.log.Debugw("target: started", "task", targetID)
+		r.log.Debugf("target started:  %s", targetID)
 	}
 
 	// start goroutine, even if there's an error, because it's
