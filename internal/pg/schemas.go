@@ -14,6 +14,7 @@ WHERE n.nspname !~ '^pg_'
 ORDER BY "Name"
 `
 
+// ListSchemas describes the schemas in the database
 func (c *Conn) ListSchemas() ([]*ddl.Schema, error) {
 	c.log.Infow("listing schemas")
 

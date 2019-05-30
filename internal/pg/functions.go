@@ -22,6 +22,7 @@ WHERE pg_catalog.pg_function_is_visible(p.oid)
 ORDER BY "Schema", "Name"
 `
 
+// ListFunctions describes the custom functions in the database
 func (c *Conn) ListFunctions() ([]*ddl.Function, error) {
 	c.log.Infow("listing functions")
 

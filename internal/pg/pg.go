@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
+// Options contains settings for connecting to a PostgreSQL database
 type Options struct {
 	Log *zap.SugaredLogger
 
@@ -23,13 +24,13 @@ type Options struct {
 	ConnectRetries int
 }
 
+// Conn is a connection to a PostgreSQL database
 type Conn struct {
 	conn *pgx.Conn
 	log  *zap.SugaredLogger
 }
 
-var ErrNoHostForTLS = errors.New("host server name must be provided when TLS is required")
-
+// New connects to a PostgreSQL database
 func New(o *Options) (*Conn, error) {
 	cfg, err := pgx.ParseEnvLibpq()
 	if err != nil {
@@ -78,13 +79,15 @@ func New(o *Options) (*Conn, error) {
 	return c, nil
 }
 
+// Close closes a connection
 func (c *Conn) Close() error {
 	return c.conn.Close()
 }
 
-func (c *Conn) Exec(query string) error {
-	c.log.Debugw("executing query", "query", query)
-	tag, err := c.conn.Exec(query)
+// Exec executes SQL statements
+func (c *Conn) Exec(sql string) error {
+	c.log.Debugw("executing sql", "sql", sql)
+	tag, err := c.conn.Exec(sql)
 	if err != nil {
 		c.log.Debugf("rows affected = %d", tag.RowsAffected())
 	}

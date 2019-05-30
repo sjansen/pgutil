@@ -1,5 +1,6 @@
 package pg
 
+// ServerVersion queries the database host for its server version
 func (c *Conn) ServerVersion() (string, error) {
 	c.log.Infow("requesting server version")
 

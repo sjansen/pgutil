@@ -19,6 +19,7 @@ WHERE c.relkind IN ('r','p','')
 ORDER BY "Schema", "Name"
 `
 
+// ListTables describes the tables in the database
 func (c *Conn) ListTables() ([]*ddl.Table, error) {
 	c.log.Infow("listing tables")
 
@@ -67,6 +68,7 @@ WHERE n.nspname = $1
 ORDER BY a.attnum
 `
 
+// ListColumns describes the columns of a database table
 func (c *Conn) ListColumns(schema, table string) ([]string, error) {
 	c.log.Infow("listing columns", "schema", schema, "table", table)
 
