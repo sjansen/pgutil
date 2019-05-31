@@ -17,6 +17,7 @@ func (x *Exec) exec(ctx context.Context, t *Target) error {
 	return t.conn.Exec(x.SQL)
 }
 
+// Check validates the task's settings
 func (x *Exec) Check() error {
 	if x.SQL == "" {
 		return errors.New("missing SQL")

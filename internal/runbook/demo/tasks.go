@@ -16,6 +16,7 @@ func (x *Echo) munge(t *Target) error {
 	return err
 }
 
+// Check validates the task's settings
 func (x *Echo) Check() error {
 	return nil
 }
@@ -31,6 +32,7 @@ func (x *Fail) munge(t *Target) error {
 	return ErrFail
 }
 
+// Check validates the task's settings
 func (x *Fail) Check() error {
 	return nil
 }
@@ -51,6 +53,7 @@ func (x *Rev) munge(t *Target) error {
 	return nil
 }
 
+// Check validates the task's settings
 func (x *Rev) Check() error {
 	return nil
 }
@@ -78,6 +81,7 @@ func (x *Rot13) munge(t *Target) error {
 	return nil
 }
 
+// Check validates the task's settings
 func (x *Rot13) Check() error {
 	return nil
 }
@@ -96,6 +100,7 @@ func (x *Sleep) munge(t *Target) error {
 	return nil
 }
 
+// Check validates the task's settings
 func (x *Sleep) Check() error {
 	if x.Seconds < 1 {
 		x.Seconds = 1

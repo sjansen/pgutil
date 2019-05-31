@@ -10,9 +10,9 @@ import (
 
 var _ execer = &Exec{}
 
-// Exec describes how to run a command
+// Exec executes a command
 type Exec struct {
-	// Args specifies the command
+	// Args contains the command and its arguments
 	Args []string
 	// Env specifies the environment of the command
 	Env Env
@@ -28,6 +28,7 @@ func (x *Exec) exec(ctx context.Context, t *Target) error {
 	return cmd.Run()
 }
 
+// Check validates the task's settings
 func (x *Exec) Check() error {
 	if len(x.Args) < 1 {
 		return errors.New("too few args")
