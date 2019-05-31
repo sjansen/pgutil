@@ -9,10 +9,21 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// Discard returns a logger that discards all log messages, most useful in tests
 func Discard() *zap.SugaredLogger {
 	return New(0, ioutil.Discard, nil)
 }
 
+// New returns a logger
+//
+// Valid levels are:
+//   0 = errors only,
+//   1 = include warnings,
+//   2 = include informational messages,
+//   3 = include debug messages.
+//
+// If debugLog is non-nil, all log messages will be written to it independent of
+// the verbosity of the default log.
 func New(verbosity int, defaultLog io.Writer, debugLog io.Writer) *zap.SugaredLogger {
 	var level zapcore.Level
 	switch {
