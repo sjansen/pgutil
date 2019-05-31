@@ -1,5 +1,6 @@
 package dag
 
+// DirectedGraph contains directed relationships from one node to zero or more others
 type DirectedGraph map[string]NodeSet
 
 // NewDirectedGraph converts a list of nodes and edges into a graph

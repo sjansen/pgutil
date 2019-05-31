@@ -8,6 +8,7 @@ import (
 
 var _ munger = &Echo{}
 
+// Echo prints the target's string when executed
 type Echo struct{}
 
 func (x *Echo) munge(t *Target) error {
@@ -21,6 +22,7 @@ func (x *Echo) Check() error {
 
 var _ munger = &Fail{}
 
+// Fail always returns an error when executed
 type Fail struct{}
 
 var ErrFail = errors.New("fail task executed")
@@ -35,6 +37,7 @@ func (x *Fail) Check() error {
 
 var _ munger = &Rev{}
 
+// Rev reverses the target's string when executed
 type Rev struct{}
 
 func (x *Rev) munge(t *Target) error {
@@ -54,6 +57,7 @@ func (x *Rev) Check() error {
 
 var _ munger = &Rot13{}
 
+// Rot13 applies the ROT-13 substitution cipher to the target's string when executed
 type Rot13 struct{}
 
 func (x *Rot13) munge(t *Target) error {
@@ -80,6 +84,7 @@ func (x *Rot13) Check() error {
 
 var _ munger = &Sleep{}
 
+// Sleep pauses the current target for Seconds seconds when executed
 type Sleep struct {
 	Seconds int
 }

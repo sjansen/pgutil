@@ -7,7 +7,9 @@ import (
 
 var _ execer = &Exec{}
 
+// Exec executes SQL
 type Exec struct {
+	// SQL specifies one or more SQL statments
 	SQL string `json:"sql"`
 }
 
