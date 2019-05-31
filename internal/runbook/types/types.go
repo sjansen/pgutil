@@ -4,13 +4,13 @@ import (
 	"context"
 )
 
-// Runbook describes how to perform a series of tasks
+// A Runbook describes how to perform a series of tasks
 type Runbook struct {
 	Targets map[string]Target
 	Tasks   map[string]*Task
 }
 
-// TargetFactory instantiates new targets
+// A TargetFactory instantiates new targets
 type TargetFactory interface {
 	NewTarget() Target
 }
@@ -18,7 +18,7 @@ type TargetFactory interface {
 // Targets maps target IDs to targets
 type Targets map[string]Target
 
-// Target is concerned with specific classes of tasks
+// A Target executes tasks
 type Target interface {
 	Analyze() error
 	ConcurrencyLimit() int
@@ -31,7 +31,7 @@ type Target interface {
 // Tasks maps task IDs to tasks
 type Tasks map[string]*Task
 
-// Task contains generic task data
+// Task contains data common to all tasks
 type Task struct {
 	Target  string
 	After   []string
@@ -39,7 +39,7 @@ type Task struct {
 	Config  TaskConfig
 }
 
-// TaskConfig contains task-specific data
+// A TaskConfig contains task-specific data
 type TaskConfig interface {
 	Check() error
 }

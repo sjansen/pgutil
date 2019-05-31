@@ -1,5 +1,6 @@
 package dag
 
+// DependencyGraph contains a set of tasks with dependencies
 type DependencyGraph struct {
 	dependencies map[string]NodeSet
 	dependents   map[string]NodeSet
@@ -11,7 +12,7 @@ type pendingTask struct {
 	next *pendingTask
 }
 
-// NewDependencyGraph converts a list of tasks and dependencies into a graph
+// NewDependencyGraph converts a list of tasks with dependencies into a graph
 func NewDependencyGraph(nodes map[string][]string) (*DependencyGraph, error) {
 	digraph, err := NewDirectedGraph(nodes)
 	if err != nil {

@@ -10,10 +10,12 @@ import (
 	"github.com/sjansen/pgutil/internal/runbook/types"
 )
 
+// TargetFactory instantiates new targets
 type TargetFactory struct {
 	Log *zap.SugaredLogger
 }
 
+// Target executes tasks
 type Target struct {
 	log  *zap.SugaredLogger
 	conn *pg.Conn
@@ -34,6 +36,7 @@ type execer interface {
 	exec(context.Context, *Target) error
 }
 
+// NewTarget create a new target with default settings
 func (f *TargetFactory) NewTarget() types.Target {
 	return &Target{
 		log: f.Log,
@@ -42,6 +45,7 @@ func (f *TargetFactory) NewTarget() types.Target {
 	}
 }
 
+// Analyze verifies the target's settings are valid
 func (t *Target) Analyze() error {
 	if t.Concurrency < 1 {
 		return errors.New("invalid concurrency")
@@ -49,10 +53,12 @@ func (t *Target) Analyze() error {
 	return nil
 }
 
+// ConcurrencyLimit reports how many tasks the target can execute concurrently
 func (t *Target) ConcurrencyLimit() int {
 	return t.Concurrency
 }
 
+// Handle executes a task
 func (t *Target) Handle(ctx context.Context, task types.TaskConfig) error {
 	if x, ok := task.(execer); ok {
 		return x.exec(ctx, t)
@@ -60,6 +66,7 @@ func (t *Target) Handle(ctx context.Context, task types.TaskConfig) error {
 	return errors.New("invalid task")
 }
 
+// NewTaskConfig creates a specific class of TaskConfig with default settings
 func (t *Target) NewTaskConfig(class string) (types.TaskConfig, error) {
 	switch class {
 	case "", "exec":
@@ -68,6 +75,7 @@ func (t *Target) NewTaskConfig(class string) (types.TaskConfig, error) {
 	return nil, errors.New("invalid task class")
 }
 
+// Start should be called before the target starts handling tasks
 func (t *Target) Start() error {
 	conn, err := pg.New(&pg.Options{
 		Log: t.log,
@@ -87,6 +95,7 @@ func (t *Target) Start() error {
 	return err
 }
 
+// Stop should be called when there are no tasks left for the target to handle
 func (t *Target) Stop() error {
 	return t.conn.Close()
 }

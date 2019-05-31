@@ -7,6 +7,9 @@ import (
 
 type targetID string
 type taskID string
+
+// A Scheduler determines which tasks are ready for execution based on task dependencies
+// and target capacity.
 type Scheduler struct {
 	deps      *dag.DependencyGraph
 	tasks     map[taskID]targetID
@@ -15,6 +18,7 @@ type Scheduler struct {
 	targetLen map[targetID]int
 }
 
+// New initializes a new Scheduler, and returns a set of tasks ready for immediate execution
 func New(targets types.Targets, tasks types.Tasks) (s *Scheduler, ready map[string][]string, err error) {
 	s = &Scheduler{
 		tasks:   map[taskID]targetID{},
@@ -48,6 +52,7 @@ func New(targets types.Targets, tasks types.Tasks) (s *Scheduler, ready map[stri
 	return s, s.buildReady(), nil
 }
 
+// Next returns a set of tasks ready for execution given a completed task
 func (s *Scheduler) Next(completed string) (ready map[string][]string, err error) {
 	if s.noPendingTasks() {
 		return nil, ErrNoPendingTasks
