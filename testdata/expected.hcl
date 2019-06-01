@@ -17,3 +17,17 @@ table "public" "foo" {
   owner   = "docker"
   columns = ["id", "created", "modified", "key", "value"]
 }
+
+trigger "" "foo" "update_foo_modified" {
+  function           = "update_modified_column"
+  when               = "BEFORE"
+  constraint         = false
+  deferrable         = false
+  initially_deferred = false
+  for_each_row       = true
+  delete             = false
+  insert             = false
+  truncate           = false
+  update             = true
+  columns            = null
+}

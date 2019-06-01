@@ -4,6 +4,7 @@ import (
 	"github.com/sjansen/pgutil/internal/ddl"
 )
 
+// InspectDatabase describes the database
 func (c *Conn) InspectDatabase() (db *ddl.Database, err error) {
 	db = &ddl.Database{}
 
@@ -26,6 +27,14 @@ func (c *Conn) InspectDatabase() (db *ddl.Database, err error) {
 		db.Tables[i].Columns, err = c.ListColumns(table.Schema, table.Name)
 		if err != nil {
 			return nil, err
+		}
+
+		triggers, err := c.ListTriggers(table.Schema, table.Name)
+		if err != nil {
+			return nil, err
+		}
+		if len(triggers) > 0 {
+			db.Triggers = append(db.Triggers, triggers...)
 		}
 	}
 

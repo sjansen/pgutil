@@ -9,6 +9,7 @@
 /pgutil
 /TODO
 .DS_Store
+actual.hcl
 coverage.txt
 
 # Patterns
