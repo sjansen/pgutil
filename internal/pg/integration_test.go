@@ -41,6 +41,8 @@ func TestExec(t *testing.T) {
 	defer c.Close()
 
 	query := `
+BEGIN
+;
 CREATE TABLE IF NOT EXISTS measurements (
     id BIGSERIAL NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -59,6 +61,8 @@ INSERT INTO measurements
     (timestamp, value)
 VALUES
     (now(), random())
+;
+ROLLBACK
 ;
 `
 	err = c.Exec(query)
