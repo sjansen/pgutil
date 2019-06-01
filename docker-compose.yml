@@ -10,6 +10,7 @@ services:
       PGDATABASE: "pgutil"
       PGUSER:     "docker"
       PGPASSWORD: ""
+      PGUTIL_TEST_TAGS: "docker integration"
     links:
      - pg
     volumes:
