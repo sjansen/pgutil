@@ -1,8 +1,11 @@
 package ddl
 
 import (
+	"io"
+
 	"github.com/hashicorp/hcl2/gohcl"
 	"github.com/hashicorp/hcl2/hclparse"
+	"github.com/hashicorp/hcl2/hclwrite"
 )
 
 // ParseBytes converts HCL data to structs describing a database.
@@ -38,4 +41,12 @@ func ParseFile(filename string) (*Database, error) {
 	}
 
 	return db, nil
+}
+
+// Write converts structs describing a database to an an HCL configuration file.
+func Write(w io.Writer, db *Database) error {
+	f := hclwrite.NewEmptyFile()
+	gohcl.EncodeIntoBody(db, f.Body())
+	_, err := w.Write(f.Bytes())
+	return err
 }

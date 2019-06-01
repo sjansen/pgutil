@@ -1,8 +1,11 @@
 package ddl_test
 
 import (
+	"bytes"
+	"io/ioutil"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/ddl"
@@ -84,4 +87,24 @@ func TestParseFile(t *testing.T) {
 	actual, err := ddl.ParseFile("testdata/example.hcl")
 	require.NoError(err)
 	require.Equal(expected, actual)
+}
+
+func TestWrite(t *testing.T) {
+	assert := assert.New(t)
+	require := require.New(t)
+
+	db, err := ddl.ParseFile("testdata/example.hcl")
+	require.NoError(err)
+
+	expected, err := ioutil.ReadFile("testdata/expected.hcl")
+	require.NoError(err)
+
+	buf := &bytes.Buffer{}
+	err = ddl.Write(buf, db)
+	require.NoError(err)
+
+	actual := buf.Bytes()
+	if !assert.Equal(string(expected), string(actual)) {
+		ioutil.WriteFile("testdata/actual.hcl", actual, 0666)
+	}
 }
