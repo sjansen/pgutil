@@ -1,68 +1,41 @@
 package ddl
 
-//go:generate ragel-go -G2 -o trigger_parser.go trigger_parser.rl
+import (
+	"github.com/hashicorp/hcl2/gohcl"
+	"github.com/hashicorp/hcl2/hclparse"
+)
 
-// Database describes a PostgreSQL database
-type Database struct {
-	Parameters *Parameters `hcl:"parameters,block"`
+// ParseBytes converts HCL data to structs describing a database.
+// The filename is used for error messages.
+func ParseBytes(src []byte, filename string) (*Database, error) {
+	p := hclparse.NewParser()
+	f, err := p.ParseHCL(src, filename)
+	if err != nil {
+		return nil, err
+	}
 
-	Schemas   []*Schema   `hcl:"schema,block"`
-	Functions []*Function `hcl:"function,block"`
-	Tables    []*Table    `hcl:"table,block"`
-	Triggers  []*Trigger  `hcl:"trigger,block"`
+	db := &Database{}
+	err = gohcl.DecodeBody(f.Body, nil, db)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
 
-// Parameters describes database-level configuration options
-type Parameters struct {
-	SearchPath []string `hcl:"search_path,optional"`
-}
+// ParseFile converts an HCL configuration file to structs describing a database.
+func ParseFile(filename string) (*Database, error) {
+	p := hclparse.NewParser()
+	f, err := p.ParseHCLFile(filename)
+	if err != nil {
+		return nil, err
+	}
 
-// A Schema is a database namespace
-type Schema struct {
-	Name    string `hcl:"name,label"`
-	Comment string `hcl:"comment,optional"`
-	Owner   string `hcl:"owner,optional"`
-}
+	db := &Database{}
+	err = gohcl.DecodeBody(f.Body, nil, db)
+	if err != nil {
+		return nil, err
+	}
 
-// A Function describes reusable behavior run on the server
-type Function struct {
-	Schema  string `hcl:"schema,label"`
-	Name    string `hcl:"name,label"`
-	Comment string `hcl:"comment,optional"`
-	Owner   string `hcl:"owner,optional"`
-
-	Returns    string `hcl:"returns,attr"`
-	Language   string `hcl:"language,attr"`
-	Definition string `hcl:"definition,attr"`
-}
-
-// A Table is a collection of similar data organized as rows
-type Table struct {
-	Schema  string `hcl:"schema,label"`
-	Name    string `hcl:"name,label"`
-	Comment string `hcl:"comment,optional"`
-	Owner   string `hcl:"owner,optional"`
-
-	Columns []string `hcl:"columns,attr"`
-}
-
-// A Trigger executes a function when a specific event happens
-type Trigger struct {
-	Schema string `hcl:"schema,label"`
-	Table  string `hcl:"table,label"`
-	Name   string `hcl:"name,label"`
-
-	Function string `hcl:"function,attr"`
-	When     string `hcl:"when,attr"`
-
-	Constraint        bool `hcl:"constraint,optional"`
-	Deferrable        bool `hcl:"deferrable,optional"`
-	InitiallyDeferred bool `hcl:"initially_deferred,optional"`
-	ForEachRow        bool `hcl:"for_each_row,optional"`
-
-	Delete   bool     `hcl:"delete,optional"`
-	Insert   bool     `hcl:"insert,optional"`
-	Truncate bool     `hcl:"truncate,optional"`
-	Update   bool     `hcl:"update,optional"`
-	Columns  []string `hcl:"columns,optional"`
+	return db, nil
 }
