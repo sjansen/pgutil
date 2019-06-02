@@ -11,78 +11,69 @@ import (
 	"github.com/sjansen/pgutil/internal/ddl"
 )
 
-var configFile = `
-table "public" "foo" {
-  comment = "A simple test case"
-  columns = ["id", "created", "modified", "key", "value"]
-}
-`
-
 var updateModifiedColumn = `BEGIN
   NEW.modified = now();
   RETURN NEW;
 END;
 `
 
+var expected = &ddl.Database{
+	Parameters: &ddl.Parameters{
+		SearchPath: []string{"$user", "public"},
+	},
+	Schemas: []*ddl.Schema{
+		{Name: "public"},
+	},
+	Functions: []*ddl.Function{
+		{
+			Schema:     "public",
+			Name:       "update_modified_column",
+			Returns:    "trigger",
+			Language:   "plpgsql",
+			Definition: updateModifiedColumn,
+		},
+	},
+
+	Tables: []*ddl.Table{
+		{
+			Schema:  "public",
+			Name:    "foo",
+			Comment: "A simple test case",
+			Columns: []*ddl.Column{
+				{Name: "id", Type: "integer", NotNull: true},
+				{Name: "created", Type: "timestamp with time zone", NotNull: true, Default: "now()"},
+				{Name: "modified", Type: "timestamp with time zone", NotNull: true, Default: "now()"},
+				{Name: "key", Type: "character varying(50)", NotNull: true},
+				{Name: "value", Type: "character varying(500)"},
+			},
+		},
+	},
+	Triggers: []*ddl.Trigger{
+		{
+			Schema:     "public",
+			Table:      "foo",
+			Name:       "update_foo_modified",
+			Function:   "update_modified_column",
+			When:       "before",
+			Update:     true,
+			ForEachRow: true,
+		},
+	},
+}
+
 func TestParseBytes(t *testing.T) {
 	require := require.New(t)
 
-	expected := &ddl.Database{
-		Tables: []*ddl.Table{
-			{
-				Schema:  "public",
-				Name:    "foo",
-				Comment: "A simple test case",
-				Columns: []string{"id", "created", "modified", "key", "value"},
-			},
-		},
-	}
+	configFile, err := ioutil.ReadFile("testdata/example.hcl")
+	require.NoError(err)
 
-	actual, err := ddl.ParseBytes([]byte(configFile), "foo.hcl")
+	actual, err := ddl.ParseBytes([]byte(configFile), "example.hcl")
 	require.NoError(err)
 	require.Equal(expected, actual)
 }
 
 func TestParseFile(t *testing.T) {
 	require := require.New(t)
-
-	expected := &ddl.Database{
-		Parameters: &ddl.Parameters{
-			SearchPath: []string{"$user", "public"},
-		},
-		Schemas: []*ddl.Schema{
-			{Name: "public"},
-		},
-		Functions: []*ddl.Function{
-			{
-				Schema:     "public",
-				Name:       "update_modified_column",
-				Returns:    "trigger",
-				Language:   "plpgsql",
-				Definition: updateModifiedColumn,
-			},
-		},
-
-		Tables: []*ddl.Table{
-			{
-				Schema:  "public",
-				Name:    "foo",
-				Comment: "A simple test case",
-				Columns: []string{"id", "created", "modified", "key", "value"},
-			},
-		},
-		Triggers: []*ddl.Trigger{
-			{
-				Schema:     "public",
-				Table:      "foo",
-				Name:       "update_foo_modified",
-				Function:   "update_modified_column",
-				When:       "before",
-				Update:     true,
-				ForEachRow: true,
-			},
-		},
-	}
 
 	actual, err := ddl.ParseFile("testdata/example.hcl")
 	require.NoError(err)

@@ -43,7 +43,15 @@ type Table struct {
 	Comment string `hcl:"comment,optional"`
 	Owner   string `hcl:"owner,optional"`
 
-	Columns []string `hcl:"columns,attr"`
+	Columns []*Column `hcl:"column,block"`
+}
+
+// A Column is a data field of a table
+type Column struct {
+	Name    string `hcl:"name,label"`
+	Type    string `hcl:"type,attr"`
+	NotNull bool   `hcl:"not_null,optional"`
+	Default string `hcl:"default,optional"`
 }
 
 // A Trigger executes a function when a specific event happens

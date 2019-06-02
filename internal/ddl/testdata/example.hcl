@@ -18,7 +18,27 @@ EOF
 table "public" "foo" {
   comment = "A simple test case"
 
-  columns = ["id", "created", "modified", "key", "value"]
+  column "id" {
+    type = "integer"
+    not_null = true
+  }
+  column "created" {
+    type = "timestamp with time zone"
+    not_null = true
+    default = "now()"
+  }
+  column "modified" {
+    type = "timestamp with time zone"
+    not_null = true
+    default = "now()"
+  }
+  column "key" {
+    type = "character varying(50)"
+    not_null = true
+  }
+  column "value" {
+    type = "character varying(500)"
+  }
 }
 
 trigger "public" "foo" "update_foo_modified" {

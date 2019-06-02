@@ -1,7 +1,17 @@
 package pg
 
+import "github.com/sjansen/pgutil/internal/ddl"
+
 var listColumns = `
-SELECT a.attname
+SELECT
+  a.attname
+, pg_catalog.format_type(a.atttypid, a.atttypmod)
+, a.attnotnull
+, (SELECT pg_catalog.pg_get_expr(d.adbin, d.adrelid)
+   FROM pg_catalog.pg_attrdef d
+   WHERE d.adrelid = a.attrelid
+     AND d.adnum = a.attnum
+     AND a.atthasdef)
 FROM pg_catalog.pg_namespace n
 JOIN pg_catalog.pg_class c
   ON c.relnamespace = n.oid
@@ -15,7 +25,7 @@ ORDER BY a.attnum
 `
 
 // ListColumns describes the columns of a database table
-func (c *Conn) ListColumns(schema, table string) ([]string, error) {
+func (c *Conn) ListColumns(schema, table string) ([]*ddl.Column, error) {
 	c.log.Infow("listing columns", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listColumns)
@@ -26,15 +36,19 @@ func (c *Conn) ListColumns(schema, table string) ([]string, error) {
 	defer rows.Close()
 
 	c.log.Debugw("scanning rows")
-	var columns []string
+	var columns []*ddl.Column
 	for rows.Next() {
-		var name string
-		err = rows.Scan(&name)
+		var defaultValue *string
+		col := &ddl.Column{}
+		err = rows.Scan(
+			&col.Name, &col.Type, &col.NotNull, &defaultValue,
+		)
 		if err != nil {
 			break
 		}
-		c.log.Debugw("row scanned", "column", name)
-		columns = append(columns, name)
+		col.Default = String(defaultValue)
+		c.log.Debugw("row scanned", "column", col.Name, "type", col.Type)
+		columns = append(columns, col)
 	}
 	if err != nil {
 		return nil, err
