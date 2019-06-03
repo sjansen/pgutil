@@ -28,6 +28,7 @@ func RegisterCommands(version string) *ArgParser {
 		Short('v').CounterVar(&parser.verbosity)
 
 	registerPing(parser)
+	registerInspect(parser)
 	registerRunbook(parser)
 	registerVersion(parser, version)
 	return parser
