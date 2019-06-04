@@ -30,6 +30,10 @@ func ParseIndex(data string) (*Index, error) {
 		index.setName(buffer.String())
 		buffer.Reset()
 	}
+	action setOpClass {
+		index.setOpClass(buffer.String())
+		buffer.Reset()
+	}
 	action setTable {
 		index.setTable(buffer.String())
 		buffer.Reset()
@@ -54,8 +58,11 @@ func ParseIndex(data string) (*Index, error) {
 		ws 'ON'i ws ( ident $ addToBuffer % setTable )
 		(ws 'USING'i ws ( ident $ addToBuffer % setUsing ))?
 		ws '(' ws?
-		  ( ident $ addToBuffer % addColumn )
-		  ( ws? ',' ws? ( ident $ addToBuffer % addColumn ) )*
+		  ( ident $ addToBuffer % addColumn)
+		  (ws ident $ addToBuffer % setOpClass )?
+		  ( ws? ',' ws? ( ident $ addToBuffer % addColumn )
+		    (ws ident $ addToBuffer % setOpClass )?
+		  )*
 		ws? ')'
 		(ws 'WHERE'i ws ( any+ $ addToBuffer % setWhere )
 		| space* )

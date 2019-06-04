@@ -9,6 +9,11 @@ func (t *Index) setName(name string) {
 	t.Name = name
 }
 
+func (t *Index) setOpClass(opclass string) {
+	key := t.Keys[len(t.Keys)-1]
+	key.OpClass = opclass
+}
+
 func (t *Index) setTable(table string) {
 	t.Table = table
 }

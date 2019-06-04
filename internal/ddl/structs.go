@@ -73,6 +73,7 @@ type Index struct {
 type IndexKey struct {
 	Column     string `hcl:"column,optional"`
 	Expression string `hcl:"expression,optional"`
+	OpClass    string `hcl:"opclass,optional"`
 	Descending bool   `hcl:"descending,optional"`
 }
 

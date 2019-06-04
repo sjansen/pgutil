@@ -8,7 +8,7 @@ import (
 
 var index_start int = 1
 var _ = index_start
-var index_first_final int = 46
+var index_first_final int = 48
 var _ = index_first_final
 var index_error int = 0
 var _ = index_error
@@ -79,10 +79,10 @@ func ParseIndex(data string) (*Index, error) {
 			goto st_case_23
 		case 24:
 			goto st_case_24
-		case 46:
-			goto st_case_46
-		case 47:
-			goto st_case_47
+		case 48:
+			goto st_case_48
+		case 49:
+			goto st_case_49
 		case 25:
 			goto st_case_25
 		case 26:
@@ -95,8 +95,8 @@ func ParseIndex(data string) (*Index, error) {
 			goto st_case_29
 		case 30:
 			goto st_case_30
-		case 48:
-			goto st_case_48
+		case 50:
+			goto st_case_50
 		case 31:
 			goto st_case_31
 		case 32:
@@ -127,13 +127,17 @@ func ParseIndex(data string) (*Index, error) {
 			goto st_case_44
 		case 45:
 			goto st_case_45
+		case 46:
+			goto st_case_46
+		case 47:
+			goto st_case_47
 
 		}
 		goto st_out
 	_st1:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -180,7 +184,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st2:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -213,7 +217,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st3:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -246,7 +250,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st4:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -279,7 +283,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st5:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -312,7 +316,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st6:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -345,7 +349,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st7:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -379,7 +383,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st8:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -406,7 +410,7 @@ func ParseIndex(data string) (*Index, error) {
 			}
 		case 85:
 			{
-				goto _st39
+				goto _st41
 			}
 		case 105:
 			{
@@ -414,7 +418,7 @@ func ParseIndex(data string) (*Index, error) {
 			}
 		case 117:
 			{
-				goto _st39
+				goto _st41
 			}
 
 		}
@@ -430,7 +434,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st9:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -463,7 +467,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st10:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -496,7 +500,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st11:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -529,7 +533,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st12:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -562,7 +566,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st13:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -596,7 +600,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st14:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -656,7 +660,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st15:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -732,7 +736,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st16:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -775,7 +779,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st17:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -808,7 +812,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st18:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -842,7 +846,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st19:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -902,7 +906,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st20:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -978,7 +982,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st21:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1005,11 +1009,11 @@ func ParseIndex(data string) (*Index, error) {
 			}
 		case 85:
 			{
-				goto _st31
+				goto _st33
 			}
 		case 117:
 			{
-				goto _st31
+				goto _st33
 			}
 
 		}
@@ -1029,10 +1033,17 @@ func ParseIndex(data string) (*Index, error) {
 		}
 
 		goto _st22
+	_ctr47:
+		{
+			index.setOpClass(buffer.String())
+			buffer.Reset()
+		}
+
+		goto _st22
 	_st22:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1092,7 +1103,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st23:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1176,7 +1187,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st24:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1199,7 +1210,7 @@ func ParseIndex(data string) (*Index, error) {
 			}
 		case 41:
 			{
-				goto _st46
+				goto _st48
 			}
 		case 44:
 			{
@@ -1207,9 +1218,29 @@ func ParseIndex(data string) (*Index, error) {
 			}
 
 		}
-		if 9 <= (data[p]) && (data[p]) <= 13 {
+		if (data[p]) < 65 {
 			{
-				goto _st24
+				if 9 <= (data[p]) && (data[p]) <= 13 {
+					{
+						goto _st24
+					}
+
+				}
+			}
+
+		} else if (data[p]) > 90 {
+			{
+				if 97 <= (data[p]) && (data[p]) <= 122 {
+					{
+						goto _ctr36
+					}
+
+				}
+			}
+
+		} else {
+			{
+				goto _ctr36
 			}
 
 		}
@@ -1222,11 +1253,18 @@ func ParseIndex(data string) (*Index, error) {
 			buffer.Reset()
 		}
 
-		goto _st46
-	_st46:
+		goto _st48
+	_ctr46:
+		{
+			index.setOpClass(buffer.String())
+			buffer.Reset()
+		}
+
+		goto _st48
+	_st48:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1238,29 +1276,29 @@ func ParseIndex(data string) (*Index, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof46
+			goto _test_eof48
 
 		}
-	st_case_46:
+	st_case_48:
 		if (data[p]) == 32 {
 			{
-				goto _st47
+				goto _st49
 			}
 
 		}
 		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				goto _st47
+				goto _st49
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_st47:
+	_st49:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1272,14 +1310,14 @@ func ParseIndex(data string) (*Index, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof47
+			goto _test_eof49
 
 		}
-	st_case_47:
+	st_case_49:
 		switch data[p] {
 		case 32:
 			{
-				goto _st47
+				goto _st49
 			}
 		case 87:
 			{
@@ -1293,7 +1331,7 @@ func ParseIndex(data string) (*Index, error) {
 		}
 		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				goto _st47
+				goto _st49
 			}
 
 		}
@@ -1303,7 +1341,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st25:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1336,7 +1374,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st26:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1369,7 +1407,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st27:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1402,7 +1440,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st28:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1435,7 +1473,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st29:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1469,7 +1507,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st30:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1486,25 +1524,25 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_30:
 		{
-			goto _ctr42
+			goto _ctr43
 		}
-	_ctr42:
+	_ctr43:
 		{
 			buffer.WriteByte((data[p]))
 		}
 
-		goto _st48
-	_ctr60:
+		goto _st50
+	_ctr66:
 		{
 			index.setWhere(buffer.String())
 			buffer.Reset()
 		}
 
-		goto _st48
-	_st48:
+		goto _st50
+	_st50:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1516,17 +1554,23 @@ func ParseIndex(data string) (*Index, error) {
 		}
 		p += 1
 		if p == pe {
-			goto _test_eof48
+			goto _test_eof50
 
 		}
-	st_case_48:
+	st_case_50:
 		{
-			goto _ctr42
+			goto _ctr43
 		}
+	_ctr36:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st31
 	_st31:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1543,23 +1587,74 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_31:
 		switch data[p] {
-		case 83:
+		case 32:
 			{
-				goto _st32
+				goto _ctr45
 			}
-		case 115:
+		case 41:
 			{
-				goto _st32
+				goto _ctr46
+			}
+		case 44:
+			{
+				goto _ctr47
+			}
+		case 95:
+			{
+				goto _ctr36
+			}
+
+		}
+		if (data[p]) < 48 {
+			{
+				if 9 <= (data[p]) && (data[p]) <= 13 {
+					{
+						goto _ctr45
+					}
+
+				}
+			}
+
+		} else if (data[p]) > 57 {
+			{
+				if (data[p]) > 90 {
+					{
+						if 97 <= (data[p]) && (data[p]) <= 122 {
+							{
+								goto _ctr36
+							}
+
+						}
+					}
+
+				} else if (data[p]) >= 65 {
+					{
+						goto _ctr36
+					}
+
+				}
+			}
+
+		} else {
+			{
+				goto _ctr36
 			}
 
 		}
 		{
 			goto _st0
 		}
+	_ctr45:
+		{
+			index.setOpClass(buffer.String())
+			buffer.Reset()
+		}
+
+		goto _st32
 	_st32:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1576,13 +1671,23 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_32:
 		switch data[p] {
-		case 73:
+		case 32:
 			{
-				goto _st33
+				goto _st32
 			}
-		case 105:
+		case 41:
 			{
-				goto _st33
+				goto _st48
+			}
+		case 44:
+			{
+				goto _st22
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _st32
 			}
 
 		}
@@ -1592,7 +1697,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st33:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1609,11 +1714,11 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_33:
 		switch data[p] {
-		case 78:
+		case 83:
 			{
 				goto _st34
 			}
-		case 110:
+		case 115:
 			{
 				goto _st34
 			}
@@ -1625,7 +1730,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st34:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1642,11 +1747,11 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_34:
 		switch data[p] {
-		case 71:
+		case 73:
 			{
 				goto _st35
 			}
-		case 103:
+		case 105:
 			{
 				goto _st35
 			}
@@ -1658,7 +1763,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st35:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1674,13 +1779,12 @@ func ParseIndex(data string) (*Index, error) {
 
 		}
 	st_case_35:
-		if (data[p]) == 32 {
+		switch data[p] {
+		case 78:
 			{
 				goto _st36
 			}
-
-		}
-		if 9 <= (data[p]) && (data[p]) <= 13 {
+		case 110:
 			{
 				goto _st36
 			}
@@ -1692,7 +1796,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st36:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1708,51 +1812,24 @@ func ParseIndex(data string) (*Index, error) {
 
 		}
 	st_case_36:
-		if (data[p]) == 32 {
+		switch data[p] {
+		case 71:
 			{
-				goto _st36
+				goto _st37
 			}
-
-		}
-		if (data[p]) < 65 {
+		case 103:
 			{
-				if 9 <= (data[p]) && (data[p]) <= 13 {
-					{
-						goto _st36
-					}
-
-				}
-			}
-
-		} else if (data[p]) > 90 {
-			{
-				if 97 <= (data[p]) && (data[p]) <= 122 {
-					{
-						goto _ctr48
-					}
-
-				}
-			}
-
-		} else {
-			{
-				goto _ctr48
+				goto _st37
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr48:
-		{
-			buffer.WriteByte((data[p]))
-		}
-
-		goto _st37
 	_st37:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1768,67 +1845,25 @@ func ParseIndex(data string) (*Index, error) {
 
 		}
 	st_case_37:
-		switch data[p] {
-		case 32:
+		if (data[p]) == 32 {
 			{
-				goto _ctr50
-			}
-		case 95:
-			{
-				goto _ctr48
+				goto _st38
 			}
 
 		}
-		if (data[p]) < 48 {
+		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				if 9 <= (data[p]) && (data[p]) <= 13 {
-					{
-						goto _ctr50
-					}
-
-				}
-			}
-
-		} else if (data[p]) > 57 {
-			{
-				if (data[p]) > 90 {
-					{
-						if 97 <= (data[p]) && (data[p]) <= 122 {
-							{
-								goto _ctr48
-							}
-
-						}
-					}
-
-				} else if (data[p]) >= 65 {
-					{
-						goto _ctr48
-					}
-
-				}
-			}
-
-		} else {
-			{
-				goto _ctr48
+				goto _st38
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr50:
-		{
-			index.setUsing(buffer.String())
-			buffer.Reset()
-		}
-
-		goto _st38
 	_st38:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1844,30 +1879,51 @@ func ParseIndex(data string) (*Index, error) {
 
 		}
 	st_case_38:
-		switch data[p] {
-		case 32:
+		if (data[p]) == 32 {
 			{
 				goto _st38
-			}
-		case 40:
-			{
-				goto _st22
 			}
 
 		}
-		if 9 <= (data[p]) && (data[p]) <= 13 {
+		if (data[p]) < 65 {
 			{
-				goto _st38
+				if 9 <= (data[p]) && (data[p]) <= 13 {
+					{
+						goto _st38
+					}
+
+				}
+			}
+
+		} else if (data[p]) > 90 {
+			{
+				if 97 <= (data[p]) && (data[p]) <= 122 {
+					{
+						goto _ctr54
+					}
+
+				}
+			}
+
+		} else {
+			{
+				goto _ctr54
 			}
 
 		}
 		{
 			goto _st0
 		}
+	_ctr54:
+		{
+			buffer.WriteByte((data[p]))
+		}
+
+		goto _st39
 	_st39:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1884,23 +1940,66 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_39:
 		switch data[p] {
-		case 78:
+		case 32:
 			{
-				goto _st40
+				goto _ctr56
 			}
-		case 110:
+		case 95:
 			{
-				goto _st40
+				goto _ctr54
+			}
+
+		}
+		if (data[p]) < 48 {
+			{
+				if 9 <= (data[p]) && (data[p]) <= 13 {
+					{
+						goto _ctr56
+					}
+
+				}
+			}
+
+		} else if (data[p]) > 57 {
+			{
+				if (data[p]) > 90 {
+					{
+						if 97 <= (data[p]) && (data[p]) <= 122 {
+							{
+								goto _ctr54
+							}
+
+						}
+					}
+
+				} else if (data[p]) >= 65 {
+					{
+						goto _ctr54
+					}
+
+				}
+			}
+
+		} else {
+			{
+				goto _ctr54
 			}
 
 		}
 		{
 			goto _st0
 		}
+	_ctr56:
+		{
+			index.setUsing(buffer.String())
+			buffer.Reset()
+		}
+
+		goto _st40
 	_st40:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1917,13 +2016,19 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_40:
 		switch data[p] {
-		case 73:
+		case 32:
 			{
-				goto _st41
+				goto _st40
 			}
-		case 105:
+		case 40:
 			{
-				goto _st41
+				goto _st22
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _st40
 			}
 
 		}
@@ -1933,7 +2038,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st41:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1950,11 +2055,11 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_41:
 		switch data[p] {
-		case 81:
+		case 78:
 			{
 				goto _st42
 			}
-		case 113:
+		case 110:
 			{
 				goto _st42
 			}
@@ -1966,7 +2071,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st42:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -1983,11 +2088,11 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_42:
 		switch data[p] {
-		case 85:
+		case 73:
 			{
 				goto _st43
 			}
-		case 117:
+		case 105:
 			{
 				goto _st43
 			}
@@ -1999,7 +2104,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st43:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -2016,29 +2121,23 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_43:
 		switch data[p] {
-		case 69:
+		case 81:
 			{
-				goto _ctr56
+				goto _st44
 			}
-		case 101:
+		case 113:
 			{
-				goto _ctr56
+				goto _st44
 			}
 
 		}
 		{
 			goto _st0
 		}
-	_ctr56:
-		{
-			index.Unique = true
-		}
-
-		goto _st44
 	_st44:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -2054,13 +2153,12 @@ func ParseIndex(data string) (*Index, error) {
 
 		}
 	st_case_44:
-		if (data[p]) == 32 {
+		switch data[p] {
+		case 85:
 			{
 				goto _st45
 			}
-
-		}
-		if 9 <= (data[p]) && (data[p]) <= 13 {
+		case 117:
 			{
 				goto _st45
 			}
@@ -2072,7 +2170,7 @@ func ParseIndex(data string) (*Index, error) {
 	_st45:
 		if p == eof {
 			{
-				if cs >= 46 {
+				if cs >= 48 {
 					goto _out
 
 				} else {
@@ -2089,9 +2187,82 @@ func ParseIndex(data string) (*Index, error) {
 		}
 	st_case_45:
 		switch data[p] {
+		case 69:
+			{
+				goto _ctr62
+			}
+		case 101:
+			{
+				goto _ctr62
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_ctr62:
+		{
+			index.Unique = true
+		}
+
+		goto _st46
+	_st46:
+		if p == eof {
+			{
+				if cs >= 48 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof46
+
+		}
+	st_case_46:
+		if (data[p]) == 32 {
+			{
+				goto _st47
+			}
+
+		}
+		if 9 <= (data[p]) && (data[p]) <= 13 {
+			{
+				goto _st47
+			}
+
+		}
+		{
+			goto _st0
+		}
+	_st47:
+		if p == eof {
+			{
+				if cs >= 48 {
+					goto _out
+
+				} else {
+					goto _pop
+
+				}
+			}
+
+		}
+		p += 1
+		if p == pe {
+			goto _test_eof47
+
+		}
+	st_case_47:
+		switch data[p] {
 		case 32:
 			{
-				goto _st45
+				goto _st47
 			}
 		case 73:
 			{
@@ -2105,7 +2276,7 @@ func ParseIndex(data string) (*Index, error) {
 		}
 		if 9 <= (data[p]) && (data[p]) <= 13 {
 			{
-				goto _st45
+				goto _st47
 			}
 
 		}
@@ -2185,11 +2356,11 @@ func ParseIndex(data string) (*Index, error) {
 	_test_eof24:
 		cs = 24
 		goto _test_eof
-	_test_eof46:
-		cs = 46
+	_test_eof48:
+		cs = 48
 		goto _test_eof
-	_test_eof47:
-		cs = 47
+	_test_eof49:
+		cs = 49
 		goto _test_eof
 	_test_eof25:
 		cs = 25
@@ -2209,8 +2380,8 @@ func ParseIndex(data string) (*Index, error) {
 	_test_eof30:
 		cs = 30
 		goto _test_eof
-	_test_eof48:
-		cs = 48
+	_test_eof50:
+		cs = 50
 		goto _test_eof
 	_test_eof31:
 		cs = 31
@@ -2256,6 +2427,12 @@ func ParseIndex(data string) (*Index, error) {
 		goto _test_eof
 	_test_eof45:
 		cs = 45
+		goto _test_eof
+	_test_eof46:
+		cs = 46
+		goto _test_eof
+	_test_eof47:
+		cs = 47
 		goto _test_eof
 
 	_test_eof:
@@ -2364,11 +2541,11 @@ func ParseIndex(data string) (*Index, error) {
 					{
 						break
 					}
-				case 46:
+				case 48:
 					{
 						break
 					}
-				case 47:
+				case 49:
 					{
 						break
 					}
@@ -2396,7 +2573,7 @@ func ParseIndex(data string) (*Index, error) {
 					{
 						break
 					}
-				case 48:
+				case 50:
 					{
 						break
 					}
@@ -2457,6 +2634,14 @@ func ParseIndex(data string) (*Index, error) {
 						break
 					}
 				case 45:
+					{
+						break
+					}
+				case 46:
+					{
+						break
+					}
+				case 47:
 					{
 						break
 					}
@@ -2516,10 +2701,10 @@ func ParseIndex(data string) (*Index, error) {
 					goto _st23
 				case 24:
 					goto _st24
-				case 46:
-					goto _st46
-				case 47:
-					goto _st47
+				case 48:
+					goto _st48
+				case 49:
+					goto _st49
 				case 25:
 					goto _st25
 				case 26:
@@ -2532,8 +2717,8 @@ func ParseIndex(data string) (*Index, error) {
 					goto _st29
 				case 30:
 					goto _st30
-				case 48:
-					goto _ctr60
+				case 50:
+					goto _ctr66
 				case 31:
 					goto _st31
 				case 32:
@@ -2564,11 +2749,15 @@ func ParseIndex(data string) (*Index, error) {
 					goto _st44
 				case 45:
 					goto _st45
+				case 46:
+					goto _st46
+				case 47:
+					goto _st47
 				}
 			}
 
 		}
-		if cs >= 46 {
+		if cs >= 48 {
 			goto _out
 		}
 	_pop:
