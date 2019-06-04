@@ -13,6 +13,10 @@ func collapseWhitespace(before string) string {
 	return after
 }
 
+func trim(s string) string {
+	return strings.TrimSpace(s)
+}
+
 type parseError struct {
 	cs   int
 	data string

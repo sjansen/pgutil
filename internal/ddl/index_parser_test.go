@@ -16,7 +16,6 @@ func TestParseIndex(t *testing.T) {
 		CREATE UNIQUE INDEX foo__key
 		ON foo USING btree (key)
 	`,
-		// WHERE value IS NULL
 		Expected: &Index{
 			Table:  "foo",
 			Name:   "foo__key",
@@ -28,9 +27,8 @@ func TestParseIndex(t *testing.T) {
 		},
 	}, {Stmt: `
 		CREATE INDEX foo__key__value
-		ON foo USING btree (key, value)
+		ON foo USING btree ( key, value )
 	`,
-		// WHERE value IS NULL
 		Expected: &Index{
 			Table: "foo",
 			Name:  "foo__key__value",
@@ -38,6 +36,19 @@ func TestParseIndex(t *testing.T) {
 			Keys: []*IndexKey{
 				{Column: "key"},
 				{Column: "value"},
+			},
+		},
+	}, {Stmt: `
+		CREATE INDEX foo__uniq__key__null_value
+		ON foo ( key )
+		WHERE value IS NULL
+	`,
+		Expected: &Index{
+			Table: "foo",
+			Name:  "foo__uniq__key__null_value",
+			Where: "value IS NULL",
+			Keys: []*IndexKey{
+				{Column: "key"},
 			},
 		},
 	}} {

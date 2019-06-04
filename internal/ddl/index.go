@@ -16,3 +16,7 @@ func (t *Index) setTable(table string) {
 func (t *Index) setUsing(s string) {
 	t.Using = collapseWhitespace(s)
 }
+
+func (t *Index) setWhere(s string) {
+	t.Where = collapseWhitespace(trim(s))
+}

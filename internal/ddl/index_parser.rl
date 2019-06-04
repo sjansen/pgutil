@@ -15,7 +15,7 @@ func ParseIndex(data string) (*Index, error) {
 	index := &Index{}
 
 	buffer := &bytes.Buffer{}
-	cs, p, pe := 0, 0, len(data)
+	cs, eof, p, pe := 0, len(data), 0, len(data)
 	%%{
 
 	action addToBuffer       {
@@ -38,6 +38,10 @@ func ParseIndex(data string) (*Index, error) {
 		index.setUsing(buffer.String())
 		buffer.Reset()
 	}
+	action setWhere {
+		index.setWhere(buffer.String())
+		buffer.Reset()
+	}
 
 	action matchUnique   { index.Unique = true }
 
@@ -49,11 +53,12 @@ func ParseIndex(data string) (*Index, error) {
 		ws ( ident $ addToBuffer % setName )
 		ws 'ON'i ws ( ident $ addToBuffer % setTable )
 		(ws 'USING'i ws ( ident $ addToBuffer % setUsing ))?
-		ws '('
+		ws '(' ws?
 		  ( ident $ addToBuffer % addColumn )
 		  ( ws? ',' ws? ( ident $ addToBuffer % addColumn ) )*
-		')'
-		space*
+		ws? ')'
+		(ws 'WHERE'i ws ( any+ $ addToBuffer % setWhere )
+		| space* )
 		;
 
 	write init;
