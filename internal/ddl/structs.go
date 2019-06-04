@@ -1,5 +1,6 @@
 package ddl
 
+//go:generate ragel-go -G2 -o index_parser.go index_parser.rl
 //go:generate ragel-go -G2 -o trigger_parser.go trigger_parser.rl
 
 // Database describes a PostgreSQL database
@@ -52,6 +53,27 @@ type Column struct {
 	Type    string `hcl:"type,attr"`
 	NotNull bool   `hcl:"not_null,optional"`
 	Default string `hcl:"default,optional"`
+}
+
+// An Index is used to enhance database performance
+type Index struct {
+	Schema string `hcl:"schema,label"`
+	Table  string `hcl:"table,label"`
+	Name   string `hcl:"name,label"`
+
+	Primary bool   `hcl:"primary,optional"`
+	Unique  bool   `hcl:"unique,optional"`
+	Using   string `hcl:"using,optional"`
+	Where   string `hcl:"where,optional"`
+
+	Keys []*IndexKey `hcl:"key,block"`
+}
+
+// An IndexKey is used to enhance database performance
+type IndexKey struct {
+	Column     string `hcl:"column,optional"`
+	Expression string `hcl:"expression,optional"`
+	Descending bool   `hcl:"descending,optional"`
 }
 
 // A Trigger executes a function when a specific event happens

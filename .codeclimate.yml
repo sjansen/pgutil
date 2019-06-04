@@ -1,3 +1,4 @@
 exclude_patterns:
 - "**/*_test.go"
+- "internal/ddl/index_parser.go"
 - "internal/ddl/trigger_parser.go"

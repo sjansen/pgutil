@@ -5,4 +5,5 @@ coverage:
 ignore:
   - "main.go"
   - "scripts"
+  - "internal/ddl/index_parser.go"
   - "internal/ddl/trigger_parser.go"
