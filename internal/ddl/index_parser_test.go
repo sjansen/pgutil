@@ -74,6 +74,28 @@ func TestParseIndex(t *testing.T) {
 				{Column: "value", OpClass: "varchar_pattern_ops"},
 			},
 		},
+	}, {Stmt: `
+		CREATE INDEX foo__key__upper
+		ON foo ( upper(key::text) )
+	`,
+		Expected: &Index{
+			Table: "foo",
+			Name:  "foo__key__upper",
+			Keys: []*IndexKey{
+				{Expression: "upper(key::text)"},
+			},
+		},
+	}, {Stmt: `
+		CREATE INDEX foo__value__even_odd
+		ON foo ( ( value % 2 ) )
+	`,
+		Expected: &Index{
+			Table: "foo",
+			Name:  "foo__value__even_odd",
+			Keys: []*IndexKey{
+				{Expression: "( value % 2 )"},
+			},
+		},
 	}} {
 		actual, err := ParseIndex(tc.Stmt)
 		require.NoError(err)

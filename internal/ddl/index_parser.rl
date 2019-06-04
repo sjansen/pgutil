@@ -26,6 +26,10 @@ func ParseIndex(data string) (*Index, error) {
 		index.addColumn(buffer.String())
 		buffer.Reset()
 	}
+	action addExpression {
+		index.addExpression(buffer.String())
+		buffer.Reset()
+	}
 	action setName {
 		index.setName(buffer.String())
 		buffer.Reset()
@@ -50,6 +54,8 @@ func ParseIndex(data string) (*Index, error) {
 	action matchUnique   { index.Unique = true }
 
 	ws = space+;
+	expr = '(' [^)]+ ')';
+	fncall = [a-zA-Z][_a-zA-Z0-9]* '(' [^)]* ')';
 	ident = [a-zA-Z][_a-zA-Z0-9]*;
 
 	main := space*
@@ -58,7 +64,10 @@ func ParseIndex(data string) (*Index, error) {
 		ws 'ON'i ws ( ident $ addToBuffer % setTable )
 		(ws 'USING'i ws ( ident $ addToBuffer % setUsing ))?
 		ws '(' ws?
-		  ( ident $ addToBuffer % addColumn)
+		  ( expr $ addToBuffer % addExpression
+		  | fncall $ addToBuffer % addExpression
+		  | ident $ addToBuffer % addColumn
+		  )
 		  (ws ident $ addToBuffer % setOpClass )?
 		  ( ws? ',' ws? ( ident $ addToBuffer % addColumn )
 		    (ws ident $ addToBuffer % setOpClass )?

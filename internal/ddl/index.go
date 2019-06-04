@@ -5,6 +5,11 @@ func (t *Index) addColumn(s string) {
 	t.Keys = append(t.Keys, key)
 }
 
+func (t *Index) addExpression(s string) {
+	key := &IndexKey{Expression: s}
+	t.Keys = append(t.Keys, key)
+}
+
 func (t *Index) setName(name string) {
 	t.Name = name
 }
