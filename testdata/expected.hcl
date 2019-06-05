@@ -16,25 +16,25 @@ table "public" "foo" {
   comment = ""
   owner   = "docker"
 
-  column "id" {
-    type     = "integer"
-    not_null = true
-    default  = "nextval('foo_id_seq'::regclass)"
-  }
   column "created" {
     type     = "timestamp with time zone"
     not_null = true
     default  = "now()"
   }
-  column "modified" {
-    type     = "timestamp with time zone"
+  column "id" {
+    type     = "integer"
     not_null = true
-    default  = "now()"
+    default  = "nextval('foo_id_seq'::regclass)"
   }
   column "key" {
     type     = "character varying(50)"
     not_null = true
     default  = ""
+  }
+  column "modified" {
+    type     = "timestamp with time zone"
+    not_null = true
+    default  = "now()"
   }
   column "value" {
     type     = "character varying(500)"

@@ -15,7 +15,9 @@ type InspectCmd struct {
 	DBName   string
 	Username string
 
-	Output string
+	Output      string
+	SortColumns bool
+	SortIndexes bool
 }
 
 // Run executes the command
@@ -34,7 +36,10 @@ func (c *InspectCmd) Run(base *Base) error {
 	}
 	defer conn.Close()
 
-	db, err := conn.InspectDatabase()
+	db, err := conn.InspectDatabase(&pg.InspectOptions{
+		SortColumns: c.SortColumns,
+		SortIndexes: c.SortIndexes,
+	})
 	if err != nil {
 		return err
 	}

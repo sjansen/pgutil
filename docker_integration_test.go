@@ -36,7 +36,10 @@ func TestConnectAndQuery(t *testing.T) {
 	require.NoError(err)
 	defer c.Close()
 
-	db, err := c.InspectDatabase()
+	db, err := c.InspectDatabase(&pg.InspectOptions{
+		SortColumns: true,
+		SortIndexes: true,
+	})
 	require.NoError(err)
 
 	buf := &bytes.Buffer{}
