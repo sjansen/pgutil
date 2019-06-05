@@ -29,6 +29,14 @@ func (c *Conn) InspectDatabase() (db *ddl.Database, err error) {
 			return nil, err
 		}
 
+		indexes, err := c.ListIndexes(table.Schema, table.Name)
+		if err != nil {
+			return nil, err
+		}
+		if len(indexes) > 0 {
+			db.Indexes = append(db.Indexes, indexes...)
+		}
+
 		triggers, err := c.ListTriggers(table.Schema, table.Name)
 		if err != nil {
 			return nil, err

@@ -10,6 +10,7 @@ type Database struct {
 	Schemas   []*Schema   `hcl:"schema,block"`
 	Functions []*Function `hcl:"function,block"`
 	Tables    []*Table    `hcl:"table,block"`
+	Indexes   []*Index    `hcl:"index,block"`
 	Triggers  []*Trigger  `hcl:"trigger,block"`
 }
 

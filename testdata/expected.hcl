@@ -43,6 +43,20 @@ table "public" "foo" {
   }
 }
 
+index "" "foo" "foo_key_key" {
+  primary = false
+  unique  = true
+  using   = "btree"
+  where   = ""
+
+  key {
+    column     = "key"
+    expression = ""
+    opclass    = ""
+    descending = false
+  }
+}
+
 trigger "" "foo" "update_foo_modified" {
   function           = "update_modified_column"
   when               = "BEFORE"
