@@ -15,6 +15,21 @@ END;
 EOF
 }
 
+table "public" "bar" {
+  column "id" {
+    type = "integer"
+    not_null = true
+  }
+  column "foo_id" {
+    type = "integer"
+    not_null = true
+  }
+  foreign_key "foo" {
+    columns = ["foo_id"]
+    referenced = ["id"]
+  }
+}
+
 table "public" "foo" {
   comment = "A simple test case"
 

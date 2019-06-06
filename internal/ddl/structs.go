@@ -45,7 +45,8 @@ type Table struct {
 	Comment string `hcl:"comment,optional"`
 	Owner   string `hcl:"owner,optional"`
 
-	Columns []*Column `hcl:"column,block"`
+	Columns     []*Column     `hcl:"column,block"`
+	ForeignKeys []*ForeignKey `hcl:"foreign_key,block"`
 }
 
 // A Column is a data field of a table
@@ -54,6 +55,20 @@ type Column struct {
 	Type    string `hcl:"type,attr"`
 	NotNull bool   `hcl:"not_null,optional"`
 	Default string `hcl:"default,optional"`
+}
+
+// A ForeignKey ensures referential integrity
+type ForeignKey struct {
+	Table      string   `hcl:"table,label"`
+	Columns    []string `hcl:"columns,attr"`
+	Referenced []string `hcl:"referenced,attr"`
+
+	Match    string `hcl:"match,optional"`
+	OnDelete string `hcl:"on_delete,optional"`
+	OnUpdate string `hcl:"on_update,optional"`
+
+	Deferrable        bool `hcl:"deferrable,optional"`
+	InitiallyDeferred bool `hcl:"initially_deferred,optional"`
 }
 
 // An Index is used to enhance database performance

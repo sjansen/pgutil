@@ -16,6 +16,31 @@ function "public" "update_modified_column" {
   definition = "BEGIN\n  NEW.modified = now();\n  RETURN NEW;\nEND;\n"
 }
 
+table "public" "bar" {
+  comment = ""
+  owner   = ""
+
+  column "id" {
+    type     = "integer"
+    not_null = true
+    default  = ""
+  }
+  column "foo_id" {
+    type     = "integer"
+    not_null = true
+    default  = ""
+  }
+
+  foreign_key "foo" {
+    columns            = ["foo_id"]
+    referenced         = ["id"]
+    match              = ""
+    on_delete          = ""
+    on_update          = ""
+    deferrable         = false
+    initially_deferred = false
+  }
+}
 table "public" "foo" {
   comment = "A simple test case"
   owner   = ""

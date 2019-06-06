@@ -37,6 +37,19 @@ var expected = &ddl.Database{
 	Tables: []*ddl.Table{
 		{
 			Schema:  "public",
+			Name:    "bar",
+			Comment: "",
+			Columns: []*ddl.Column{
+				{Name: "id", Type: "integer", NotNull: true},
+				{Name: "foo_id", Type: "integer", NotNull: true},
+			},
+			ForeignKeys: []*ddl.ForeignKey{{
+				Table:      "foo",
+				Columns:    []string{"foo_id"},
+				Referenced: []string{"id"},
+			}},
+		}, {
+			Schema:  "public",
 			Name:    "foo",
 			Comment: "A simple test case",
 			Columns: []*ddl.Column{
