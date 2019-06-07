@@ -32,6 +32,7 @@ table "public" "bar" {
   }
 
   foreign_key "foo" {
+    name               = ""
     columns            = ["foo_id"]
     referenced         = ["id"]
     match              = ""

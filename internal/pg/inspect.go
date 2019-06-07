@@ -33,32 +33,9 @@ func (c *Conn) InspectDatabase(o *InspectOptions) (db *ddl.Database, err error) 
 		return nil, err
 	}
 
-	for i, table := range db.Tables {
-		db.Tables[i].Columns, err = c.ListColumns(table.Schema, table.Name)
-		if err != nil {
+	for _, table := range db.Tables {
+		if err := c.inspectTable(o, db, table); err != nil {
 			return nil, err
-		}
-		if o.SortColumns {
-			columns := db.Tables[i].Columns
-			sort.Slice(columns, func(i, j int) bool {
-				return columns[i].Name < columns[j].Name
-			})
-		}
-
-		indexes, err := c.ListIndexes(table.Schema, table.Name)
-		if err != nil {
-			return nil, err
-		}
-		if len(indexes) > 0 {
-			db.Indexes = append(db.Indexes, indexes...)
-		}
-
-		triggers, err := c.ListTriggers(table.Schema, table.Name)
-		if err != nil {
-			return nil, err
-		}
-		if len(triggers) > 0 {
-			db.Triggers = append(db.Triggers, triggers...)
 		}
 	}
 
@@ -73,4 +50,43 @@ func (c *Conn) InspectDatabase(o *InspectOptions) (db *ddl.Database, err error) 
 	}
 
 	return db, nil
+}
+
+func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Table) (err error) {
+	table.Columns, err = c.ListColumns(table.Schema, table.Name)
+	if err != nil {
+		return err
+	}
+	if o.SortColumns {
+		columns := table.Columns
+		sort.Slice(columns, func(i, j int) bool {
+			return columns[i].Name < columns[j].Name
+		})
+	}
+
+	fks, err := c.ListForeignKeys(table.Schema, table.Name)
+	if err != nil {
+		return err
+	}
+	if len(fks) > 0 {
+		table.ForeignKeys = append(table.ForeignKeys, fks...)
+	}
+
+	indexes, err := c.ListIndexes(table.Schema, table.Name)
+	if err != nil {
+		return err
+	}
+	if len(indexes) > 0 {
+		db.Indexes = append(db.Indexes, indexes...)
+	}
+
+	triggers, err := c.ListTriggers(table.Schema, table.Name)
+	if err != nil {
+		return err
+	}
+	if len(triggers) > 0 {
+		db.Triggers = append(db.Triggers, triggers...)
+	}
+
+	return nil
 }

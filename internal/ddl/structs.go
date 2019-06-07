@@ -60,6 +60,7 @@ type Column struct {
 
 // A ForeignKey ensures referential integrity
 type ForeignKey struct {
+	Name       string   `hcl:"name,optional"`
 	Table      string   `hcl:"table,label"`
 	Columns    []string `hcl:"columns,attr"`
 	Referenced []string `hcl:"referenced,attr"`
