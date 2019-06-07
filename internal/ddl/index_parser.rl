@@ -15,7 +15,8 @@ func ParseIndex(data string) (*Index, error) {
 	index := &Index{}
 
 	buffer := &bytes.Buffer{}
-	cs, eof, p, pe := 0, len(data), 0, len(data)
+	cs, eof := 0, len(data);
+	p, pe := 0, eof;
 	%%{
 
 	action addToBuffer       {

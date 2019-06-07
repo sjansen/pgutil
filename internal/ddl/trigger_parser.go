@@ -19,7 +19,8 @@ func ParseTrigger(data string) (*Trigger, error) {
 	trigger := &Trigger{}
 
 	buffer := &bytes.Buffer{}
-	cs, p, pe := 0, 0, len(data)
+	cs, eof := 0, len(data)
+	p, pe := 0, eof
 	{
 		cs = int(trigger_start)
 	}

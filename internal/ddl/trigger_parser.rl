@@ -15,7 +15,8 @@ func ParseTrigger(data string) (*Trigger, error) {
 	trigger := &Trigger{}
 
 	buffer := &bytes.Buffer{}
-	cs, p, pe := 0, 0, len(data)
+	cs, eof := 0, len(data);
+	p, pe := 0, eof;
 	%%{
 
 	action addToBuffer       {
@@ -75,7 +76,9 @@ func ParseTrigger(data string) (*Trigger, error) {
 		ws 'ON'i ws ( ident $ addToBuffer % setTable )
 		( ws ( 'NOT'i ws 'DEFERRABLE'i )
 		| ws ( 'DEFERRABLE'i ws @ matchDeferrable )?
-		   ( 'INITIALLY'i ws 'IMMEDIATE'i | 'INITIALLY'i ws 'DEFERRED'i @ matchInitiallyDeferred )?
+		  ( 'INITIALLY'i ws 'IMMEDIATE'i
+		  | 'INITIALLY'i ws 'DEFERRED'i @ matchInitiallyDeferred
+		  )?
 		)?
 		( ws 'FOR'i ws ('EACH'i ws)? ('ROW'i @ matchForEachRow | 'STATEMENT'i) )?
 		ws 'EXECUTE'i ws ('FUNCTION'i | 'PROCEDURE'i) ws ( ident $ addToBuffer % setFunction ) '()'

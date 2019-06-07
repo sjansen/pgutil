@@ -17,6 +17,10 @@ func trim(s string) string {
 	return strings.TrimSpace(s)
 }
 
+func upper(s string) string {
+	return strings.ToUpper(s)
+}
+
 type parseError struct {
 	cs   int
 	data string

@@ -3,11 +3,7 @@ package ddl
 import "strings"
 
 func (t *Trigger) addColumn(s string) {
-	if t.Columns == nil {
-		t.Columns = []string{s}
-	} else {
-		t.Columns = append(t.Columns, s)
-	}
+	t.Columns = append(t.Columns, s)
 }
 
 func (t *Trigger) setFunction(s string) {
