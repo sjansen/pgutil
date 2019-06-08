@@ -8,7 +8,7 @@ require (
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/fortytw2/leaktest v1.3.0
-	github.com/google/go-jsonnet v0.12.1
+	github.com/google/go-jsonnet v0.13.0
 	github.com/hashicorp/hcl v1.0.0
 	github.com/hashicorp/hcl2 v0.0.0-20190515223218-4b22149b7cef
 	github.com/hokaccha/go-prettyjson v0.0.0-20180920040306-f579f869bbfe
