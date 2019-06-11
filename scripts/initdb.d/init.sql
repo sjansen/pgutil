@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS observation (
     measurement_id INTEGER NOT NULL REFERENCES measurement(id),
     notes VARCHAR(500),
     CONSTRAINT "encourage detailed notes"
-    CHECK(length(notes) > 50)
+      CHECK(length(notes) > 50)
 )
 ;
 CREATE TRIGGER update_observation_modified

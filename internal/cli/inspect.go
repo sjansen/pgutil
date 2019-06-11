@@ -21,6 +21,8 @@ func registerInspect(p *ArgParser) {
 		Short('o').PlaceHolder("FILENAME").StringVar(&c.Output)
 	cmd.Flag("sort-columns", "List columns in alphanumeric order, instead of physical order").
 		BoolVar(&c.SortColumns)
+	cmd.Flag("sort-check-constraints", "List check constraints order by expression, instead of name").
+		BoolVar(&c.SortChecks)
 	cmd.Flag("sort-indexes", "List indexes in alphanumeric order, instead of default order").
 		BoolVar(&c.SortIndexes)
 }

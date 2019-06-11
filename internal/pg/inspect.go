@@ -7,6 +7,7 @@ import (
 )
 
 type InspectOptions struct {
+	SortChecks  bool
 	SortColumns bool
 	SortIndexes bool
 }
@@ -70,6 +71,11 @@ func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Tabl
 	}
 	if len(checks) > 0 {
 		table.Checks = append(table.Checks, checks...)
+	}
+	if o.SortChecks {
+		sort.Slice(checks, func(i, j int) bool {
+			return (checks[i].Expression < checks[j].Expression)
+		})
 	}
 
 	fks, err := c.ListForeignKeys(table.Schema, table.Name)
