@@ -51,7 +51,7 @@ func ParseCheck(data string) (*Check, error) {
 		}
 	}
 
-	check.Expression = data[mark1:mark2]
+	check.setExpression(data[mark1:mark2])
 
 	return check, nil
 }

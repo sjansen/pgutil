@@ -64,6 +64,14 @@ func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Tabl
 		})
 	}
 
+	checks, err := c.ListChecks(table.Schema, table.Name)
+	if err != nil {
+		return err
+	}
+	if len(checks) > 0 {
+		table.Checks = append(table.Checks, checks...)
+	}
+
 	fks, err := c.ListForeignKeys(table.Schema, table.Name)
 	if err != nil {
 		return err

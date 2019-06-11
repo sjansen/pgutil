@@ -41,6 +41,13 @@ table "public" "measurement" {
     not_null = false
     default  = ""
   }
+
+  check {
+    name               = "measurement_key_check"
+    expression         = "key::text ~ '^\\d{4}-\\d{4}-\\d{4}(:[a-z]+)?$'::text"
+    deferrable         = false
+    initially_deferred = false
+  }
 }
 table "public" "observation" {
   comment = ""
@@ -70,6 +77,13 @@ table "public" "observation" {
     type     = "character varying(500)"
     not_null = false
     default  = ""
+  }
+
+  check {
+    name               = "encourage detailed notes"
+    expression         = "length(notes::text) > 50"
+    deferrable         = false
+    initially_deferred = false
   }
 
   foreign_key "measurement" {

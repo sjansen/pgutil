@@ -48,6 +48,7 @@ type Table struct {
 	Owner   string `hcl:"owner,optional"`
 
 	Columns     []*Column     `hcl:"column,block"`
+	Checks      []*Check      `hcl:"check,block"`
 	ForeignKeys []*ForeignKey `hcl:"foreign_key,block"`
 }
 
