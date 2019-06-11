@@ -1,5 +1,6 @@
 package ddl
 
+//go:generate ragel-go -G2 -o check_parser.go check_parser.rl
 //go:generate ragel-go -G2 -o index_parser.go index_parser.rl
 //go:generate ragel-go -G2 -o foreign_key_parser.go foreign_key_parser.rl
 //go:generate ragel-go -G2 -o trigger_parser.go trigger_parser.rl
@@ -56,6 +57,14 @@ type Column struct {
 	Type    string `hcl:"type,attr"`
 	NotNull bool   `hcl:"not_null,optional"`
 	Default string `hcl:"default,optional"`
+}
+
+// A Check constraint limits column values
+type Check struct {
+	Name              string `hcl:"name,optional"`
+	Expression        string `hcl:"expression,attr"`
+	Deferrable        bool   `hcl:"deferrable,optional"`
+	InitiallyDeferred bool   `hcl:"initially_deferred,optional"`
 }
 
 // A ForeignKey ensures referential integrity
