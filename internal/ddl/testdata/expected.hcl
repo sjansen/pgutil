@@ -1,6 +1,7 @@
 
 parameters {
   search_path = ["$user", "public"]
+  timezone    = ""
 }
 
 schema "public" {

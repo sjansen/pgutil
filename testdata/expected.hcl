@@ -1,4 +1,9 @@
 
+parameters {
+  search_path = ["\"$user\"", " public"]
+  timezone    = "UTC"
+}
+
 schema "public" {
   comment = "standard public schema"
   owner   = "docker"

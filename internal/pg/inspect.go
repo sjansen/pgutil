@@ -19,6 +19,11 @@ func (c *Conn) InspectDatabase(o *InspectOptions) (db *ddl.Database, err error) 
 		o = &InspectOptions{}
 	}
 
+	db.Parameters, err = c.ListParameters()
+	if err != nil {
+		return nil, err
+	}
+
 	db.Schemas, err = c.ListSchemas()
 	if err != nil {
 		return nil, err
@@ -29,14 +34,22 @@ func (c *Conn) InspectDatabase(o *InspectOptions) (db *ddl.Database, err error) 
 		return nil, err
 	}
 
+	if err := c.inspectTables(o, db); err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
+func (c *Conn) inspectTables(o *InspectOptions, db *ddl.Database) (err error) {
 	db.Tables, err = c.ListTables()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	for _, table := range db.Tables {
 		if err := c.inspectTable(o, db, table); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
@@ -50,7 +63,7 @@ func (c *Conn) InspectDatabase(o *InspectOptions) (db *ddl.Database, err error) 
 		})
 	}
 
-	return db, nil
+	return
 }
 
 func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Table) (err error) {

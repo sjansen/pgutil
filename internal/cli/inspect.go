@@ -6,7 +6,7 @@ import (
 
 func registerInspect(p *ArgParser) {
 	c := &commands.InspectCmd{}
-	cmd := p.addCommand(c, "inspect", "Scan a datbase and output its configuration")
+	cmd := p.addCommand(c, "inspect", "Scan a database and output its configuration")
 
 	cmd.Flag("host", "server hostname or socket directory").Short('h').StringVar(&c.Host)
 	cmd.Flag("port", "server port number").Short('p').Uint16Var(&c.Port)
