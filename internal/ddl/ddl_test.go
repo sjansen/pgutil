@@ -93,6 +93,34 @@ func TestParseFile(t *testing.T) {
 	require.Equal(expected, actual)
 }
 
+func TestToSQL(t *testing.T) {
+	assert := assert.New(t)
+	require := require.New(t)
+
+	db, err := ddl.ParseFile("testdata/settings.hcl")
+	require.NoError(err)
+
+	var buf bytes.Buffer
+	for _, t := range db.Tables {
+		sql, err := t.ToSQL()
+		require.NoError(err)
+		buf.WriteString(sql)
+	}
+	for _, idx := range db.Indexes {
+		sql, err := idx.ToSQL()
+		require.NoError(err)
+		buf.WriteString(sql)
+	}
+
+	expected, err := ioutil.ReadFile("testdata/settings.sql")
+	require.NoError(err)
+
+	actual := buf.Bytes()
+	if !assert.Equal(string(expected), string(actual)) {
+		ioutil.WriteFile("testdata/settings-actual.sql", actual, 0666)
+	}
+}
+
 func TestWrite(t *testing.T) {
 	assert := assert.New(t)
 	require := require.New(t)

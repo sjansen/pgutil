@@ -10,6 +10,7 @@
 /TODO
 .DS_Store
 actual.hcl
+actual.sql
 coverage.txt
 
 # Patterns
@@ -17,3 +18,5 @@ coverage.txt
 *.dot
 *.pdf
 *.ri
+*-actual.hcl
+*-actual.sql

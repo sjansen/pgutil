@@ -1,32 +1,58 @@
 package ddl
 
-func (t *Index) addColumn(s string) {
+import "strings"
+
+func (idx *Index) addColumn(s string) {
 	key := &IndexKey{Column: s}
-	t.Keys = append(t.Keys, key)
+	idx.Keys = append(idx.Keys, key)
 }
 
-func (t *Index) addExpression(s string) {
+func (idx *Index) addExpression(s string) {
 	key := &IndexKey{Expression: s}
-	t.Keys = append(t.Keys, key)
+	idx.Keys = append(idx.Keys, key)
 }
 
-func (t *Index) setName(name string) {
-	t.Name = name
+func (idx *Index) setName(name string) {
+	idx.Name = name
 }
 
-func (t *Index) setOpClass(opclass string) {
-	key := t.Keys[len(t.Keys)-1]
+func (idx *Index) setOpClass(opclass string) {
+	key := idx.Keys[len(idx.Keys)-1]
 	key.OpClass = opclass
 }
 
-func (t *Index) setTable(table string) {
-	t.Table = table
+func (idx *Index) setTable(table string) {
+	idx.Table = table
 }
 
-func (t *Index) setUsing(s string) {
-	t.Using = collapseWhitespace(s)
+func (idx *Index) setUsing(s string) {
+	idx.Using = collapseWhitespace(s)
 }
 
-func (t *Index) setWhere(s string) {
-	t.Where = collapseWhitespace(trim(s))
+func (idx *Index) setWhere(s string) {
+	idx.Where = collapseWhitespace(trim(s))
+}
+
+func (idx *Index) ToSQL() (string, error) {
+	var sb strings.Builder
+	if idx.Primary {
+		sb.WriteString("ALTER TABLE ")
+		sb.WriteString(quoteName(idx.Table))
+		sb.WriteString("\n  ADD ")
+		if idx.Name != "" {
+			sb.WriteString("CONSTRAINT ")
+			sb.WriteString(quoteName(idx.Name))
+			sb.WriteString("\n  ")
+		}
+		sb.WriteString("PRIMARY KEY (")
+		for i, key := range idx.Keys {
+			if i > 0 {
+				sb.WriteString(", ")
+			}
+			sb.WriteString(quoteName(key.Column))
+		}
+		sb.WriteString(")\n")
+	}
+	sb.WriteString(";\n")
+	return sb.String(), nil
 }
