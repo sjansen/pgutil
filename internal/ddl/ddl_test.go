@@ -101,6 +101,11 @@ func TestToSQL(t *testing.T) {
 	require.NoError(err)
 
 	var buf bytes.Buffer
+	for _, f := range db.Functions {
+		sql, err := f.ToSQL()
+		require.NoError(err)
+		buf.WriteString(sql)
+	}
 	for _, t := range db.Tables {
 		sql, err := t.ToSQL()
 		require.NoError(err)
@@ -108,6 +113,11 @@ func TestToSQL(t *testing.T) {
 	}
 	for _, idx := range db.Indexes {
 		sql, err := idx.ToSQL()
+		require.NoError(err)
+		buf.WriteString(sql)
+	}
+	for _, t := range db.Triggers {
+		sql, err := t.ToSQL()
 		require.NoError(err)
 		buf.WriteString(sql)
 	}

@@ -23,3 +23,23 @@ func (t *Trigger) setWhen(s string) {
 		collapseWhitespace(s),
 	)
 }
+
+func (t *Trigger) ToSQL() (string, error) {
+	var sb strings.Builder
+	sb.WriteString("CREATE TRIGGER ")
+	sb.WriteString(quoteName(t.Name))
+	sb.WriteString("\n  ")
+	sb.WriteString(t.When)
+	if t.Update {
+		sb.WriteString(" UPDATE")
+	}
+	sb.WriteString(" ON ")
+	sb.WriteString(quoteName(t.Table))
+	if t.ForEachRow {
+		sb.WriteString("\n  FOR EACH ROW")
+	}
+	sb.WriteString("\n  EXECUTE PROCEDURE ")
+	sb.WriteString(t.Function)
+	sb.WriteString("()\n;\n")
+	return sb.String(), nil
+}
