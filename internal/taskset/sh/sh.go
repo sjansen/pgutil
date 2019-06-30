@@ -6,16 +6,34 @@ import (
 
 	"github.com/sjansen/pgutil/internal/taskset/base"
 	"github.com/sjansen/pgutil/internal/taskset/types"
+	"go.uber.org/zap"
 )
 
 var _ types.Target = &Target{}
 
-type Target struct{}
+// TargetFactory instantiates new targets
+type TargetFactory struct {
+	Log *zap.SugaredLogger
+}
 
-func (t *Target) NewTask(class string) (types.Task, error) {
+// NewTarget create a new target with default settings
+func (f *TargetFactory) NewTarget() types.Target {
+	return &Target{
+		log: f.Log,
+	}
+}
+
+// Target executes tasks
+type Target struct {
+	log *zap.SugaredLogger
+}
+
+// NewTask creates a new Task of type typ with default settings
+func (t *Target) NewTask(typ string) (types.Task, error) {
 	return &Task{}, nil
 }
 
+// Start should be called before the target starts handling tasks
 func (t *Target) Start() (chan<- map[string]types.Task, <-chan map[string]error) {
 	fn := func(id string, task types.Task, results chan<- map[string]error) {
 		go func() {

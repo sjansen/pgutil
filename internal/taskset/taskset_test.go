@@ -5,14 +5,33 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/sjansen/pgutil/internal/logger"
 	"github.com/sjansen/pgutil/internal/taskset/parser"
+	"github.com/sjansen/pgutil/internal/taskset/pg"
+	"github.com/sjansen/pgutil/internal/taskset/sh"
 	"github.com/sjansen/pgutil/internal/taskset/types"
 )
 
-func TestParseFile(t *testing.T) {
+func newParser() *parser.Parser {
+	log := logger.Discard()
+	return &parser.Parser{
+		Targets: map[string]types.TargetFactory{
+			"pg": &pg.TargetFactory{
+				Log: log,
+			},
+			"sh": &sh.TargetFactory{
+				Log: log,
+			},
+		},
+	}
+
+}
+
+func TestTaskExecution(t *testing.T) {
 	require := require.New(t)
 
-	ts, err := parser.ParseFile("testdata/simple.hcl")
+	p := newParser()
+	ts, err := p.Parse("testdata/simple.hcl")
 	require.NoError(err)
 
 	pg := ts.Targets["pg"]["src"]
