@@ -9,6 +9,7 @@ type TaskSet struct {
 // Target executes tasks
 type Target interface {
 	NewTask(string) (Task, error)
+	Ready() error
 	Start() (chan<- map[string]Task, <-chan map[string]error)
 }
 
@@ -20,4 +21,5 @@ type TargetFactory interface {
 // Task contains data common to all tasks
 type Task interface {
 	Dependencies() []string
+	Ready() error
 }

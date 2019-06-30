@@ -8,9 +8,9 @@ import (
 
 type RunTask func(id string, t types.Task, ch chan<- map[string]error)
 
-func RunTasks(fn RunTask) (chan<- map[string]types.Task, <-chan map[string]error) {
-	queue := make(chan map[string]types.Task)
-	results := make(chan map[string]error)
+func RunTasks(fn RunTask, maxConcurrency int) (chan<- map[string]types.Task, <-chan map[string]error) {
+	queue := make(chan map[string]types.Task, maxConcurrency)
+	results := make(chan map[string]error, maxConcurrency)
 
 	go func(queue <-chan map[string]types.Task, results chan<- map[string]error) {
 		relay := make(chan map[string]error)

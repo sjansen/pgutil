@@ -1,11 +1,13 @@
 package taskset_test
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/logger"
+	"github.com/sjansen/pgutil/internal/taskset/demo"
 	"github.com/sjansen/pgutil/internal/taskset/parser"
 	"github.com/sjansen/pgutil/internal/taskset/pg"
 	"github.com/sjansen/pgutil/internal/taskset/sh"
@@ -24,7 +26,6 @@ func newParser() *parser.Parser {
 			},
 		},
 	}
-
 }
 
 func TestTaskExecution(t *testing.T) {
@@ -72,4 +73,54 @@ func TestTaskExecution(t *testing.T) {
 
 	close(pgQueue)
 	close(shQueue)
+}
+
+func TestDemoTaskExecution(t *testing.T) {
+	require := require.New(t)
+
+	buf := &bytes.Buffer{}
+	log := logger.Discard()
+	p := &parser.Parser{
+		Targets: map[string]types.TargetFactory{
+			"demo": &demo.TargetFactory{
+				Log:    log,
+				Stdout: buf,
+			},
+		},
+	}
+	ts, err := p.Parse("testdata/demo.hcl")
+	require.NoError(err)
+
+	for _, target := range []string{"msg1", "msg2", "msg3"} {
+		msg := ts.Targets["demo"][target]
+		queue, results := msg.Start()
+
+		for _, name := range []string{"/reverse", "/rotate"} {
+			name = target + name
+			queue <- map[string]types.Task{
+				name: ts.Tasks[name],
+			}
+		}
+
+		for i := 0; i < 2; i++ {
+			result := <-results
+			for _, err := range result {
+				require.NoError(err)
+			}
+		}
+
+		name := target + "/decrypted"
+		queue <- map[string]types.Task{
+			name: ts.Tasks[name],
+		}
+
+		result := <-results
+		require.NoError(result[name])
+	}
+
+	expected := `Spoon!
+The cake is a lie.
+The world is a vampire.
+`
+	require.Equal(expected, buf.String())
 }

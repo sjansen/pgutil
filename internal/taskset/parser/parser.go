@@ -2,6 +2,7 @@ package parser
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/hashicorp/hcl2/gohcl"
 	"github.com/hashicorp/hcl2/hcl"
@@ -38,7 +39,7 @@ type Parser struct {
 	Targets map[string]types.TargetFactory
 }
 
-// ParseFile loads targets and task from a runbook file
+// Parse loads targets and task from a file
 func (p *Parser) Parse(filename string) (*types.TaskSet, error) {
 	hp := hclparse.NewParser()
 	f, diag := hp.ParseHCLFile(filename)
@@ -101,14 +102,32 @@ func (p *Parser) loadExplicitTargets(raw *taskSet, ts *types.TaskSet) error {
 
 func (p *Parser) loadTasks(raw *taskSet, ts *types.TaskSet) error {
 	for _, t := range raw.Tasks {
-		task, err := ts.Targets[t.Type][t.Target].NewTask(t.Type)
+		targetType, taskType := t.Type, ""
+		if x := strings.SplitN(t.Type, "/", 2); len(x) > 1 {
+			targetType = x[0]
+			taskType = x[1]
+		}
+
+		targetGroup, ok := ts.Targets[targetType]
+		if !ok {
+			return errors.New("invalid target type")
+		}
+
+		target, ok := targetGroup[t.Target]
+		if !ok {
+			return errors.New("invalid target")
+		}
+
+		task, err := target.NewTask(taskType)
 		if err != nil {
 			return err
 		}
+
 		diag := gohcl.DecodeBody(t.Config, nil, task)
 		if diag != nil && diag.HasErrors() {
 			return diag
 		}
+
 		ts.Tasks[t.Name] = task
 	}
 	return nil

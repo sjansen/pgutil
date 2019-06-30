@@ -1,25 +1,29 @@
-package sh
+package demo
 
 import (
+	"context"
 	"errors"
-	"fmt"
+	"io"
+	"sync"
 
 	"github.com/sjansen/pgutil/internal/taskset/base"
 	"github.com/sjansen/pgutil/internal/taskset/types"
 	"go.uber.org/zap"
 )
 
-var _ types.Target = &Target{}
-
 // TargetFactory instantiates new targets
 type TargetFactory struct {
-	Log *zap.SugaredLogger
+	Log    *zap.SugaredLogger
+	Stdout io.Writer
 }
 
 // NewTarget create a new target with default settings
 func (f *TargetFactory) NewTarget() types.Target {
 	return &Target{
-		log: f.Log,
+		log:    f.Log,
+		stdout: f.Stdout,
+
+		MaxConcurrency: 1,
 	}
 }
 
@@ -29,17 +33,42 @@ type execer interface {
 
 // Target executes tasks
 type Target struct {
-	log *zap.SugaredLogger
+	sync.Mutex
+	log    *zap.SugaredLogger
+	stdout io.Writer
+
+	MaxConcurrency int    `hcl:"max_concurrency,optional"`
+	String         string `hcl:"string,attr"`
 }
 
 // NewTask creates a new Task of type typ with default settings
 func (t *Target) NewTask(typ string) (types.Task, error) {
-	return &Task{}, nil
+	switch typ {
+	case "echo":
+		return &Echo{}, nil
+	case "fail":
+		return &Fail{}, nil
+	case "rev":
+		return &Rev{}, nil
+	case "rot13":
+		return &Rot13{}, nil
+	case "sleep":
+		return &Sleep{}, nil
+	}
+	return nil, errors.New("invalid task type") // TODO
 }
 
 // Ready verifies the target's settings are valid
 func (t *Target) Ready() error {
 	return nil
+}
+
+// Run executes a single task
+func (t *Target) Run(ctx context.Context, task types.Task) error {
+	if x, ok := task.(execer); ok {
+		return x.exec(t)
+	}
+	return errors.New("invalid task")
 }
 
 // Start should be called before the target starts handling tasks
@@ -57,20 +86,10 @@ func (t *Target) Start() (chan<- map[string]types.Task, <-chan map[string]error)
 			}
 		}()
 	}
-	return base.RunTasks(fn, 1)
+	return base.RunTasks(fn, t.MaxConcurrency)
 }
 
-type Task struct {
-	base.Task
-	Args []string `hcl:"args,attr"`
-}
-
-// Ready validates the task's settings
-func (t *Task) Ready() error {
-	return nil
-}
-
-func (t *Task) exec(target *Target) error {
-	fmt.Println("  args:", t.Args)
+// Stop should be called when there are no tasks left for the target to handle
+func (t *Target) Stop() error {
 	return nil
 }

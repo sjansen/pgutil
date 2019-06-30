@@ -23,6 +23,10 @@ func (f *TargetFactory) NewTarget() types.Target {
 	}
 }
 
+type execer interface {
+	exec(*Target) error
+}
+
 // Target executes tasks
 type Target struct {
 	log *zap.SugaredLogger
@@ -33,13 +37,18 @@ func (t *Target) NewTask(typ string) (types.Task, error) {
 	return &Task{}, nil
 }
 
+// Ready verifies the target's settings are valid
+func (t *Target) Ready() error {
+	return nil
+}
+
 // Start should be called before the target starts handling tasks
 func (t *Target) Start() (chan<- map[string]types.Task, <-chan map[string]error) {
 	fn := func(id string, task types.Task, results chan<- map[string]error) {
 		go func() {
-			if x, ok := task.(runner); ok {
+			if x, ok := task.(execer); ok {
 				results <- map[string]error{
-					id: x.Run(),
+					id: x.exec(t),
 				}
 			} else {
 				results <- map[string]error{
@@ -48,11 +57,7 @@ func (t *Target) Start() (chan<- map[string]types.Task, <-chan map[string]error)
 			}
 		}()
 	}
-	return base.RunTasks(fn)
-}
-
-type runner interface {
-	Run() error
+	return base.RunTasks(fn, 1)
 }
 
 type Task struct {
@@ -60,7 +65,12 @@ type Task struct {
 	SQL string `hcl:"sql,attr"`
 }
 
-func (t *Task) Run() error {
+// Ready validates the task's settings
+func (t *Task) Ready() error {
+	return nil
+}
+
+func (t *Task) exec(target *Target) error {
 	fmt.Println("  sql:", t.SQL)
 	return nil
 }
