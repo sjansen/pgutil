@@ -41,31 +41,31 @@ func TestTaskExecution(t *testing.T) {
 	pgQueue, pgResults := pg.Start()
 	shQueue, shResults := sh.Start()
 
-	shQueue <- map[string]types.Task{
+	shQueue <- map[types.TaskID]types.Task{
 		"create-dir": ts.Tasks["create-dir"],
 	}
 	result := <-shResults
 	require.NoError(result["create-dir"])
 
-	pgQueue <- map[string]types.Task{
+	pgQueue <- map[types.TaskID]types.Task{
 		"create-table": ts.Tasks["create-table"],
 	}
 	result = <-pgResults
 	require.NoError(result["create-table"])
 
-	pgQueue <- map[string]types.Task{
+	pgQueue <- map[types.TaskID]types.Task{
 		"insert-new-measurements": ts.Tasks["insert-new-measurements"],
 	}
 	result = <-pgResults
 	require.NoError(result["insert-new-measurements"])
 
-	pgQueue <- map[string]types.Task{
+	pgQueue <- map[types.TaskID]types.Task{
 		"delete-old-measurements": ts.Tasks["delete-old-measurements"],
 	}
 	result = <-pgResults
 	require.NoError(result["delete-old-measurements"])
 
-	shQueue <- map[string]types.Task{
+	shQueue <- map[types.TaskID]types.Task{
 		"remove-dir": ts.Tasks["remove-dir"],
 	}
 	result = <-shResults
@@ -91,14 +91,14 @@ func TestDemoTaskExecution(t *testing.T) {
 	ts, err := p.Parse("testdata/demo.hcl")
 	require.NoError(err)
 
-	for _, target := range []string{"msg1", "msg2", "msg3"} {
+	for _, target := range []types.TargetID{"msg1", "msg2", "msg3"} {
 		msg := ts.Targets["demo"][target]
 		queue, results := msg.Start()
 
 		for _, name := range []string{"/reverse", "/rotate"} {
-			name = target + name
-			queue <- map[string]types.Task{
-				name: ts.Tasks[name],
+			taskID := types.TaskID(string(target) + name)
+			queue <- map[types.TaskID]types.Task{
+				taskID: ts.Tasks[taskID],
 			}
 		}
 
@@ -109,13 +109,13 @@ func TestDemoTaskExecution(t *testing.T) {
 			}
 		}
 
-		name := target + "/decrypted"
-		queue <- map[string]types.Task{
-			name: ts.Tasks[name],
+		taskID := types.TaskID(string(target) + "/decrypted")
+		queue <- map[types.TaskID]types.Task{
+			taskID: ts.Tasks[taskID],
 		}
 
 		result := <-results
-		require.NoError(result[name])
+		require.NoError(result[taskID])
 	}
 
 	expected := `Spoon!

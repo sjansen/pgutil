@@ -43,15 +43,15 @@ func (t *Target) Ready() error {
 }
 
 // Start should be called before the target starts handling tasks
-func (t *Target) Start() (chan<- map[string]types.Task, <-chan map[string]error) {
-	fn := func(id string, task types.Task, results chan<- map[string]error) {
+func (t *Target) Start() (chan<- types.TaskBatch, <-chan types.TaskResults) {
+	fn := func(id types.TaskID, task types.Task, results chan<- types.TaskResults) {
 		go func() {
 			if x, ok := task.(execer); ok {
-				results <- map[string]error{
+				results <- map[types.TaskID]error{
 					id: x.exec(t),
 				}
 			} else {
-				results <- map[string]error{
+				results <- map[types.TaskID]error{
 					id: errors.New("invalid task type"),
 				}
 			}

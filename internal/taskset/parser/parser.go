@@ -18,18 +18,19 @@ type taskSet struct {
 
 type target struct {
 	Type string `hcl:"type,label"`
-	Name string `hcl:"name,label"`
+	ID   string `hcl:"name,label"`
 
 	Config hcl.Body `hcl:",remain"`
 }
 
 type task struct {
-	Type    string   `hcl:"type,label"`
-	Name    string   `hcl:"name,label"`
+	Type   string `hcl:"type,label"`
+	ID     string `hcl:"name,label"`
+	Target string `hcl:"target,optional"`
+
 	After   []string `hcl:"after,optional"`
-	Provide []string `hcl:"after,optional"`
-	Require []string `hcl:"after,optional"`
-	Target  string   `hcl:"target,optional"`
+	Provide []string `hcl:"provides,optional"`
+	Require []string `hcl:"requires,optional"`
 
 	Config hcl.Body `hcl:",remain"`
 }
@@ -54,8 +55,8 @@ func (p *Parser) Parse(filename string) (*types.TaskSet, error) {
 	}
 
 	ts := &types.TaskSet{
-		Targets: map[string]map[string]types.Target{},
-		Tasks:   map[string]types.Task{},
+		Targets: map[string]map[types.TargetID]types.Target{},
+		Tasks:   map[types.TaskID]types.Task{},
 	}
 	err := p.loadDefaultTargets(ts)
 	if err != nil {
@@ -77,7 +78,7 @@ func (p *Parser) Parse(filename string) (*types.TaskSet, error) {
 
 func (p *Parser) loadDefaultTargets(ts *types.TaskSet) error {
 	for typ, factory := range p.Targets {
-		ts.Targets[typ] = map[string]types.Target{
+		ts.Targets[typ] = map[types.TargetID]types.Target{
 			"": factory.NewTarget(),
 		}
 	}
@@ -95,7 +96,7 @@ func (p *Parser) loadExplicitTargets(raw *taskSet, ts *types.TaskSet) error {
 		if err != nil {
 			return err
 		}
-		ts.Targets[t.Type][t.Name] = target
+		ts.Targets[t.Type][types.TargetID(t.ID)] = target
 	}
 	return nil
 }
@@ -113,7 +114,7 @@ func (p *Parser) loadTasks(raw *taskSet, ts *types.TaskSet) error {
 			return errors.New("invalid target type")
 		}
 
-		target, ok := targetGroup[t.Target]
+		target, ok := targetGroup[types.TargetID(t.Target)]
 		if !ok {
 			return errors.New("invalid target")
 		}
@@ -128,7 +129,7 @@ func (p *Parser) loadTasks(raw *taskSet, ts *types.TaskSet) error {
 			return diag
 		}
 
-		ts.Tasks[t.Name] = task
+		ts.Tasks[types.TaskID(t.ID)] = task
 	}
 	return nil
 }
