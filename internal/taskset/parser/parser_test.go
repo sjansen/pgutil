@@ -31,6 +31,6 @@ func TestParse(t *testing.T) {
 	require := require.New(t)
 
 	p := newParser()
-	_, err := p.Parse("testdata/simple.hcl")
+	_, err := p.Parse("testdata/measurements.hcl")
 	require.NoError(err)
 }

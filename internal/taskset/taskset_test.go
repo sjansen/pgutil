@@ -32,7 +32,7 @@ func TestTaskExecution(t *testing.T) {
 	require := require.New(t)
 
 	p := newParser()
-	ts, err := p.Parse("testdata/simple.hcl")
+	ts, err := p.Parse("testdata/measurements.hcl")
 	require.NoError(err)
 
 	pg := ts.Targets["pg"]["src"]
