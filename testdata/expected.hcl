@@ -143,7 +143,7 @@ index "" "observation" "observation_pkey" {
   }
 }
 
-trigger "" "measurement" "update_measurement_modified" {
+trigger "" "measurement" "update_modified_column" {
   function           = "update_modified_column"
   when               = "BEFORE"
   constraint         = false
@@ -156,7 +156,7 @@ trigger "" "measurement" "update_measurement_modified" {
   update             = true
   columns            = null
 }
-trigger "" "observation" "update_observation_modified" {
+trigger "" "observation" "update_modified_column" {
   function           = "update_modified_column"
   when               = "BEFORE"
   constraint         = false

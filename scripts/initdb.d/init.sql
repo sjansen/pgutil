@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS measurement (
     CHECK(key ~ '^\d{4}-\d{4}-\d{4}(:[a-z]+)?$')
 )
 ;
-CREATE TRIGGER update_measurement_modified
+CREATE TRIGGER update_modified_column
   BEFORE UPDATE ON measurement
   FOR EACH ROW
   EXECUTE PROCEDURE update_modified_column()
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS observation (
       CHECK(length(notes) > 50)
 )
 ;
-CREATE TRIGGER update_observation_modified
+CREATE TRIGGER update_modified_column
   BEFORE UPDATE ON observation
   FOR EACH ROW
   EXECUTE PROCEDURE update_modified_column()
