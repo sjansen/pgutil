@@ -3,6 +3,7 @@
 package pg_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -31,6 +32,33 @@ func TestConnectAndQuery(t *testing.T) {
 	version, err := c.ServerVersion()
 	require.NoError(err)
 	require.NotEmpty(version)
+}
+
+func TestDescribeFunction(t *testing.T) {
+	require := require.New(t)
+
+	c, err := connect()
+	require.NoError(err)
+	defer c.Close()
+
+	function, err := c.DescribeFunction("pg_catalog", "current_database")
+	require.NoError(err)
+	require.NotNil(function)
+}
+
+func TestDescribeTrigger(t *testing.T) {
+	if os.Getenv("PGUTIL_TEST_TAGS") == "" {
+		t.Skip("missing $PGUTIL_TEST_TAGS")
+	}
+	require := require.New(t)
+
+	c, err := connect()
+	require.NoError(err)
+	defer c.Close()
+
+	trigger, err := c.DescribeTrigger("public", "measurement", "update_modified_column")
+	require.NoError(err)
+	require.NotNil(trigger)
 }
 
 func TestExec(t *testing.T) {
