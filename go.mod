@@ -11,7 +11,7 @@ require (
 	github.com/hashicorp/hcl2 v0.0.0-20190515223218-4b22149b7cef
 	github.com/hokaccha/go-prettyjson v0.0.0-20180920040306-f579f869bbfe
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
-	github.com/jackc/pgx v3.4.0+incompatible
+	github.com/jackc/pgx v3.5.0+incompatible
 	github.com/lib/pq v1.1.1 // indirect
 	github.com/mattn/go-isatty v0.0.8
 	github.com/pkg/errors v0.8.1 // indirect
