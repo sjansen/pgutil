@@ -49,6 +49,7 @@ func (c *Conn) ListIndexes(schema, table string) ([]*ddl.Index, error) {
 		if err != nil {
 			break
 		}
+		index.Schema = schema
 		index.Primary = isPrimary
 		indexes = append(indexes, index)
 	}

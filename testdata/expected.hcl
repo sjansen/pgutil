@@ -103,7 +103,7 @@ table "public" "observation" {
   }
 }
 
-index "" "measurement" "measurement_pkey" {
+index "public" "measurement" "measurement_pkey" {
   primary = true
   unique  = true
   using   = "btree"
@@ -116,7 +116,7 @@ index "" "measurement" "measurement_pkey" {
     descending = false
   }
 }
-index "" "measurement" "measurement_key_key" {
+index "public" "measurement" "measurement_key_key" {
   primary = false
   unique  = true
   using   = "btree"
@@ -129,7 +129,7 @@ index "" "measurement" "measurement_key_key" {
     descending = false
   }
 }
-index "" "observation" "observation_pkey" {
+index "public" "observation" "observation_pkey" {
   primary = true
   unique  = true
   using   = "btree"
@@ -143,7 +143,7 @@ index "" "observation" "observation_pkey" {
   }
 }
 
-trigger "" "measurement" "update_modified_column" {
+trigger "public" "measurement" "update_modified_column" {
   function           = "update_modified_column"
   when               = "BEFORE"
   constraint         = false
@@ -156,7 +156,7 @@ trigger "" "measurement" "update_modified_column" {
   update             = true
   columns            = null
 }
-trigger "" "observation" "update_modified_column" {
+trigger "public" "observation" "update_modified_column" {
   function           = "update_modified_column"
   when               = "BEFORE"
   constraint         = false

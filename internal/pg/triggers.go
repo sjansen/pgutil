@@ -43,6 +43,7 @@ func (c *Conn) ListTriggers(schema, table string) ([]*ddl.Trigger, error) {
 		if err != nil {
 			break
 		}
+		trigger.Schema = schema
 		triggers = append(triggers, trigger)
 	}
 	if err != nil {
