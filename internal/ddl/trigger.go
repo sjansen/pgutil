@@ -2,6 +2,27 @@ package ddl
 
 import "strings"
 
+// A Trigger executes a function when a specific event happens
+type Trigger struct {
+	Schema string `hcl:"schema,label"`
+	Table  string `hcl:"table,label"`
+	Name   string `hcl:"name,label"`
+
+	Function string `hcl:"function,attr"`
+	When     string `hcl:"when,attr"`
+
+	Constraint        bool `hcl:"constraint,optional"`
+	Deferrable        bool `hcl:"deferrable,optional"`
+	InitiallyDeferred bool `hcl:"initially_deferred,optional"`
+	ForEachRow        bool `hcl:"for_each_row,optional"`
+
+	Delete   bool     `hcl:"delete,optional"`
+	Insert   bool     `hcl:"insert,optional"`
+	Truncate bool     `hcl:"truncate,optional"`
+	Update   bool     `hcl:"update,optional"`
+	Columns  []string `hcl:"columns,optional"`
+}
+
 func (t *Trigger) addColumn(s string) {
 	t.Columns = append(t.Columns, s)
 }

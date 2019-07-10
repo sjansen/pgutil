@@ -3,7 +3,6 @@ package commands
 import (
 	"os"
 
-	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/pg"
 )
 
@@ -54,5 +53,5 @@ func (c *InspectCmd) Run(base *Base) error {
 		}
 	}
 
-	return ddl.Write(w, db)
+	return db.Write(w)
 }

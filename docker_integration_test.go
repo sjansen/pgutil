@@ -10,7 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/logger"
 	"github.com/sjansen/pgutil/internal/pg"
 )
@@ -43,7 +42,7 @@ func TestConnectAndQuery(t *testing.T) {
 	require.NoError(err)
 
 	buf := &bytes.Buffer{}
-	err = ddl.Write(buf, db)
+	err = db.Write(buf)
 	require.NoError(err)
 
 	actual := buf.Bytes()

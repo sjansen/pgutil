@@ -1,5 +1,10 @@
 package ddl
 
+//go:generate ragel-go -G2 -o check_parser.go check_parser.rl
+//go:generate ragel-go -G2 -o index_parser.go index_parser.rl
+//go:generate ragel-go -G2 -o foreign_key_parser.go foreign_key_parser.rl
+//go:generate ragel-go -G2 -o trigger_parser.go trigger_parser.rl
+
 import (
 	"io"
 
@@ -44,7 +49,7 @@ func ParseFile(filename string) (*Database, error) {
 }
 
 // Write converts structs describing a database to an an HCL configuration file.
-func Write(w io.Writer, db *Database) error {
+func (db *Database) Write(w io.Writer) error {
 	f := hclwrite.NewEmptyFile()
 	gohcl.EncodeIntoBody(db, f.Body())
 	_, err := w.Write(f.Bytes())

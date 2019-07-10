@@ -2,6 +2,34 @@ package ddl
 
 import "strings"
 
+// A Table is a collection of similar data organized as rows
+type Table struct {
+	Schema  string `hcl:"schema,label"`
+	Name    string `hcl:"name,label"`
+	Comment string `hcl:"comment,optional"`
+	Owner   string `hcl:"owner,optional"`
+
+	Columns     []*Column     `hcl:"column,block"`
+	Checks      []*Check      `hcl:"check,block"`
+	ForeignKeys []*ForeignKey `hcl:"foreign_key,block"`
+}
+
+// A Column is a data field of a table
+type Column struct {
+	Name    string `hcl:"name,label"`
+	Type    string `hcl:"type,attr"`
+	NotNull bool   `hcl:"not_null,optional"`
+	Default string `hcl:"default,optional"`
+}
+
+// A Check constraint limits column values
+type Check struct {
+	Name              string `hcl:"name,optional"`
+	Expression        string `hcl:"expression,attr"`
+	Deferrable        bool   `hcl:"deferrable,optional"`
+	InitiallyDeferred bool   `hcl:"initially_deferred,optional"`
+}
+
 func (t *Table) ToSQL() (string, error) {
 	var sb strings.Builder
 	sb.WriteString("CREATE TABLE ")

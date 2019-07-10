@@ -142,7 +142,7 @@ func TestWrite(t *testing.T) {
 	require.NoError(err)
 
 	buf := &bytes.Buffer{}
-	err = ddl.Write(buf, db)
+	err = db.Write(buf)
 	require.NoError(err)
 
 	actual := buf.Bytes()
