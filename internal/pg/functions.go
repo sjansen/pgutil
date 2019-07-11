@@ -1,6 +1,9 @@
 package pg
 
-import "github.com/sjansen/pgutil/internal/ddl"
+import (
+	"github.com/jackc/pgx"
+	"github.com/sjansen/pgutil/internal/ddl"
+)
 
 var describeFunction = `
 SELECT
@@ -48,7 +51,10 @@ func (c *Conn) DescribeFunction(schema, name string) (*ddl.Function, error) {
 	err := c.conn.QueryRow(describeFunction, schema, name).Scan(
 		&owner, &comment, &returns, &language, &definition,
 	)
-	if err != nil {
+	switch {
+	case err == pgx.ErrNoRows:
+		return nil, ErrNotFound
+	case err != nil:
 		return nil, err
 	}
 

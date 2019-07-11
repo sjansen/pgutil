@@ -1,6 +1,9 @@
 package pg
 
-import "github.com/sjansen/pgutil/internal/ddl"
+import (
+	"github.com/jackc/pgx"
+	"github.com/sjansen/pgutil/internal/ddl"
+)
 
 var describeTrigger = `
 SELECT
@@ -38,7 +41,10 @@ func (c *Conn) DescribeTrigger(schema, table, name string) (*ddl.Trigger, error)
 
 	c.log.Debugw("executing query", "query", listTriggers)
 	err := c.conn.QueryRow(describeTrigger, schema, table, name).Scan(&triggerdef)
-	if err != nil {
+	switch {
+	case err == pgx.ErrNoRows:
+		return nil, ErrNotFound
+	case err != nil:
 		return nil, err
 	}
 	c.log.Debugw("scanned", "triggerdef", triggerdef)

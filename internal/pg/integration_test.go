@@ -44,6 +44,10 @@ func TestDescribeFunction(t *testing.T) {
 	function, err := c.DescribeFunction("pg_catalog", "current_database")
 	require.NoError(err)
 	require.NotNil(function)
+
+	function, err = c.DescribeFunction("public", "no_such_function")
+	require.Equal(pg.ErrNotFound, err)
+	require.Nil(function)
 }
 
 func TestDescribeTrigger(t *testing.T) {
@@ -59,6 +63,10 @@ func TestDescribeTrigger(t *testing.T) {
 	trigger, err := c.DescribeTrigger("public", "measurement", "update_modified_column")
 	require.NoError(err)
 	require.NotNil(trigger)
+
+	trigger, err = c.DescribeTrigger("public", "no_such_table", "no_such_trigger")
+	require.Equal(pg.ErrNotFound, err)
+	require.Nil(trigger)
 }
 
 func TestExec(t *testing.T) {
