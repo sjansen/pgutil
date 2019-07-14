@@ -34,13 +34,41 @@ var expected = &ddl.Database{
 		},
 	},
 
+	Sequences: []*ddl.Sequence{
+		{
+			Schema:  "public",
+			Name:    "bar_id_seq",
+			Comment: "",
+
+			Start:     1,
+			Minimum:   1,
+			Maximum:   2147483647,
+			Increment: 1,
+			Cache:     1,
+			Cycle:     false,
+
+			OwnedBy: &ddl.SequenceOwner{
+				Schema: "public",
+				Table:  "bar",
+				Column: "id",
+			},
+		},
+		{
+			Schema: "public",
+			Name:   "foo_id_seq",
+
+			Maximum: 2147483647,
+		},
+	},
 	Tables: []*ddl.Table{
 		{
 			Schema:  "public",
 			Name:    "bar",
 			Comment: "",
 			Columns: []*ddl.Column{
-				{Name: "id", Type: "integer", NotNull: true},
+				{Name: "id", Type: "integer", NotNull: true,
+					Default: "nextval('bar_id_seq'::regclass)",
+				},
 				{Name: "foo_id", Type: "integer", NotNull: true},
 			},
 			ForeignKeys: []*ddl.ForeignKey{{
@@ -53,9 +81,12 @@ var expected = &ddl.Database{
 			Name:    "foo",
 			Comment: "A simple test case",
 			Columns: []*ddl.Column{
-				{Name: "id", Type: "integer", NotNull: true},
-				{Name: "created", Type: "timestamp with time zone", NotNull: true, Default: "now()"},
-				{Name: "modified", Type: "timestamp with time zone", NotNull: true, Default: "now()"},
+				{Name: "id", Type: "integer", NotNull: true,
+					Default: "nextval('foo_id_seq'::regclass)"},
+				{Name: "created", Type: "timestamp with time zone", NotNull: true,
+					Default: "now()"},
+				{Name: "modified", Type: "timestamp with time zone", NotNull: true,
+					Default: "now()"},
 				{Name: "key", Type: "character varying(50)", NotNull: true},
 				{Name: "value", Type: "character varying(500)"},
 			},

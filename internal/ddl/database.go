@@ -6,6 +6,7 @@ type Database struct {
 
 	Schemas   []*Schema   `hcl:"schema,block"`
 	Functions []*Function `hcl:"function,block"`
+	Sequences []*Sequence `hcl:"sequence,block"`
 	Tables    []*Table    `hcl:"table,block"`
 	Indexes   []*Index    `hcl:"index,block"`
 	Triggers  []*Trigger  `hcl:"trigger,block"`
@@ -20,6 +21,6 @@ type Parameters struct {
 // A Schema is a database namespace
 type Schema struct {
 	Name    string `hcl:"name,label"`
-	Comment string `hcl:"comment,optional"`
 	Owner   string `hcl:"owner,optional"`
+	Comment string `hcl:"comment,optional"`
 }

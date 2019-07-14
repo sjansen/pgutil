@@ -34,6 +34,11 @@ func (c *Conn) InspectDatabase(o *InspectOptions) (db *ddl.Database, err error) 
 		return nil, err
 	}
 
+	db.Sequences, err = c.ListSequences()
+	if err != nil {
+		return nil, err
+	}
+
 	if err := c.inspectTables(o, db); err != nil {
 		return nil, err
 	}

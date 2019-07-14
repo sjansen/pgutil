@@ -7,7 +7,7 @@ END;
 $$ language 'plpgsql'
 ;
 CREATE TABLE IF NOT EXISTS measurement (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     created TIMESTAMPTZ NOT NULL DEFAULT now(),
     modified TIMESTAMPTZ NOT NULL DEFAULT now(),
     key VARCHAR(50) UNIQUE NOT NULL,
@@ -21,7 +21,7 @@ CREATE TRIGGER update_modified_column
   EXECUTE PROCEDURE update_modified_column()
 ;
 CREATE TABLE IF NOT EXISTS observation (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     created TIMESTAMPTZ NOT NULL DEFAULT now(),
     modified TIMESTAMPTZ NOT NULL DEFAULT now(),
     measurement_id INTEGER NOT NULL REFERENCES measurement(id),

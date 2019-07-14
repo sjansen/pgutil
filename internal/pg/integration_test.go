@@ -141,6 +141,18 @@ func TestListSchemas(t *testing.T) {
 	require.NotEmpty(schemas)
 }
 
+func TestListSequences(t *testing.T) {
+	require := require.New(t)
+
+	c, err := connect()
+	require.NoError(err)
+	defer c.Close()
+
+	sequences, err := c.ListSequences()
+	require.NoError(err)
+	require.NotEmpty(sequences)
+}
+
 func TestListTables(t *testing.T) {
 	require := require.New(t)
 

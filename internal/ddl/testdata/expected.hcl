@@ -5,26 +5,55 @@ parameters {
 }
 
 schema "public" {
-  comment = ""
   owner   = ""
+  comment = ""
 }
 
 function "public" "update_modified_column" {
-  comment    = ""
   owner      = ""
+  comment    = ""
   returns    = "trigger"
   language   = "plpgsql"
   definition = "BEGIN\n  NEW.modified = now();\n  RETURN NEW;\nEND;\n"
 }
 
+sequence "public" "bar_id_seq" {
+  owner     = ""
+  comment   = ""
+  data_type = ""
+  start     = 1
+  minimum   = 1
+  maximum   = 2147483647
+  increment = 1
+  cache     = 1
+  cycle     = false
+
+  owned_by {
+    schema = "public"
+    table  = "bar"
+    column = "id"
+  }
+}
+sequence "public" "foo_id_seq" {
+  owner     = ""
+  comment   = ""
+  data_type = ""
+  start     = 0
+  minimum   = 0
+  maximum   = 2147483647
+  increment = 0
+  cache     = 0
+  cycle     = false
+}
+
 table "public" "bar" {
-  comment = ""
   owner   = ""
+  comment = ""
 
   column "id" {
     type     = "integer"
     not_null = true
-    default  = ""
+    default  = "nextval('bar_id_seq'::regclass)"
   }
   column "foo_id" {
     type     = "integer"
@@ -44,13 +73,13 @@ table "public" "bar" {
   }
 }
 table "public" "foo" {
-  comment = "A simple test case"
   owner   = ""
+  comment = "A simple test case"
 
   column "id" {
     type     = "integer"
     not_null = true
-    default  = ""
+    default  = "nextval('foo_id_seq'::regclass)"
   }
   column "created" {
     type     = "timestamp with time zone"

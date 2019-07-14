@@ -5,21 +5,56 @@ parameters {
 }
 
 schema "public" {
-  comment = "standard public schema"
   owner   = "docker"
+  comment = "standard public schema"
 }
 
 function "public" "update_modified_column" {
-  comment    = ""
   owner      = "docker"
+  comment    = ""
   returns    = "trigger"
   language   = "plpgsql"
   definition = "\nBEGIN\n    NEW.modified = now();\n    RETURN NEW; \nEND;\n"
 }
 
+sequence "public" "measurement_id_seq" {
+  owner     = "docker"
+  comment   = ""
+  data_type = "bigint"
+  start     = 1
+  minimum   = 1
+  maximum   = 9223372036854775807
+  increment = 1
+  cache     = 1
+  cycle     = false
+
+  owned_by {
+    schema = "public"
+    table  = "measurement"
+    column = "id"
+  }
+}
+sequence "public" "observation_id_seq" {
+  owner     = "docker"
+  comment   = ""
+  data_type = "bigint"
+  start     = 1
+  minimum   = 1
+  maximum   = 9223372036854775807
+  increment = 1
+  cache     = 1
+  cycle     = false
+
+  owned_by {
+    schema = "public"
+    table  = "observation"
+    column = "id"
+  }
+}
+
 table "public" "measurement" {
-  comment = ""
   owner   = "docker"
+  comment = ""
 
   column "created" {
     type     = "timestamp with time zone"
@@ -27,7 +62,7 @@ table "public" "measurement" {
     default  = "now()"
   }
   column "id" {
-    type     = "integer"
+    type     = "bigint"
     not_null = true
     default  = "nextval('measurement_id_seq'::regclass)"
   }
@@ -55,8 +90,8 @@ table "public" "measurement" {
   }
 }
 table "public" "observation" {
-  comment = ""
   owner   = "docker"
+  comment = ""
 
   column "created" {
     type     = "timestamp with time zone"
@@ -64,7 +99,7 @@ table "public" "observation" {
     default  = "now()"
   }
   column "id" {
-    type     = "integer"
+    type     = "bigint"
     not_null = true
     default  = "nextval('observation_id_seq'::regclass)"
   }

@@ -21,7 +21,7 @@ ORDER BY "Schema", "Name"
 
 // ListTables describes the tables in the database
 func (c *Conn) ListTables() ([]*ddl.Table, error) {
-	c.log.Infow("listing tables")
+	c.log.Infow("ListTables")
 
 	c.log.Debugw("executing query", "query", listTables)
 	rows, err := c.conn.Query(listTables)

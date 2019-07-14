@@ -6,8 +6,8 @@ import "strings"
 type Function struct {
 	Schema  string `hcl:"schema,label"`
 	Name    string `hcl:"name,label"`
-	Comment string `hcl:"comment,optional"`
 	Owner   string `hcl:"owner,optional"`
+	Comment string `hcl:"comment,optional"`
 
 	Returns    string `hcl:"returns,attr"`
 	Language   string `hcl:"language,attr"`

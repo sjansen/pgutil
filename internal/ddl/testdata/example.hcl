@@ -15,10 +15,30 @@ END;
 EOF
 }
 
+sequence "public" "bar_id_seq" {
+  start     = 1
+  minimum   = 1
+  maximum   = 2147483647
+  increment = 1
+  cache     = 1
+  cycle     = false
+
+  owned_by {
+    schema = "public"
+    table  = "bar"
+    column = "id"
+  }
+}
+
+sequence "public" "foo_id_seq" {
+  maximum   = 2147483647
+}
+
 table "public" "bar" {
   column "id" {
     type = "integer"
     not_null = true
+    default = "nextval('bar_id_seq'::regclass)"
   }
   column "foo_id" {
     type = "integer"
@@ -36,6 +56,7 @@ table "public" "foo" {
   column "id" {
     type = "integer"
     not_null = true
+    default = "nextval('foo_id_seq'::regclass)"
   }
   column "created" {
     type = "timestamp with time zone"

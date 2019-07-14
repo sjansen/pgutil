@@ -6,8 +6,8 @@ import "strings"
 type Table struct {
 	Schema  string `hcl:"schema,label"`
 	Name    string `hcl:"name,label"`
-	Comment string `hcl:"comment,optional"`
 	Owner   string `hcl:"owner,optional"`
+	Comment string `hcl:"comment,optional"`
 
 	Columns     []*Column     `hcl:"column,block"`
 	Checks      []*Check      `hcl:"check,block"`
