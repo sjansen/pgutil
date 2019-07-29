@@ -88,6 +88,11 @@ table "public" "measurement" {
     deferrable         = false
     initially_deferred = false
   }
+
+  storage_parameters {
+    fillfactor         = 75
+    autovacuum_enabled = false
+  }
 }
 table "public" "observation" {
   owner   = "docker"
@@ -135,6 +140,9 @@ table "public" "observation" {
     on_update          = ""
     deferrable         = false
     initially_deferred = false
+  }
+
+  storage_parameters {
   }
 }
 

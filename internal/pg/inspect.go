@@ -104,6 +104,12 @@ func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Tabl
 		table.ForeignKeys = append(table.ForeignKeys, fks...)
 	}
 
+	params, err := c.ListTableStorageParameters(table.Schema, table.Name)
+	if err != nil {
+		return err
+	}
+	table.StorageParameters = params
+
 	indexes, err := c.ListIndexes(table.Schema, table.Name)
 	if err != nil {
 		return err

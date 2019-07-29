@@ -12,6 +12,8 @@ type Table struct {
 	Columns     []*Column     `hcl:"column,block"`
 	Checks      []*Check      `hcl:"check,block"`
 	ForeignKeys []*ForeignKey `hcl:"foreign_key,block"`
+
+	StorageParameters *TableStorageParameters `hcl:"storage_parameters,block"`
 }
 
 // A Column is a data field of a table

@@ -2,7 +2,7 @@ package ddl
 
 import "strings"
 
-// An Index is used to enhance database performance
+// An Index is used to improve database performance
 type Index struct {
 	Schema string `hcl:"schema,label"`
 	Table  string `hcl:"table,label"`
@@ -16,7 +16,7 @@ type Index struct {
 	Keys []*IndexKey `hcl:"key,block"`
 }
 
-// An IndexKey is used to enhance database performance
+// An IndexKey is used to improve database performance
 type IndexKey struct {
 	Column     string `hcl:"column,optional"`
 	Expression string `hcl:"expression,optional"`

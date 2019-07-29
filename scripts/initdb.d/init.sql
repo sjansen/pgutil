@@ -20,6 +20,11 @@ CREATE TRIGGER update_modified_column
   FOR EACH ROW
   EXECUTE PROCEDURE update_modified_column()
 ;
+ALTER TABLE measurement SET (
+    autovacuum_enabled = false,
+    fillfactor = 75
+)
+;
 CREATE TABLE IF NOT EXISTS observation (
     id BIGSERIAL PRIMARY KEY,
     created TIMESTAMPTZ NOT NULL DEFAULT now(),
