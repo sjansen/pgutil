@@ -24,14 +24,6 @@ type Column struct {
 	Default string `hcl:"default,optional"`
 }
 
-// A Check constraint limits column values
-type Check struct {
-	Name              string `hcl:"name,optional"`
-	Expression        string `hcl:"expression,attr"`
-	Deferrable        bool   `hcl:"deferrable,optional"`
-	InitiallyDeferred bool   `hcl:"initially_deferred,optional"`
-}
-
 func (t *Table) ToSQL() (string, error) {
 	var sb strings.Builder
 	sb.WriteString("CREATE TABLE ")
