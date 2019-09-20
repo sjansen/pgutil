@@ -1,0 +1,24 @@
+Replacing unalterable constraints:
+
+    ALTER TABLE "table_name"
+      ADD CONSTRAINT "tmp_constraint_name"
+          FOREIGN KEY ("column_name")
+          REFERENCES hvnext_interviewuse(id)
+          ON UPDATE CASCADE
+          DEFERRABLE INITIALLY DEFERRED
+          NOT VALID
+    ;
+    BEGIN
+    ;
+    ALTER TABLE "table_name"
+      DROP CONSTRAINT "constraint_name"
+    ;
+    ALTER TABLE "table_name"
+      RENAME CONSTRAINT "tmp_constraint_name"
+        TO "constraint_name"
+    ;
+    COMMIT
+    ;
+    ALTER TABLE "table_name"
+      VALIDATE CONSTRAINT "constraint_name"
+    ;
