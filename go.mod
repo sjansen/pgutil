@@ -17,7 +17,7 @@ require (
 	github.com/jackc/pgx v3.6.0+incompatible
 	github.com/lib/pq v1.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.2 // indirect
-	github.com/mattn/go-isatty v0.0.9
+	github.com/mattn/go-isatty v0.0.10
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
