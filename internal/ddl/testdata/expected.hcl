@@ -54,11 +54,13 @@ table "public" "bar" {
     type     = "integer"
     not_null = true
     default  = "nextval('bar_id_seq'::regclass)"
+    comment  = ""
   }
   column "foo_id" {
     type     = "integer"
     not_null = true
     default  = ""
+    comment  = ""
   }
 
   foreign_key "foo" {
@@ -80,26 +82,31 @@ table "public" "foo" {
     type     = "integer"
     not_null = true
     default  = "nextval('foo_id_seq'::regclass)"
+    comment  = ""
   }
   column "created" {
     type     = "timestamp with time zone"
     not_null = true
     default  = "now()"
+    comment  = ""
   }
   column "modified" {
     type     = "timestamp with time zone"
     not_null = true
     default  = "now()"
+    comment  = ""
   }
   column "key" {
     type     = "character varying(50)"
     not_null = true
     default  = ""
+    comment  = ""
   }
   column "value" {
     type     = "character varying(500)"
     not_null = false
     default  = ""
+    comment  = ""
   }
 }
 

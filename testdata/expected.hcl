@@ -60,26 +60,31 @@ table "public" "measurement" {
     type     = "timestamp with time zone"
     not_null = true
     default  = "now()"
+    comment  = ""
   }
   column "id" {
     type     = "bigint"
     not_null = true
     default  = "nextval('measurement_id_seq'::regclass)"
+    comment  = ""
   }
   column "key" {
     type     = "character varying(50)"
     not_null = true
     default  = ""
+    comment  = ""
   }
   column "modified" {
     type     = "timestamp with time zone"
     not_null = true
     default  = "now()"
+    comment  = ""
   }
   column "value" {
     type     = "character varying(500)"
     not_null = false
     default  = ""
+    comment  = ""
   }
 
   check {
@@ -102,26 +107,31 @@ table "public" "observation" {
     type     = "timestamp with time zone"
     not_null = true
     default  = "now()"
+    comment  = ""
   }
   column "id" {
     type     = "bigint"
     not_null = true
     default  = "nextval('observation_id_seq'::regclass)"
+    comment  = ""
   }
   column "measurement_id" {
     type     = "integer"
     not_null = true
     default  = ""
+    comment  = ""
   }
   column "modified" {
     type     = "timestamp with time zone"
     not_null = true
     default  = "now()"
+    comment  = ""
   }
   column "notes" {
     type     = "character varying(500)"
     not_null = false
     default  = ""
+    comment  = ""
   }
 
   check {

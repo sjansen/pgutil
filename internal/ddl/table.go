@@ -22,6 +22,7 @@ type Column struct {
 	Type    string `hcl:"type,attr"`
 	NotNull bool   `hcl:"not_null,optional"`
 	Default string `hcl:"default,optional"`
+	Comment string `hcl:"comment,optional"`
 }
 
 func (t *Table) ToSQL() (string, error) {

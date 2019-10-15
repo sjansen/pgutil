@@ -4,14 +4,15 @@ import "github.com/sjansen/pgutil/internal/ddl"
 
 var listColumns = `
 SELECT
-  a.attname
-, pg_catalog.format_type(a.atttypid, a.atttypmod)
-, a.attnotnull
+  a.attname AS "Name"
+, pg_catalog.format_type(a.atttypid, a.atttypmod) AS "Type"
+, a.attnotnull as "NotNull"
 , (SELECT pg_catalog.pg_get_expr(d.adbin, d.adrelid)
    FROM pg_catalog.pg_attrdef d
    WHERE d.adrelid = a.attrelid
      AND d.adnum = a.attnum
-     AND a.atthasdef)
+     AND a.atthasdef) as "Default"
+, pg_catalog.col_description(a.attrelid, a.attnum) as "Comment"
 FROM pg_catalog.pg_namespace n
 JOIN pg_catalog.pg_class c
   ON c.relnamespace = n.oid
@@ -38,14 +39,15 @@ func (c *Conn) ListColumns(schema, table string) ([]*ddl.Column, error) {
 	c.log.Debugw("scanning rows")
 	var columns []*ddl.Column
 	for rows.Next() {
-		var defaultValue *string
+		var comment, defaultValue *string
 		col := &ddl.Column{}
 		err = rows.Scan(
-			&col.Name, &col.Type, &col.NotNull, &defaultValue,
+			&col.Name, &col.Type, &col.NotNull, &defaultValue, &comment,
 		)
 		if err != nil {
 			break
 		}
+		col.Comment = String(comment)
 		col.Default = String(defaultValue)
 		c.log.Debugw("row scanned", "column", col.Name, "type", col.Type)
 		columns = append(columns, col)
