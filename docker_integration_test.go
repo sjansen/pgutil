@@ -18,6 +18,7 @@ func connect() (c *pg.Conn, err error) {
 	options := &pg.Options{
 		Log: logger.Discard(),
 
+		Database:       "pgutil_test_complete",
 		ConnectRetries: 3,
 		SSLMode:        "prefer",
 	}
