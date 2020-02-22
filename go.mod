@@ -20,7 +20,7 @@ require (
 	github.com/mattn/go-isatty v0.0.11
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.5.1
 	github.com/zclconf/go-cty v1.1.0 // indirect
 	go.uber.org/zap v1.13.0
 	golang.org/x/crypto v0.0.0-20191029031824-8986dd9e96cf // indirect
