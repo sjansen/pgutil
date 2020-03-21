@@ -2,9 +2,11 @@
 set -e
 
 echo ========================================
+printenv | sort
+echo ========================================
 go version
 echo ========================================
-printenv | sort
+go env
 echo ========================================
 mkdir -p dist
 go test -race -coverpkg ./... -coverprofile=dist/coverage.txt -tags "${PGUTIL_TEST_TAGS:-'integration'}" ./...
@@ -13,4 +15,5 @@ echo go vet...
 go vet  ./...
 echo ========================================
 echo golangci-lint...
+golangci-lint version
 golangci-lint run

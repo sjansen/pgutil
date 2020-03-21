@@ -1,9 +1,9 @@
 package ddl
 
-//go:generate ragel-go -G2 -o check_parser.go check_parser.rl
-//go:generate ragel-go -G2 -o index_parser.go index_parser.rl
-//go:generate ragel-go -G2 -o foreign_key_parser.go foreign_key_parser.rl
-//go:generate ragel-go -G2 -o trigger_parser.go trigger_parser.rl
+//go:generate ragel -Z -G2 -o check_parser.go check_parser.rl
+//go:generate ragel -Z -G2 -o index_parser.go index_parser.rl
+//go:generate ragel -Z -G2 -o foreign_key_parser.go foreign_key_parser.rl
+//go:generate ragel -Z -G2 -o trigger_parser.go trigger_parser.rl
 
 import (
 	"io"

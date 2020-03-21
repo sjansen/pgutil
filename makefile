@@ -2,6 +2,9 @@
 
 default: test
 
+generate:
+	go generate ./...
+
 refresh:
 	cookiecutter gh:sjansen/cookiecutter-golang --output-dir .. --config-file .cookiecutter.yaml --no-input --overwrite-if-exists
 	git checkout go.mod go.sum
