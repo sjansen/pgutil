@@ -10,7 +10,7 @@ require (
 	github.com/fortytw2/leaktest v1.3.0
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
 	github.com/google/go-cmp v0.3.1 // indirect
-	github.com/google/go-jsonnet v0.14.0
+	github.com/google/go-jsonnet v0.17.0
 	github.com/hashicorp/hcl2 v0.0.0-20191002203319-fb75b3253c80
 	github.com/hokaccha/go-prettyjson v0.0.0-20190818114111-108c894c2c0e
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
