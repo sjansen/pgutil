@@ -44,7 +44,7 @@ func (p *Parser) Load(filename string) (string, error) {
 		JPaths: []string{directory},
 	})
 
-	return vm.EvaluateSnippet(filename, string(data))
+	return vm.EvaluateAnonymousSnippet(filename, string(data))
 }
 
 // Parse loads targets and task from a runbook file

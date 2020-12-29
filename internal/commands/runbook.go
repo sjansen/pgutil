@@ -8,10 +8,10 @@ import (
 type RunBookRunCmd struct {
 	File string
 
-	//DryRun      bool
-	//Interactive bool
-	//ListTasks   bool
-	//Tasks       []string
+	// DryRun      bool
+	// Interactive bool
+	// ListTasks   bool
+	// Tasks       []string
 }
 
 // Run executes the command
