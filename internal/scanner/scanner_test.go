@@ -20,11 +20,48 @@ func TestNewScanner(t *testing.T) {
 		Error: "invalid utf8",
 	}} {
 		_, err := scanner.New(tc.Input)
-		switch tc.Error {
-		case "":
-			require.Nil(err)
-		default:
-			require.Equal(tc.Error, err.Error())
+		if tc.Error == "" {
+			require.Nil(err, tc.Label)
+		} else {
+			require.Error(err, tc.Label)
+			require.Equal(tc.Error, err.Error(), tc.Label)
+		}
+	}
+}
+
+func TestRequireKeyword(t *testing.T) {
+	require := require.New(t)
+	for _, tc := range []struct {
+		Label string
+		Input string
+		Error string
+	}{{
+		Label: "empty",
+		Input: "",
+		Error: "keyword expected",
+	}, {
+		Label: "lowercase",
+		Input: "select",
+	}, {
+		Label: "uppercase",
+		Input: "SELECT",
+	}, {
+		Label: "partial",
+		Input: "SEL",
+		Error: "keyword expected",
+	}, {
+		Label: "extra",
+		Input: "SELECTED",
+	}} {
+		s, err := scanner.New(tc.Input)
+		require.NoError(err)
+
+		err = s.RequireKeyword("SELECT")
+		if tc.Error == "" {
+			require.Nil(err, tc.Label)
+		} else {
+			require.Error(err, tc.Label)
+			require.Equal(tc.Error, err.Error(), tc.Label)
 		}
 	}
 }
@@ -40,23 +77,22 @@ func TestRequireWhitespace(t *testing.T) {
 		Input: "",
 		Error: "whitespace expected",
 	}, {
-		Label: "invalid",
+		Label: "missing",
 		Input: "foo",
 		Error: "whitespace expected",
 	}, {
-		Label: "valid",
-		Input: " foo ",
-		Error: "",
+		Label: "present",
+		Input: " \r\n",
 	}} {
 		s, err := scanner.New(tc.Input)
 		require.NoError(err)
 
 		err = s.RequireWhitespace()
-		switch tc.Error {
-		case "":
-			require.Nil(err)
-		default:
-			require.Equal(tc.Error, err.Error())
+		if tc.Error == "" {
+			require.Nil(err, tc.Label)
+		} else {
+			require.Error(err, tc.Label)
+			require.Equal(tc.Error, err.Error(), tc.Label)
 		}
 	}
 }
@@ -70,23 +106,22 @@ func TestSkipWhitespace(t *testing.T) {
 	}{{
 		Label: "empty",
 		Input: "",
-		Error: "",
-	}, {
-		Label: "present",
-		Input: " foo ",
 	}, {
 		Label: "missing",
 		Input: "foo",
+	}, {
+		Label: "present",
+		Input: " \r\n",
 	}} {
 		s, err := scanner.New(tc.Input)
 		require.NoError(err)
 
 		err = s.SkipWhitespace()
-		switch tc.Error {
-		case "":
-			require.Nil(err)
-		default:
-			require.Equal(tc.Error, err.Error())
+		if tc.Error == "" {
+			require.Nil(err, tc.Label)
+		} else {
+			require.Error(err, tc.Label)
+			require.Equal(tc.Error, err.Error(), tc.Label)
 		}
 	}
 }
