@@ -29,6 +29,36 @@ func TestNewScanner(t *testing.T) {
 	}
 }
 
+func TestPosition(t *testing.T) {
+	require := require.New(t)
+	s, err := scanner.New("EXPLAIN ANALYZE\r\nSELECT")
+	require.NoError(err)
+
+	err = s.SkipWhitespace()
+	require.NoError(err)
+	require.Equal(scanner.Position{1, 0}, s.Position())
+
+	err = s.RequireKeyword("EXPLAIN")
+	require.NoError(err)
+	require.Equal(scanner.Position{1, 7}, s.Position())
+
+	err = s.RequireWhitespace()
+	require.NoError(err)
+	require.Equal(scanner.Position{1, 8}, s.Position())
+
+	err = s.RequireKeyword("ANALYZE")
+	require.NoError(err)
+	require.Equal(scanner.Position{1, 15}, s.Position())
+
+	err = s.RequireWhitespace()
+	require.NoError(err)
+	require.Equal(scanner.Position{1, 16}, s.Position())
+
+	err = s.RequireKeyword("SELECT")
+	require.NoError(err)
+	require.Equal(scanner.Position{2, 6}, s.Position())
+}
+
 func TestRequireKeyword(t *testing.T) {
 	require := require.New(t)
 	for _, tc := range []struct {
@@ -124,4 +154,24 @@ func TestSkipWhitespace(t *testing.T) {
 			require.Equal(tc.Error, err.Error(), tc.Label)
 		}
 	}
+}
+
+func TestSnapshotAndReset(t *testing.T) {
+	require := require.New(t)
+
+	s, err := scanner.New("COMMIT")
+	require.NoError(err)
+
+	snapshot := s.Snapshot()
+
+	err = s.RequireKeyword("COMMIT")
+	require.NoError(err)
+
+	err = s.RequireKeyword("COMMIT")
+	require.Error(err)
+
+	s.Reset(snapshot)
+
+	err = s.RequireKeyword("COMMIT")
+	require.NoError(err)
 }

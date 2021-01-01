@@ -5,14 +5,24 @@ import (
 	"unicode/utf8"
 )
 
+// Position represent the position of a rune, starting at (1,1).
+type Position struct {
+	Line   int
+	Column int
+}
+
+// State represents the state of a scanner.
+type State struct {
+	position Position
+
+	nextRuneOffset int  //nolint:structcheck
+	prevRune       rune //nolint:structcheck
+}
+
 // Scanner provides a convenient interface for parsing SQL.
 type Scanner struct {
-	str string
-	idx int
-
-	currLine  int
-	nextLine  int
-	prevIndex int
+	data string
+	State
 }
 
 // New returns a new Scanner.
@@ -21,38 +31,55 @@ func New(s string) (*Scanner, error) {
 		return nil, ErrInvalidUTF8
 	}
 	return &Scanner{
-		str:       s,
-		nextLine:  -1,
-		prevIndex: -1,
+		data: s,
+		State: State{
+			position: Position{
+				Line: 1,
+			},
+		},
 	}, nil
 }
 
 func (s *Scanner) readRune() rune {
-	s.prevIndex = s.idx
-	r, size := utf8.DecodeRuneInString(s.str[s.idx:])
-	s.idx += size
+	if s.nextRuneOffset >= len(s.data) {
+		return utf8.RuneError
+	}
+	r, size := utf8.DecodeRuneInString(s.data[s.nextRuneOffset:])
+	s.nextRuneOffset += size
 	switch {
 	case r == '\r':
-		tmp, size := utf8.DecodeRuneInString(s.str[s.idx:])
+		r = '\n'
+		tmp, size := utf8.DecodeRuneInString(s.data[s.nextRuneOffset:])
 		if tmp == '\n' {
-			s.idx += size
-			r = tmp
+			s.nextRuneOffset += size
 		}
 		fallthrough
 	case r == '\n':
-		s.nextLine = s.idx + 1
-	case s.nextLine > 0:
-		s.currLine = s.nextLine
-		s.nextLine = -1
-		s.prevIndex = -1
+		s.position.Column++
+	case s.prevRune == '\n':
+		s.position.Line++
+		s.position.Column = 1
+	default:
+		s.position.Column++
 	}
+	s.prevRune = r
 	return r
 }
 
-func (s *Scanner) unreadRune() {
-	if s.prevIndex >= 0 {
-		s.idx = s.prevIndex
-	}
+// Position returns the line & column of the most recently read rune,
+// starting at (1, 1).
+func (s *Scanner) Position() Position {
+	return s.position
+}
+
+// Reset restores the scanner to a previous state.
+func (s *Scanner) Reset(snapshot State) {
+	s.State = snapshot
+}
+
+// Snapshot returns a snapshot of the scanner's state.
+func (s *Scanner) Snapshot() State {
+	return s.State
 }
 
 // RequireKeyword consumes runes if they match after being uppercased.
@@ -68,8 +95,8 @@ func (s *Scanner) RequireKeyword(keyword string) error {
 
 // RequireWhitespace consumes one or more whitespace runes.
 func (s *Scanner) RequireWhitespace() error {
-	r := s.readRune()
-	if unicode.IsSpace(r) {
+	switch s.readRune() {
+	case ' ', '\t', '\r', '\n':
 		return s.SkipWhitespace()
 	}
 	return ErrWhitespaceExpected
@@ -77,10 +104,13 @@ func (s *Scanner) RequireWhitespace() error {
 
 // SkipWhitespace consumes zero or more whitespace runes.
 func (s *Scanner) SkipWhitespace() error {
-	r := s.readRune()
-	for unicode.IsSpace(r) {
-		r = s.readRune()
+	for s.nextRuneOffset < len(s.data) {
+		switch s.data[s.nextRuneOffset] {
+		case ' ', '\t', '\r', '\n':
+			s.readRune()
+		default:
+			return nil
+		}
 	}
-	s.unreadRune()
 	return nil
 }
