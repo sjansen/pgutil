@@ -13,6 +13,7 @@ actual.hcl
 actual.sql
 coverage.txt
 debug.test
+y.output
 
 # Patterns
 .*.sw[op]
