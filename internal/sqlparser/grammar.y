@@ -148,43 +148,11 @@ func newOptionList(opt *option) []*option {
 %%
 
 statement:
-  begin_stmt semicolon_opt
-| commit_stmt semicolon_opt
-| rollback_stmt semicolon_opt
+  transaction_stmt semicolon_opt
 
 semicolon_opt:
 /*empty*/
 | ';'
-
-begin_stmt:
-  BEGIN transaction_keywords transaction_mode_list_or_empty
-  {
-    stmt := newBeginStmt($3)
-    yylex.(*Lexer).Statement = stmt
-    if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
-    }
-  }
-
-commit_stmt:
-  COMMIT
-  {
-    stmt := &sql.CommitStmt{}
-    yylex.(*Lexer).Statement = stmt
-    if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
-    }
-  }
-
-rollback_stmt:
-  ROLLBACK
-  {
-    stmt := &sql.RollbackStmt{}
-    yylex.(*Lexer).Statement = stmt
-    if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
-    }
-  }
 
 transaction_isolation_level:
   READ COMMITTED		{ $$ = "read committed" }
@@ -214,3 +182,33 @@ transaction_mode_list:
 transaction_mode_list_or_empty:
   /*empty*/ { $$ = nil }
 | transaction_mode_list { $$ = $1 }
+
+transaction_stmt:
+  BEGIN transaction_keywords transaction_mode_list_or_empty {
+    stmt := newBeginStmt($3)
+    yylex.(*Lexer).Statement = stmt
+    if yyDebug > 6 {
+      __yyfmt__.Printf("stmt = %#v\n", stmt)
+    }
+  }
+| COMMIT {
+    stmt := &sql.CommitStmt{}
+    yylex.(*Lexer).Statement = stmt
+    if yyDebug > 6 {
+      __yyfmt__.Printf("stmt = %#v\n", stmt)
+    }
+  }
+| ROLLBACK {
+    stmt := &sql.RollbackStmt{}
+    yylex.(*Lexer).Statement = stmt
+    if yyDebug > 6 {
+      __yyfmt__.Printf("stmt = %#v\n", stmt)
+    }
+  }
+| START TRANSACTION transaction_mode_list_or_empty {
+    stmt := newBeginStmt($3)
+    yylex.(*Lexer).Statement = stmt
+    if yyDebug > 6 {
+      __yyfmt__.Printf("stmt = %#v\n", stmt)
+    }
+  }
