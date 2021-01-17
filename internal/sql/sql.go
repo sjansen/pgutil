@@ -1,7 +1,11 @@
 package sql
 
 // BeginStmt describes a BEGIN statement.
-type BeginStmt struct{}
+type BeginStmt struct {
+	Deferrable     bool
+	ReadOnly       bool
+	IsolationLevel string
+}
 
 // CommitStmt describes a COMMIT statement.
 type CommitStmt struct{}

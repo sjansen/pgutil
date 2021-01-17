@@ -25,7 +25,7 @@ func replaceExtension(path, replacement string) string {
 
 func TestParser(t *testing.T) {
 	t.Parallel()
-	sqlparser.EnableDebugLogging()
+	// sqlparser.EnableDebugLogging()
 
 	testcases, err := filepath.Glob("testdata/*.sql")
 	if err != nil {

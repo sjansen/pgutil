@@ -4,6 +4,24 @@ package sqlparser
 import (
   "github.com/sjansen/pgutil/internal/sql"
 )
+
+type option struct {
+  Name  string
+  Value interface{}
+}
+
+func newOption(name string, value interface{}) *option {
+  return &option{
+    Name:  name,
+    Value: value,
+  }
+}
+
+func newOptionList(opt *option) []*option {
+  slice := make([]*option, 0, 4)
+  slice = append(slice, opt)
+  return slice
+}
 %}
 
 /*
@@ -13,8 +31,9 @@ import (
  */
 
 %union {
-  empty struct{}
   ast   interface{}
+  opt   *option
+  opts  []*option
   str   string
 }
 
@@ -120,23 +139,27 @@ import (
 %token UNEXPECTED_SYMBOL
 %token<str> Identifier Name
 
+%type<str> transaction_isolation_level
+%type<opt> transaction_mode_item
+%type<opts> transaction_mode_list transaction_mode_list_or_empty
+
 %start statement
 
 %%
 
 statement:
-  begin_stmt
-| commit_stmt
-| rollback_stmt
+  begin_stmt semicolon_opt
+| commit_stmt semicolon_opt
+| rollback_stmt semicolon_opt
 
 semicolon_opt:
 /*empty*/
 | ';'
 
 begin_stmt:
-  BEGIN semicolon_opt
+  BEGIN transaction_keywords transaction_mode_list_or_empty
   {
-    stmt := &sql.BeginStmt{}
+    stmt := newBeginStmt($3)
     yylex.(*Lexer).Statement = stmt
     if yyDebug > 6 {
       __yyfmt__.Printf("stmt = %#v\n", stmt)
@@ -144,7 +167,7 @@ begin_stmt:
   }
 
 commit_stmt:
-  COMMIT semicolon_opt
+  COMMIT
   {
     stmt := &sql.CommitStmt{}
     yylex.(*Lexer).Statement = stmt
@@ -154,7 +177,7 @@ commit_stmt:
   }
 
 rollback_stmt:
-  ROLLBACK semicolon_opt
+  ROLLBACK
   {
     stmt := &sql.RollbackStmt{}
     yylex.(*Lexer).Statement = stmt
@@ -162,3 +185,32 @@ rollback_stmt:
       __yyfmt__.Printf("stmt = %#v\n", stmt)
     }
   }
+
+transaction_isolation_level:
+  READ COMMITTED		{ $$ = "read committed" }
+| READ UNCOMMITTED	{ $$ = "read uncommitted" }
+| REPEATABLE READ		{ $$ = "repeatable read" }
+| SERIALIZABLE			{ $$ = "serializable" }
+
+transaction_keywords:
+  /*empty*/
+| WORK
+| TRANSACTION
+
+transaction_mode_item:
+  ISOLATION LEVEL transaction_isolation_level {
+		$$ = newOption("isolation_level", $3)
+  }
+| READ ONLY { $$ = newOption("read_only", true) }
+| READ WRITE { $$ = newOption("read_only", false) }
+| DEFERRABLE { $$ = newOption("deferrable", true) }
+| NOT DEFERRABLE { $$ = newOption("deferrable", false) }
+
+transaction_mode_list:
+  transaction_mode_item { $$ = newOptionList($1) }
+| transaction_mode_list transaction_mode_item { $$ = append($1, $2) }
+| transaction_mode_list ',' transaction_mode_item { $$ = append($1, $3) }
+
+transaction_mode_list_or_empty:
+  /*empty*/ { $$ = nil }
+| transaction_mode_list { $$ = $1 }

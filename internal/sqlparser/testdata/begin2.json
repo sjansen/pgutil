@@ -1,0 +1,8 @@
+{
+  "type": "sql.BeginStmt",
+  "value": {
+    "Deferrable": true,
+    "IsolationLevel": "serializable",
+    "ReadOnly": true
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "sql.BeginStmt",
+  "value": {
+    "IsolationLevel": "read uncommitted"
+  }
+}
