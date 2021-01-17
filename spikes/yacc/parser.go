@@ -52,35 +52,35 @@ const yyPrivate = 57344
 const yyLast = 14
 
 var yyAct = [...]int{
-	13, 7, 11, 6, 9, 3, 4, 8, 10, 1,
-	5, 2, 0, 12,
+	7, 14, 8, 12, 10, 3, 5, 9, 11, 4,
+	1, 13, 6, 2,
 }
 
 var yyPact = [...]int{
-	-4, -1000, 0, -9, -1000, -1, -1000, 1, -8, -9,
-	-10, -1000, -1000, -1000,
+	-4, -1000, 0, -8, -1000, -1000, -1, -1000, 1, -7,
+	-8, -9, -1000, -1000, -1000,
 }
 
 var yyPgo = [...]int{
-	0, 11, 10, 3, 9,
+	0, 13, 12, 0, 10, 9,
 }
 
 var yyR1 = [...]int{
-	0, 4, 1, 3, 3, 2, 2,
+	0, 4, 5, 5, 1, 3, 3, 2, 2,
 }
 
 var yyR2 = [...]int{
-	0, 2, 4, 1, 3, 1, 3,
+	0, 2, 0, 1, 4, 1, 3, 1, 3,
 }
 
 var yyChk = [...]int{
-	-1000, -4, -1, 9, 6, -2, -3, 10, 8, 5,
-	7, 10, -3, 10,
+	-1000, -4, -1, 9, -5, 6, -2, -3, 10, 8,
+	5, 7, 10, -3, 10,
 }
 
 var yyDef = [...]int{
-	0, -2, 0, 0, 1, 0, 5, 3, 0, 0,
-	0, 2, 6, 4,
+	0, -2, 2, 0, 1, 3, 0, 7, 5, 0,
+	0, 0, 4, 8, 6,
 }
 
 var yyTok1 = [...]int{
@@ -437,9 +437,9 @@ yydefault:
 	// dummy call; replaced with literal code
 	switch yynt {
 
-	case 2:
+	case 4:
 		yyDollar = yyS[yypt-4 : yypt+1]
-//line parser.go.y:27
+//line parser.go.y:31
 		{
 			stmt := &SelectStmt{
 				Table:   yyDollar[4].str,
@@ -447,33 +447,33 @@ yydefault:
 			}
 			yylex.(*Lexer).Statement = stmt
 		}
-	case 3:
+	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line parser.go.y:36
+//line parser.go.y:40
 		{
 			yyVAL.node = &Column{
 				Name: yyDollar[1].str,
 			}
 		}
-	case 4:
+	case 6:
 		yyDollar = yyS[yypt-3 : yypt+1]
-//line parser.go.y:41
+//line parser.go.y:45
 		{
 			yyVAL.node = &Column{
 				Alias: yyDollar[3].str,
 				Name:  yyDollar[1].str,
 			}
 		}
-	case 5:
+	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line parser.go.y:49
+//line parser.go.y:53
 		{
 			slice := make([]*Column, 0, 4)
 			yyVAL.node = append(slice, yyDollar[1].node.(*Column))
 		}
-	case 6:
+	case 8:
 		yyDollar = yyS[yypt-3 : yypt+1]
-//line parser.go.y:53
+//line parser.go.y:57
 		{
 			slice := yyDollar[1].node.([]*Column)
 			yyVAL.node = append(slice, yyDollar[3].node.(*Column))

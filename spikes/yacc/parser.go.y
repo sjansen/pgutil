@@ -20,7 +20,11 @@ package main
 %%
 
 statement:
-  select_stmt ';'
+  select_stmt semicolon_opt
+
+semicolon_opt:
+/*empty*/
+| ';'
 
 select_stmt:
   SELECT columns FROM Identifier
