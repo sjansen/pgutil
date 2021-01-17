@@ -8,7 +8,11 @@ type BeginStmt struct {
 }
 
 // CommitStmt describes a COMMIT statement.
-type CommitStmt struct{}
+type CommitStmt struct {
+	Chain bool
+}
 
 // RollbackStmt describes a ROLLBACK statement.
-type RollbackStmt struct{}
+type RollbackStmt struct {
+	Chain bool
+}

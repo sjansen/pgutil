@@ -32,6 +32,7 @@ func newOptionList(opt *option) []*option {
 
 %union {
   ast   interface{}
+  bool  bool
   opt   *option
   opts  []*option
   str   string
@@ -139,8 +140,9 @@ func newOptionList(opt *option) []*option {
 %token UNEXPECTED_SYMBOL
 %token<str> Identifier Name
 
-%type<str> transaction_isolation_level
-%type<opt> transaction_mode_item
+%type<bool> transaction_chain
+%type<str>  transaction_isolation_level
+%type<opt>  transaction_mode_item
 %type<opts> transaction_mode_list transaction_mode_list_or_empty
 
 %start statement
@@ -151,8 +153,13 @@ statement:
   transaction_stmt semicolon_opt
 
 semicolon_opt:
-/*empty*/
+/* empty */
 | ';'
+
+transaction_chain:
+/* empty */    { $$ = false }
+| AND CHAIN    { $$ = true }
+| AND NO CHAIN { $$ = false }
 
 transaction_isolation_level:
   READ COMMITTED		{ $$ = "read committed" }
@@ -161,7 +168,7 @@ transaction_isolation_level:
 | SERIALIZABLE			{ $$ = "serializable" }
 
 transaction_keywords:
-  /*empty*/
+/* empty */
 | WORK
 | TRANSACTION
 
@@ -169,37 +176,51 @@ transaction_mode_item:
   ISOLATION LEVEL transaction_isolation_level {
 		$$ = newOption("isolation_level", $3)
   }
-| READ ONLY { $$ = newOption("read_only", true) }
-| READ WRITE { $$ = newOption("read_only", false) }
-| DEFERRABLE { $$ = newOption("deferrable", true) }
+| DEFERRABLE     { $$ = newOption("deferrable", true) }
 | NOT DEFERRABLE { $$ = newOption("deferrable", false) }
+| READ ONLY      { $$ = newOption("read_only", true) }
+| READ WRITE     { $$ = newOption("read_only", false) }
 
 transaction_mode_list:
   transaction_mode_item { $$ = newOptionList($1) }
-| transaction_mode_list transaction_mode_item { $$ = append($1, $2) }
+| transaction_mode_list transaction_mode_item     { $$ = append($1, $2) }
 | transaction_mode_list ',' transaction_mode_item { $$ = append($1, $3) }
 
 transaction_mode_list_or_empty:
-  /*empty*/ { $$ = nil }
+/* empty */             { $$ = nil }
 | transaction_mode_list { $$ = $1 }
 
 transaction_stmt:
-  BEGIN transaction_keywords transaction_mode_list_or_empty {
+  ABORT transaction_keywords transaction_chain {
+    stmt := &sql.RollbackStmt{Chain: $3}
+    yylex.(*Lexer).Statement = stmt
+    if yyDebug > 6 {
+      __yyfmt__.Printf("stmt = %#v\n", stmt)
+    }
+  }
+| BEGIN transaction_keywords transaction_mode_list_or_empty {
     stmt := newBeginStmt($3)
     yylex.(*Lexer).Statement = stmt
     if yyDebug > 6 {
       __yyfmt__.Printf("stmt = %#v\n", stmt)
     }
   }
-| COMMIT {
-    stmt := &sql.CommitStmt{}
+| COMMIT transaction_keywords transaction_chain {
+    stmt := &sql.CommitStmt{Chain: $3}
     yylex.(*Lexer).Statement = stmt
     if yyDebug > 6 {
       __yyfmt__.Printf("stmt = %#v\n", stmt)
     }
   }
-| ROLLBACK {
-    stmt := &sql.RollbackStmt{}
+| END transaction_keywords transaction_chain {
+    stmt := &sql.CommitStmt{Chain: $3}
+    yylex.(*Lexer).Statement = stmt
+    if yyDebug > 6 {
+      __yyfmt__.Printf("stmt = %#v\n", stmt)
+    }
+  }
+| ROLLBACK transaction_keywords transaction_chain {
+    stmt := &sql.RollbackStmt{Chain: $3}
     yylex.(*Lexer).Statement = stmt
     if yyDebug > 6 {
       __yyfmt__.Printf("stmt = %#v\n", stmt)

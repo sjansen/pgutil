@@ -33,6 +33,7 @@ func newOptionList(opt *option) []*option {
 type yySymType struct {
 	yys  int
 	ast  interface{}
+	bool bool
 	opt  *option
 	opts []*option
 	str  string
@@ -968,31 +969,35 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 359
+const yyLast = 366
 
 var yyAct = [...]int{
-	18, 8, 24, 11, 32, 12, 3, 29, 18, 34,
-	23, 26, 15, 13, 9, 7, 2, 1, 14, 28,
-	30, 0, 0, 0, 0, 0, 20, 21, 0, 0,
-	0, 0, 0, 0, 0, 27, 0, 0, 4, 0,
-	0, 0, 0, 0, 0, 0, 0, 10, 31, 0,
+	25, 10, 38, 13, 46, 18, 3, 43, 25, 48,
+	32, 36, 37, 40, 23, 19, 21, 20, 11, 9,
+	44, 2, 1, 14, 15, 16, 17, 22, 42, 0,
+	0, 28, 29, 30, 4, 31, 0, 34, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 12, 45, 0,
+	41, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 5, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 24, 0,
+	0, 0, 0, 0, 0, 0, 24, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 6, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 26, 0, 0,
+	0, 0, 0, 0, 0, 26, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 39, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 27, 33, 0, 0, 0, 0,
+	0, 0, 27, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 16, 0,
-	0, 0, 0, 0, 0, 0, 16, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 19, 0, 0,
-	0, 0, 0, 0, 0, 19, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 25, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 17, 0, 0, 0, 0, 0,
-	0, 0, 17, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1000,50 +1005,50 @@ var yyAct = [...]int{
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 5, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 6, 0, 0,
-	0, 0, 0, 33, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 22,
+	7, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 47, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 35, 0,
+	0, 0, 0, 0, 0, 8,
 }
 
 var yyPact = [...]int{
-	-26, -1000, -456, -389, -1000, -1000, -387, -1000, -1000, -92,
-	-1000, -1000, -92, -1000, -100, -1000, -200, -261, -1000, -89,
-	-1000, -1000, -92, -297, -1000, -1000, -1000, -1000, -1000, -61,
-	-295, -1000, -1000, -1000, -1000,
+	2, -1000, -456, -389, -389, -389, -389, -389, -387, -1000,
+	-1000, -1, -1000, -1000, -92, -1, -1, -1, -92, -1000,
+	-38, -1000, -100, -1000, -199, -1000, -88, -261, -1000, -1000,
+	-1000, -1000, -1000, -35, -1000, -92, -297, -1000, -1000, -1000,
+	-1000, -1000, -1000, -61, -295, -1000, -1000, -1000, -1000,
 }
 
 var yyPgo = [...]int{
-	0, 19, 12, 18, 13, 17, 16, 15, 14,
+	0, 15, 28, 14, 27, 16, 22, 21, 19, 18,
 }
 
 var yyR1 = [...]int{
-	0, 5, 7, 7, 1, 1, 1, 1, 8, 8,
-	8, 2, 2, 2, 2, 2, 3, 3, 3, 4,
-	4, 6, 6, 6, 6,
+	0, 6, 8, 8, 1, 1, 1, 2, 2, 2,
+	2, 9, 9, 9, 3, 3, 3, 3, 3, 4,
+	4, 4, 5, 5, 7, 7, 7, 7, 7, 7,
 }
 
 var yyR2 = [...]int{
-	0, 2, 0, 1, 2, 2, 2, 1, 0, 1,
-	1, 3, 2, 2, 1, 2, 1, 2, 3, 0,
-	1, 3, 1, 1, 3,
+	0, 2, 0, 1, 0, 2, 3, 2, 2, 2,
+	1, 0, 1, 1, 3, 1, 2, 2, 2, 1,
+	2, 3, 0, 1, 3, 3, 3, 3, 3, 3,
 }
 
 var yyChk = [...]int{
-	-1000, -5, -6, 32, 64, 328, 363, -7, 457, -8,
-	436, 392, 392, -4, -3, -2, 198, 304, 100, 247,
-	-4, -2, 458, 210, 263, 438, 100, -2, -1, 304,
-	317, 345, 65, 404, 304,
+	-1000, -6, -7, 4, 32, 64, 123, 328, 363, -8,
+	457, -9, 436, 392, -9, -9, -9, -9, 392, -1,
+	18, -5, -4, -3, 198, 100, 247, 304, -1, -1,
+	-1, -5, 48, 243, -3, 458, 210, 100, 263, 438,
+	48, -3, -2, 304, 317, 345, 65, 404, 304,
 }
 
 var yyDef = [...]int{
-	0, -2, 2, 8, 22, 23, 0, 1, 3, 19,
-	9, 10, 19, 21, 20, 16, 0, 0, 14, 0,
-	24, 17, 0, 0, 12, 13, 15, 18, 11, 0,
-	0, 7, 4, 5, 6,
+	0, -2, 2, 11, 11, 11, 11, 11, 0, 1,
+	3, 4, 12, 13, 22, 4, 4, 4, 22, 24,
+	0, 25, 23, 19, 0, 15, 0, 0, 26, 27,
+	28, 29, 5, 0, 20, 0, 0, 16, 17, 18,
+	6, 21, 14, 0, 0, 10, 7, 8, 9,
 }
 
 var yyTok1 = [...]int{
@@ -1465,92 +1470,120 @@ yydefault:
 	switch yynt {
 
 	case 4:
-		yyDollar = yyS[yypt-2 : yypt+1]
-//line grammar.y:158
+		yyDollar = yyS[yypt-0 : yypt+1]
+//line grammar.y:160
 		{
-			yyVAL.str = "read committed"
+			yyVAL.bool = false
 		}
 	case 5:
 		yyDollar = yyS[yypt-2 : yypt+1]
-//line grammar.y:159
+//line grammar.y:161
+		{
+			yyVAL.bool = true
+		}
+	case 6:
+		yyDollar = yyS[yypt-3 : yypt+1]
+//line grammar.y:162
+		{
+			yyVAL.bool = false
+		}
+	case 7:
+		yyDollar = yyS[yypt-2 : yypt+1]
+//line grammar.y:165
+		{
+			yyVAL.str = "read committed"
+		}
+	case 8:
+		yyDollar = yyS[yypt-2 : yypt+1]
+//line grammar.y:166
 		{
 			yyVAL.str = "read uncommitted"
 		}
-	case 6:
+	case 9:
 		yyDollar = yyS[yypt-2 : yypt+1]
-//line grammar.y:160
+//line grammar.y:167
 		{
 			yyVAL.str = "repeatable read"
 		}
-	case 7:
+	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line grammar.y:161
+//line grammar.y:168
 		{
 			yyVAL.str = "serializable"
 		}
-	case 11:
+	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-//line grammar.y:169
+//line grammar.y:176
 		{
 			yyVAL.opt = newOption("isolation_level", yyDollar[3].str)
 		}
-	case 12:
-		yyDollar = yyS[yypt-2 : yypt+1]
-//line grammar.y:172
-		{
-			yyVAL.opt = newOption("read_only", true)
-		}
-	case 13:
-		yyDollar = yyS[yypt-2 : yypt+1]
-//line grammar.y:173
-		{
-			yyVAL.opt = newOption("read_only", false)
-		}
-	case 14:
+	case 15:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line grammar.y:174
+//line grammar.y:179
 		{
 			yyVAL.opt = newOption("deferrable", true)
 		}
-	case 15:
+	case 16:
 		yyDollar = yyS[yypt-2 : yypt+1]
-//line grammar.y:175
+//line grammar.y:180
 		{
 			yyVAL.opt = newOption("deferrable", false)
 		}
-	case 16:
+	case 17:
+		yyDollar = yyS[yypt-2 : yypt+1]
+//line grammar.y:181
+		{
+			yyVAL.opt = newOption("read_only", true)
+		}
+	case 18:
+		yyDollar = yyS[yypt-2 : yypt+1]
+//line grammar.y:182
+		{
+			yyVAL.opt = newOption("read_only", false)
+		}
+	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line grammar.y:178
+//line grammar.y:185
 		{
 			yyVAL.opts = newOptionList(yyDollar[1].opt)
 		}
-	case 17:
+	case 20:
 		yyDollar = yyS[yypt-2 : yypt+1]
-//line grammar.y:179
+//line grammar.y:186
 		{
 			yyVAL.opts = append(yyDollar[1].opts, yyDollar[2].opt)
-		}
-	case 18:
-		yyDollar = yyS[yypt-3 : yypt+1]
-//line grammar.y:180
-		{
-			yyVAL.opts = append(yyDollar[1].opts, yyDollar[3].opt)
-		}
-	case 19:
-		yyDollar = yyS[yypt-0 : yypt+1]
-//line grammar.y:183
-		{
-			yyVAL.opts = nil
-		}
-	case 20:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line grammar.y:184
-		{
-			yyVAL.opts = yyDollar[1].opts
 		}
 	case 21:
 		yyDollar = yyS[yypt-3 : yypt+1]
 //line grammar.y:187
+		{
+			yyVAL.opts = append(yyDollar[1].opts, yyDollar[3].opt)
+		}
+	case 22:
+		yyDollar = yyS[yypt-0 : yypt+1]
+//line grammar.y:190
+		{
+			yyVAL.opts = nil
+		}
+	case 23:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line grammar.y:191
+		{
+			yyVAL.opts = yyDollar[1].opts
+		}
+	case 24:
+		yyDollar = yyS[yypt-3 : yypt+1]
+//line grammar.y:194
+		{
+			stmt := &sql.RollbackStmt{Chain: yyDollar[3].bool}
+			yylex.(*Lexer).Statement = stmt
+			if yyDebug > 6 {
+				__yyfmt__.Printf("stmt = %#v\n", stmt)
+			}
+		}
+	case 25:
+		yyDollar = yyS[yypt-3 : yypt+1]
+//line grammar.y:201
 		{
 			stmt := newBeginStmt(yyDollar[3].opts)
 			yylex.(*Lexer).Statement = stmt
@@ -1558,29 +1591,39 @@ yydefault:
 				__yyfmt__.Printf("stmt = %#v\n", stmt)
 			}
 		}
-	case 22:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line grammar.y:194
-		{
-			stmt := &sql.CommitStmt{}
-			yylex.(*Lexer).Statement = stmt
-			if yyDebug > 6 {
-				__yyfmt__.Printf("stmt = %#v\n", stmt)
-			}
-		}
-	case 23:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line grammar.y:201
-		{
-			stmt := &sql.RollbackStmt{}
-			yylex.(*Lexer).Statement = stmt
-			if yyDebug > 6 {
-				__yyfmt__.Printf("stmt = %#v\n", stmt)
-			}
-		}
-	case 24:
+	case 26:
 		yyDollar = yyS[yypt-3 : yypt+1]
 //line grammar.y:208
+		{
+			stmt := &sql.CommitStmt{Chain: yyDollar[3].bool}
+			yylex.(*Lexer).Statement = stmt
+			if yyDebug > 6 {
+				__yyfmt__.Printf("stmt = %#v\n", stmt)
+			}
+		}
+	case 27:
+		yyDollar = yyS[yypt-3 : yypt+1]
+//line grammar.y:215
+		{
+			stmt := &sql.CommitStmt{Chain: yyDollar[3].bool}
+			yylex.(*Lexer).Statement = stmt
+			if yyDebug > 6 {
+				__yyfmt__.Printf("stmt = %#v\n", stmt)
+			}
+		}
+	case 28:
+		yyDollar = yyS[yypt-3 : yypt+1]
+//line grammar.y:222
+		{
+			stmt := &sql.RollbackStmt{Chain: yyDollar[3].bool}
+			yylex.(*Lexer).Statement = stmt
+			if yyDebug > 6 {
+				__yyfmt__.Printf("stmt = %#v\n", stmt)
+			}
+		}
+	case 29:
+		yyDollar = yyS[yypt-3 : yypt+1]
+//line grammar.y:229
 		{
 			stmt := newBeginStmt(yyDollar[3].opts)
 			yylex.(*Lexer).Statement = stmt
