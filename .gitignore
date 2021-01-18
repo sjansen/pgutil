@@ -17,6 +17,7 @@ y.output
 
 # Patterns
 .*.sw[op]
+*.actual
 *.dot
 *.pdf
 *.ri

@@ -1,0 +1,9 @@
+{
+  "type": "schema.ForeignKey",
+  "value": {
+    "Table": "tbl",
+    "Columns": ["col"],
+    "OnDelete": "NO ACTION",
+    "OnUpdate": "NO ACTION"
+  }
+}

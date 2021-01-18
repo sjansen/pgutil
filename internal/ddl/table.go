@@ -1,6 +1,10 @@
 package ddl
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/sjansen/pgutil/internal/schema"
+)
 
 // A Table is a collection of similar data organized as rows
 type Table struct {
@@ -9,9 +13,9 @@ type Table struct {
 	Owner   string `hcl:"owner,optional"`
 	Comment string `hcl:"comment,optional"`
 
-	Columns     []*Column     `hcl:"column,block"`
-	Checks      []*Check      `hcl:"check,block"`
-	ForeignKeys []*ForeignKey `hcl:"foreign_key,block"`
+	Columns     []*Column            `hcl:"column,block"`
+	Checks      []*Check             `hcl:"check,block"`
+	ForeignKeys []*schema.ForeignKey `hcl:"foreign_key,block"`
 
 	StorageParameters *TableStorageParameters `hcl:"storage_parameters,block"`
 }

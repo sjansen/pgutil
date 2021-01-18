@@ -2,6 +2,7 @@ package sqlparser
 
 import (
 	"bytes"
+	"fmt"
 	"unicode"
 	"unicode/utf8"
 )
@@ -10,21 +11,28 @@ const eof = 0
 
 // Lexer tokenizes SQL statments for the parser.
 type Lexer struct {
-	Statement Statement
-	err       string
-	buf       []byte
-	decoded   rune
+	result  interface{}
+	err     string
+	buf     []byte
+	mode    int
+	decoded rune
 }
 
 // Lex returns the next token for the parser.
 func (l *Lexer) Lex(lval *yySymType) int {
+	if l.mode != 0 {
+		tmp := l.mode
+		l.mode = 0
+		return tmp
+	}
+
 	l.skipWS()
 
 	ch := l.decoded
 	switch {
 	case ch == eof:
 		return eof
-	case ch == ',' || ch == ';':
+	case ch == '(' || ch == ',' || ch == ')' || ch == ';':
 		l.decode()
 		return int(ch)
 	case isWordStart(ch):
@@ -47,6 +55,9 @@ func (l *Lexer) decode() rune {
 	}
 	l.decoded = r
 	l.buf = l.buf[size:]
+	if yyDebug > 6 {
+		fmt.Printf("decoded: %q\n", r)
+	}
 	return r
 }
 

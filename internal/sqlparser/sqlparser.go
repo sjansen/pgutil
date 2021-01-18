@@ -2,27 +2,46 @@
 
 package sqlparser
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/sjansen/pgutil/internal/schema"
+)
 
 func init() {
 	yyErrorVerbose = true
 }
 
-// Statement is a SQL command or fragment.
+// Statement is a SQL command.
 type Statement interface{}
-
-// Parse parses a SQL statement.
-func Parse(buf []byte) (Statement, error) {
-	lexer := &Lexer{
-		buf: buf,
-	}
-	if rc := yyParse(lexer); rc == 0 {
-		return lexer.Statement, nil
-	}
-	return nil, errors.New(lexer.err)
-}
 
 // EnableDebugLogging enables debug logging to stderr.
 func EnableDebugLogging() {
 	yyDebug = 10
+}
+
+// Parse parses a SQL statement.
+func Parse(buf []byte) (Statement, error) {
+	return parse(buf, 0)
+}
+
+// ParseForeignKey parses a foreign key declaration.
+func ParseForeignKey(buf []byte) (*schema.ForeignKey, error) {
+	tmp, err := parse(buf, MODE_FOREIGN_KEY)
+	if err != nil {
+		return nil, err
+	}
+	return tmp.(*schema.ForeignKey), err
+}
+
+func parse(buf []byte, mode int) (interface{}, error) {
+	lexer := &Lexer{
+		buf:  buf,
+		mode: mode,
+	}
+	rc := yyParse(lexer)
+	if rc != 0 {
+		return nil, errors.New(lexer.err)
+	}
+	return lexer.result, nil
 }

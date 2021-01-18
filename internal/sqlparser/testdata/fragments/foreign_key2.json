@@ -1,0 +1,13 @@
+{
+  "type": "schema.ForeignKey",
+  "value": {
+    "Table": "foo",
+    "Columns": ["bar", "baz"],
+    "Referenced": ["qux", "quux"],
+    "Match": "FULL",
+    "OnDelete": "CASCADE",
+    "OnUpdate": "SET DEFAULT",
+    "Deferrable": true,
+    "InitiallyDeferred": true
+  }
+}

@@ -1,6 +1,9 @@
 package pg
 
-import "github.com/sjansen/pgutil/internal/ddl"
+import (
+	"github.com/sjansen/pgutil/internal/schema"
+	"github.com/sjansen/pgutil/internal/sqlparser"
+)
 
 var listForeignKeys = `
 SELECT
@@ -20,18 +23,18 @@ ORDER BY c2.relname, t.conkey;
 `
 
 // ListForeignKeys describes a database table's dependencies on other tables
-func (c *Conn) ListForeignKeys(schema, table string) ([]*ddl.ForeignKey, error) {
-	c.log.Infow("listing foreign keys", "schema", schema, "table", table)
+func (c *Conn) ListForeignKeys(namespace, table string) ([]*schema.ForeignKey, error) {
+	c.log.Infow("listing foreign keys", "schema", namespace, "table", table)
 
 	c.log.Debugw("executing query", "query", listForeignKeys)
-	rows, err := c.conn.Query(listForeignKeys, schema, table)
+	rows, err := c.conn.Query(listForeignKeys, namespace, table)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	c.log.Debugw("scanning rows")
-	var fks []*ddl.ForeignKey
+	var fks []*schema.ForeignKey
 	for rows.Next() {
 		var name, fkdef string
 		err = rows.Scan(&name, &fkdef)
@@ -40,8 +43,8 @@ func (c *Conn) ListForeignKeys(schema, table string) ([]*ddl.ForeignKey, error) 
 		}
 		c.log.Debugw("row scanned", "name", name, "fkdef", fkdef)
 
-		var fk *ddl.ForeignKey
-		fk, err = ddl.ParseForeignKey(fkdef)
+		var fk *schema.ForeignKey
+		fk, err = sqlparser.ParseForeignKey([]byte(fkdef))
 		if err != nil {
 			break
 		}

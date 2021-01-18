@@ -17,9 +17,9 @@ func newOption(name string, value interface{}) *option {
   }
 }
 
-func newOptionList(opt *option) []*option {
+func newOptionList(opts ...*option) []*option {
   slice := make([]*option, 0, 4)
-  slice = append(slice, opt)
+  slice = append(slice, opts...)
   return slice
 }
 %}
@@ -36,6 +36,7 @@ func newOptionList(opt *option) []*option {
   opt   *option
   opts  []*option
   str   string
+  strs  []string
 }
 
 /* keywords */
@@ -137,24 +138,112 @@ func newOptionList(opt *option) []*option {
 
 	ZONE
 
+%token MODE_FOREIGN_KEY
+
 %token UNEXPECTED_SYMBOL
 %token<str> Identifier Name
 
+%type<ast>  ast
+%type<strs> column_list column_list_or_empty
+%type<bool> deferrable
+%type<ast>  foreign_key_decl
+%type<str>  foreign_key_action foreign_key_match
+%type<opts> foreign_key_actions
+%type<opt>  foreign_key_delete foreign_key_update
+%type<bool> initially_deferred
 %type<bool> transaction_chain
 %type<str>  transaction_isolation_level
 %type<opt>  transaction_mode_item
 %type<opts> transaction_mode_list transaction_mode_list_or_empty
+%type<ast>  transaction_stmt
 
-%start statement
+%start ast
 
 %%
 
-statement:
-  transaction_stmt semicolon_opt
+ast:
+  MODE_FOREIGN_KEY foreign_key_decl { yylex.(*Lexer).result = $2 }
+| transaction_stmt semicolon_opt    { yylex.(*Lexer).result = $1 }
 
 semicolon_opt:
 /* empty */
 | ';'
+
+column_list:
+  Identifier {
+    slice := make([]string, 0, 4)
+    $$ = append(slice, $1)
+  }
+| column_list ',' Identifier {
+  slice := $1
+  $$ = append(slice, $3)
+}
+
+column_list_or_empty:
+/* empty */           { $$ = nil }
+| '(' column_list ')' { $$ = $2 }
+
+deferrable:
+/* empty */      { $$ = false }
+| DEFERRABLE     { $$ = true }
+| NOT DEFERRABLE { $$ = false }
+
+initially_deferred:
+/* empty */           { $$ = false }
+| INITIALLY DEFERRED  { $$ = true }
+| INITIALLY IMMEDIATE { $$ = false }
+
+/*****************************************************************************
+ *
+ *	foreign key declaration
+ *
+ *****************************************************************************/
+
+/* TODO: Identifier should be qualified_name */
+foreign_key_decl:
+  FOREIGN KEY '(' column_list ')' REFERENCES Identifier column_list_or_empty
+  foreign_key_match foreign_key_actions deferrable initially_deferred {
+    fk := newForeignKey($10...)
+    fk.Table = $7
+    fk.Columns = $4
+    fk.Referenced = $8
+    fk.Match = $9
+    fk.Deferrable = $11
+    fk.InitiallyDeferred = $12
+    $$ = fk
+  }
+
+foreign_key_match:
+/* empty */     { $$ = "" }
+| MATCH FULL    { $$ = "FULL" }
+| MATCH PARTIAL { $$ = "PARTIAL" }
+| MATCH SIMPLE  { $$ = "SIMPLE" }
+
+foreign_key_action:
+  NO ACTION   { $$ = "NO ACTION" }
+| RESTRICT    { $$ = "RESTRICT" }
+| CASCADE     { $$ = "CASCADE" }
+| SET NULL    { $$ = "SET NULL" }
+| SET DEFAULT { $$ = "SET DEFAULT" }
+
+foreign_key_actions:
+/* empty */                             { $$ = nil }
+| foreign_key_delete                    { $$ = []*option{$1} }
+| foreign_key_update                    { $$ = []*option{$1} }
+| foreign_key_delete foreign_key_update { $$ = []*option{$1, $2} }
+| foreign_key_update foreign_key_delete { $$ = []*option{$1, $2} }
+
+foreign_key_delete:
+  ON DELETE foreign_key_action { $$ = newOption("on_delete", $3) }
+
+foreign_key_update:
+  ON UPDATE foreign_key_action { $$ = newOption("on_update", $3) }
+
+/*****************************************************************************
+ *
+ *	transaction management
+ *
+ *****************************************************************************/
 
 transaction_chain:
 /* empty */    { $$ = false }
@@ -192,44 +281,38 @@ transaction_mode_list_or_empty:
 
 transaction_stmt:
   ABORT transaction_keywords transaction_chain {
-    stmt := &sql.RollbackStmt{Chain: $3}
-    yylex.(*Lexer).Statement = stmt
+    $$ = &sql.RollbackStmt{Chain: $3}
     if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
+      __yyfmt__.Printf("stmt = %#v\n", $$)
     }
   }
 | BEGIN transaction_keywords transaction_mode_list_or_empty {
-    stmt := newBeginStmt($3)
-    yylex.(*Lexer).Statement = stmt
+    $$ = newBeginStmt($3)
     if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
+      __yyfmt__.Printf("stmt = %#v\n", $$)
     }
   }
 | COMMIT transaction_keywords transaction_chain {
-    stmt := &sql.CommitStmt{Chain: $3}
-    yylex.(*Lexer).Statement = stmt
+    $$ = &sql.CommitStmt{Chain: $3}
     if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
+      __yyfmt__.Printf("stmt = %#v\n", $$)
     }
   }
 | END transaction_keywords transaction_chain {
-    stmt := &sql.CommitStmt{Chain: $3}
-    yylex.(*Lexer).Statement = stmt
+    $$ = &sql.CommitStmt{Chain: $3}
     if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
+      __yyfmt__.Printf("stmt = %#v\n", $$)
     }
   }
 | ROLLBACK transaction_keywords transaction_chain {
-    stmt := &sql.RollbackStmt{Chain: $3}
-    yylex.(*Lexer).Statement = stmt
+    $$ = &sql.RollbackStmt{Chain: $3}
     if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
+      __yyfmt__.Printf("stmt = %#v\n", $$)
     }
   }
 | START TRANSACTION transaction_mode_list_or_empty {
-    stmt := newBeginStmt($3)
-    yylex.(*Lexer).Statement = stmt
+    $$ = newBeginStmt($3)
     if yyDebug > 6 {
-      __yyfmt__.Printf("stmt = %#v\n", stmt)
+      __yyfmt__.Printf("stmt = %#v\n", $$)
     }
   }

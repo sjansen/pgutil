@@ -3,6 +3,7 @@ package sqlparser_test
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -18,16 +19,24 @@ type Result struct {
 	Value json.RawMessage `json:"value"`
 }
 
-func replaceExtension(path, replacement string) string {
-	ext := filepath.Ext(path)
-	return path[0:len(path)-len(ext)] + replacement
-}
-
-func TestParser(t *testing.T) {
+func TestParse(t *testing.T) {
 	t.Parallel()
 	// sqlparser.EnableDebugLogging()
+	parseAndCompare(t, "testdata/statements/*.sql", func(buf []byte) (interface{}, error) {
+		return sqlparser.Parse(buf)
+	})
+}
 
-	testcases, err := filepath.Glob("testdata/*.sql")
+func TestParseForeignKey(t *testing.T) {
+	t.Parallel()
+	// sqlparser.EnableDebugLogging()
+	parseAndCompare(t, "testdata/fragments/foreign_key*.sql", func(buf []byte) (interface{}, error) {
+		return sqlparser.ParseForeignKey(buf)
+	})
+}
+
+func parseAndCompare(t *testing.T, pattern string, fn func([]byte) (interface{}, error)) {
+	testcases, err := filepath.Glob(pattern)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -43,34 +52,41 @@ func TestParser(t *testing.T) {
 			sql, err := ioutil.ReadFile(path)
 			require.NoError(err)
 
-			actualStmt, err := sqlparser.Parse(sql)
+			var actual interface{}
+			actual, err = fn(sql)
 			require.NoError(err)
-			require.NotNil(actualStmt)
+			require.NotNil(actual)
 
-			tmp, err := ioutil.ReadFile(
-				replaceExtension(path, ".json"),
+			buf, err := ioutil.ReadFile(
+				replaceExtension(path, "json"),
 			)
 			require.NoError(err)
 
-			expected := &Result{}
-			err = json.Unmarshal(tmp, expected)
+			expectedResult := &Result{}
+			err = json.Unmarshal(buf, expectedResult)
 			require.NoError(err)
 
-			actualType := reflect.TypeOf(actualStmt)
-			require.Equal(expected.Type, actualType.Elem().String())
+			typ := reflect.TypeOf(actual)
+			require.Equal(expectedResult.Type, typ.Elem().String())
 
-			expectedStmt := reflect.New(actualType.Elem()).Interface()
-			err = json.Unmarshal(expected.Value, expectedStmt)
+			expected := reflect.New(typ.Elem()).Interface()
+			err = json.Unmarshal(expectedResult.Value, expected)
 			require.NoError(err)
 
-			if !assert.Equal(expectedStmt, actualStmt) {
-				actual := &Result{
-					Type: actualType.Name(),
-				}
-				marshalled, err := json.MarshalIndent(actual, "", "  ")
+			if !assert.Equal(expected, actual) {
+				tmp, err := json.MarshalIndent(actual, "", "  ")
 				require.NoError(err)
 
-				f, err := ioutil.TempFile("", "actual.*.json")
+				result := &Result{Type: typ.Elem().String()}
+				err = result.Value.UnmarshalJSON(tmp)
+				require.NoError(err)
+
+				marshalled, err := json.MarshalIndent(result, "", "  ")
+				require.NoError(err)
+
+				f, err := os.OpenFile(replaceExtension(path, "actual"),
+					os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0755,
+				)
 				require.NoError(err)
 				defer f.Close()
 
@@ -84,4 +100,12 @@ func TestParser(t *testing.T) {
 			}
 		})
 	}
+}
+
+func replaceExtension(path, replacement string) string {
+	ext := filepath.Ext(path)
+	if ext == "" {
+		return path + "." + replacement
+	}
+	return path[0:len(path)-len(ext)] + "." + replacement
 }

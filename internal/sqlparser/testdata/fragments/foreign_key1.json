@@ -1,0 +1,8 @@
+{
+  "type": "schema.ForeignKey",
+  "value": {
+    "Table": "foo",
+    "Columns": ["foo_id"],
+    "Referenced": ["id"]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "schema.ForeignKey",
+  "value": {
+    "Table": "t",
+    "Columns": ["a", "b", "c"],
+    "Referenced": ["d", "e", "f"],
+    "Match": "SIMPLE",
+    "OnDelete": "RESTRICT",
+    "OnUpdate": "SET NULL",
+    "Deferrable": true,
+    "InitiallyDeferred": false
+  }
+}
