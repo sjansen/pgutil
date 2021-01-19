@@ -93,13 +93,13 @@ var expected = &ddl.Database{
 			},
 		},
 	},
-	Triggers: []*ddl.Trigger{
+	Triggers: []*schema.Trigger{
 		{
 			Schema:     "public",
 			Table:      "foo",
 			Name:       "update_foo_modified",
 			Function:   "update_modified_column",
-			When:       "before",
+			Timing:     "before",
 			Update:     true,
 			ForEachRow: true,
 		},

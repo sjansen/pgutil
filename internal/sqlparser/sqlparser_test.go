@@ -35,6 +35,14 @@ func TestParseForeignKey(t *testing.T) {
 	})
 }
 
+func TestTrigger(t *testing.T) {
+	t.Parallel()
+	// sqlparser.EnableDebugLogging()
+	parseAndCompare(t, "testdata/statements/trigger*.sql", func(buf []byte) (interface{}, error) {
+		return sqlparser.ParseTrigger(buf)
+	})
+}
+
 func parseAndCompare(t *testing.T, pattern string, fn func([]byte) (interface{}, error)) {
 	testcases, err := filepath.Glob(pattern)
 	if err != nil {

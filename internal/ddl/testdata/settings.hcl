@@ -44,7 +44,7 @@ index "" "settings" "settings_pkey" {
 
 trigger "" "settings" "update_settings_mtime" {
   function           = "update_mtime_column"
-  when               = "BEFORE"
+  timing             = "BEFORE"
   for_each_row       = true
   update             = true
 }

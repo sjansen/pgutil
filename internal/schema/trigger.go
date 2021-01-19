@@ -1,15 +1,16 @@
-package ddl
+package schema
 
 import "strings"
 
-// A Trigger executes a function when a specific event happens
+// A Trigger executes a function when a specific event happens.
 type Trigger struct {
 	Schema string `hcl:"schema,label"`
 	Table  string `hcl:"table,label"`
 	Name   string `hcl:"name,label"`
 
+	From     string `hcl:"from,optional"`
 	Function string `hcl:"function,attr"`
-	When     string `hcl:"when,attr"`
+	Timing   string `hcl:"timing,attr"`
 
 	Constraint        bool `hcl:"constraint,optional"`
 	Deferrable        bool `hcl:"deferrable,optional"`
@@ -23,34 +24,13 @@ type Trigger struct {
 	Columns  []string `hcl:"columns,optional"`
 }
 
-func (t *Trigger) addColumn(s string) {
-	t.Columns = append(t.Columns, s)
-}
-
-func (t *Trigger) setFunction(s string) {
-	t.Function = s
-}
-
-func (t *Trigger) setName(name string) {
-	t.Name = name
-}
-
-func (t *Trigger) setTable(table string) {
-	t.Table = table
-}
-
-func (t *Trigger) setWhen(s string) {
-	t.When = strings.ToUpper(
-		collapseWhitespace(s),
-	)
-}
-
+// ToSQL produces a CREATE TRIGGER statement.
 func (t *Trigger) ToSQL() (string, error) {
 	var sb strings.Builder
 	sb.WriteString("CREATE TRIGGER ")
 	sb.WriteString(quoteName(t.Name))
 	sb.WriteString("\n  ")
-	sb.WriteString(t.When)
+	sb.WriteString(t.Timing)
 	if t.Update {
 		sb.WriteString(" UPDATE")
 	}

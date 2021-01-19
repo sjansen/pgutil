@@ -1,0 +1,15 @@
+{
+  "type": "schema.Trigger",
+  "value": {
+    "Table": "table1",
+    "Name": "trigger1",
+    "Function": "fn1",
+    "Timing": "AFTER",
+    "Constraint": true,
+    "Deferrable": true,
+    "InitiallyDeferred": true,
+    "ForEachRow": true,
+    "Delete": true,
+    "Insert": true
+  }
+}

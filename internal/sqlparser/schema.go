@@ -28,3 +28,22 @@ func newForeignKey(opts ...*option) *schema.ForeignKey {
 	}
 	return fk
 }
+
+func newTrigger(opts ...*option) *schema.Trigger {
+	t := &schema.Trigger{}
+	for _, opt := range opts {
+		switch opt.Name {
+		case "delete":
+			t.Delete = opt.Value.(bool)
+		case "insert":
+			t.Insert = opt.Value.(bool)
+		case "truncate":
+			t.Truncate = opt.Value.(bool)
+		case "update":
+			t.Update = opt.Value.(bool)
+		case "columns":
+			t.Columns = opt.Value.([]string)
+		}
+	}
+	return t
+}

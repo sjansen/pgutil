@@ -1,15 +1,17 @@
 package ddl
 
+import "github.com/sjansen/pgutil/internal/schema"
+
 // Database describes a PostgreSQL database
 type Database struct {
 	Parameters *Parameters `hcl:"parameters,block"`
 
-	Schemas   []*Schema   `hcl:"schema,block"`
-	Functions []*Function `hcl:"function,block"`
-	Sequences []*Sequence `hcl:"sequence,block"`
-	Tables    []*Table    `hcl:"table,block"`
-	Indexes   []*Index    `hcl:"index,block"`
-	Triggers  []*Trigger  `hcl:"trigger,block"`
+	Schemas   []*Schema         `hcl:"schema,block"`
+	Functions []*Function       `hcl:"function,block"`
+	Sequences []*Sequence       `hcl:"sequence,block"`
+	Tables    []*Table          `hcl:"table,block"`
+	Indexes   []*Index          `hcl:"index,block"`
+	Triggers  []*schema.Trigger `hcl:"trigger,block"`
 }
 
 // Parameters describes database-level configuration options

@@ -1,6 +1,6 @@
 package schema
 
-// A ForeignKey ensures referential integrity
+// A ForeignKey ensures referential integrity.
 type ForeignKey struct {
 	Name       string   `hcl:"name,optional"`
 	Table      string   `hcl:"table,label"`

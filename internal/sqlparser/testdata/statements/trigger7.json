@@ -1,0 +1,13 @@
+{
+  "type": "schema.Trigger",
+  "value": {
+    "Table": "table6",
+    "Name": "trigger6",
+    "From": "referenced",
+    "Function": "proc6",
+    "Timing": "AFTER",
+    "Constraint": true,
+    "ForEachRow": true,
+    "Delete": true
+  }
+}

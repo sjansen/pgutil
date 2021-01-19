@@ -1,0 +1,11 @@
+{
+  "type": "schema.Trigger",
+  "value": {
+    "Table": "foo",
+    "Name": "update_foo_modified",
+    "Function": "update_modified_column",
+    "Timing": "BEFORE",
+    "ForEachRow": true,
+    "Update": true
+  }
+}

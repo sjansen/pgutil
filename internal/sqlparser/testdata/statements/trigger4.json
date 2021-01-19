@@ -1,0 +1,10 @@
+{
+  "type": "schema.Trigger",
+  "value": {
+    "Table": "view3",
+    "Name": "trigger3",
+    "Function": "fn3",
+    "Timing": "INSTEAD OF",
+    "Update": true
+  }
+}

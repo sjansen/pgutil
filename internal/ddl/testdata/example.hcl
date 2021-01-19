@@ -79,7 +79,7 @@ table "public" "foo" {
 
 trigger "public" "foo" "update_foo_modified" {
   function     = "update_modified_column"
-  when         = "before"
+  timing       = "before"
   update       = true
   for_each_row = true
 }

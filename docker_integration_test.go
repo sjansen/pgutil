@@ -25,11 +25,14 @@ func connect() (c *pg.Conn, err error) {
 	return pg.New(options)
 }
 
+const actualPath = "testdata/actual.hcl"
+const expectedPath = "testdata/expected.hcl"
+
 func TestConnectAndQuery(t *testing.T) {
 	assert := assert.New(t)
 	require := require.New(t)
 
-	expected, err := ioutil.ReadFile("testdata/expected.hcl")
+	expected, err := ioutil.ReadFile(expectedPath)
 	require.NoError(err)
 
 	c, err := connect()
@@ -48,6 +51,11 @@ func TestConnectAndQuery(t *testing.T) {
 
 	actual := buf.Bytes()
 	if !assert.Equal(string(expected), string(actual)) {
-		ioutil.WriteFile("testdata/actual.hcl", actual, 0666)
+		ioutil.WriteFile(actualPath, actual, 0666)
+		t.Log(
+			"Temp JSON file created to facilitate debugging.",
+			"\nexpected:", expectedPath,
+			"\nactual:", actualPath,
+		)
 	}
 }

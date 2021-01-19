@@ -1,0 +1,10 @@
+{
+  "type": "schema.Trigger",
+  "value": {
+    "Table": "table2",
+    "Name": "trigger2",
+    "Function": "fn2",
+    "Timing": "BEFORE",
+    "Truncate": true
+  }
+}

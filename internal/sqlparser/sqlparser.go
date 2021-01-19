@@ -34,6 +34,15 @@ func ParseForeignKey(buf []byte) (*schema.ForeignKey, error) {
 	return tmp.(*schema.ForeignKey), err
 }
 
+// ParseTrigger parses a trigger declaration.
+func ParseTrigger(buf []byte) (*schema.Trigger, error) {
+	tmp, err := parse(buf, MODE_TRIGGER)
+	if err != nil {
+		return nil, err
+	}
+	return tmp.(*schema.Trigger), err
+}
+
 func parse(buf []byte, mode int) (interface{}, error) {
 	lexer := &Lexer{
 		buf:  buf,

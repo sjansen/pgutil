@@ -197,8 +197,9 @@ index "public" "observation" "observation_pkey" {
 }
 
 trigger "public" "measurement" "update_modified_column" {
+  from               = ""
   function           = "update_modified_column"
-  when               = "BEFORE"
+  timing             = "BEFORE"
   constraint         = false
   deferrable         = false
   initially_deferred = false
@@ -210,8 +211,9 @@ trigger "public" "measurement" "update_modified_column" {
   columns            = null
 }
 trigger "public" "observation" "update_modified_column" {
+  from               = ""
   function           = "update_modified_column"
-  when               = "BEFORE"
+  timing             = "BEFORE"
   constraint         = false
   deferrable         = false
   initially_deferred = false

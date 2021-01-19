@@ -2,7 +2,10 @@ package pg
 
 import (
 	"github.com/jackc/pgx"
-	"github.com/sjansen/pgutil/internal/ddl"
+
+	"github.com/sjansen/pgutil/internal/schema"
+	schemapkg "github.com/sjansen/pgutil/internal/schema"
+	"github.com/sjansen/pgutil/internal/sqlparser"
 )
 
 var describeTrigger = `
@@ -34,7 +37,7 @@ ORDER BY 1;
 `
 
 // DescribeTrigger describes a specific database table trigger
-func (c *Conn) DescribeTrigger(schema, table, name string) (*ddl.Trigger, error) {
+func (c *Conn) DescribeTrigger(schema, table, name string) (*schemapkg.Trigger, error) {
 	c.log.Infow("DescribeTrigger", "schema", schema, "table", table, "name", name)
 
 	var triggerdef string
@@ -49,8 +52,8 @@ func (c *Conn) DescribeTrigger(schema, table, name string) (*ddl.Trigger, error)
 	}
 	c.log.Debugw("scanned", "triggerdef", triggerdef)
 
-	var trigger *ddl.Trigger
-	trigger, err = ddl.ParseTrigger(triggerdef)
+	var trigger *schemapkg.Trigger
+	trigger, err = sqlparser.ParseTrigger([]byte(triggerdef))
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +64,7 @@ func (c *Conn) DescribeTrigger(schema, table, name string) (*ddl.Trigger, error)
 }
 
 // ListTriggers describes the triggers of a database table
-func (c *Conn) ListTriggers(schema, table string) ([]*ddl.Trigger, error) {
+func (c *Conn) ListTriggers(schema, table string) ([]*schema.Trigger, error) {
 	c.log.Infow("ListTriggers", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listTriggers)
@@ -72,7 +75,7 @@ func (c *Conn) ListTriggers(schema, table string) ([]*ddl.Trigger, error) {
 	defer rows.Close()
 
 	c.log.Debugw("scanning rows")
-	var triggers []*ddl.Trigger
+	var triggers []*schemapkg.Trigger
 	for rows.Next() {
 		var name, triggerdef string
 		err = rows.Scan(&name, &triggerdef)
@@ -81,8 +84,8 @@ func (c *Conn) ListTriggers(schema, table string) ([]*ddl.Trigger, error) {
 		}
 		c.log.Debugw("scanned", "trigger", name, "triggerdef", triggerdef)
 
-		var trigger *ddl.Trigger
-		trigger, err = ddl.ParseTrigger(triggerdef)
+		var trigger *schemapkg.Trigger
+		trigger, err = sqlparser.ParseTrigger([]byte(triggerdef))
 		if err != nil {
 			break
 		}

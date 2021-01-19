@@ -139,6 +139,7 @@ func newOptionList(opts ...*option) []*option {
 	ZONE
 
 %token MODE_FOREIGN_KEY
+%token MODE_TRIGGER
 
 %token UNEXPECTED_SYMBOL
 %token<str> Identifier Name
@@ -146,6 +147,7 @@ func newOptionList(opts ...*option) []*option {
 %type<ast>  ast
 %type<strs> column_list column_list_or_empty
 %type<bool> deferrable
+%type<ast>  create_trigger
 %type<ast>  foreign_key_decl
 %type<str>  foreign_key_action foreign_key_match
 %type<opts> foreign_key_actions
@@ -156,6 +158,10 @@ func newOptionList(opts ...*option) []*option {
 %type<opt>  transaction_mode_item
 %type<opts> transaction_mode_list transaction_mode_list_or_empty
 %type<ast>  transaction_stmt
+%type<opt>  trigger_event_item
+%type<opts> trigger_event_list
+%type<bool> trigger_for
+%type<str>  trigger_from trigger_timing
 
 %start ast
 
@@ -163,6 +169,8 @@ func newOptionList(opts ...*option) []*option {
 
 ast:
   MODE_FOREIGN_KEY foreign_key_decl { yylex.(*Lexer).result = $2 }
+| MODE_TRIGGER create_trigger       { yylex.(*Lexer).result = $2 }
+| create_trigger semicolon_opt      { yylex.(*Lexer).result = $1 }
 | transaction_stmt semicolon_opt    { yylex.(*Lexer).result = $1 }
 
 semicolon_opt:
@@ -183,15 +191,90 @@ column_list_or_empty:
 /* empty */           { $$ = nil }
 | '(' column_list ')' { $$ = $2 }
 
+/* TODO: combine with initially_deferred */
 deferrable:
 /* empty */      { $$ = false }
 | DEFERRABLE     { $$ = true }
 | NOT DEFERRABLE { $$ = false }
 
+function_or_procedure:
+  FUNCTION
+|	PROCEDURE
+
 initially_deferred:
 /* empty */           { $$ = false }
 | INITIALLY DEFERRED  { $$ = true }
 | INITIALLY IMMEDIATE { $$ = false }
+
+/*****************************************************************************
+ *
+ *	create trigger
+ *
+ *****************************************************************************/
+
+/* TODO
+ * - trigger Identifier should be name
+ * - table Identifier qualified_name
+ * - function Identifier should be func_name
+ * - OR REPLACE
+ * - REFERENCING ...
+ * - WHEN ( condition )
+ * - function arguments
+ */
+create_trigger:
+  CREATE TRIGGER Identifier trigger_timing trigger_event_list ON Identifier
+  trigger_for EXECUTE function_or_procedure Identifier '(' ')' {
+    t := newTrigger($5...)
+    t.Name = $3
+    t.Timing = $4
+    t.Table = $7
+    t.ForEachRow = $8
+    t.Function = $11
+    $$ = t
+  }
+| CREATE CONSTRAINT TRIGGER Identifier AFTER trigger_event_list ON Identifier
+  trigger_from deferrable initially_deferred FOR EACH ROW
+  EXECUTE function_or_procedure Identifier '(' ')' {
+    t := newTrigger($6...)
+    t.Constraint = true
+    t.Name = $4
+    t.Timing = "AFTER"
+    t.Table = $8
+    t.From = $9
+    t.Deferrable = $10
+    t.InitiallyDeferred = $11
+    t.ForEachRow = true
+    t.Function = $17
+    $$ = t
+  }
+
+trigger_event_item:
+  DELETE                { $$ = newOption("delete", true) }
+| INSERT                { $$ = newOption("insert", true) }
+| TRUNCATE              { $$ = newOption("truncate", true) }
+| UPDATE                { $$ = newOption("update", true) }
+| UPDATE OF column_list { $$ = newOption("columns", $3) }
+
+trigger_event_list:
+  trigger_event_item                       { $$ = newOptionList($1) }
+| trigger_event_list OR trigger_event_item { $$ = append($1, $3) }
+
+trigger_for:
+/* empty */          { $$ = false }
+| FOR EACH ROW       { $$ = true }
+| FOR EACH STATEMENT { $$ = false }
+| FOR ROW            { $$ = true }
+| FOR STATEMENT      { $$ = false }
+
+/* TODO: Identifier should be qualified_name */
+trigger_from:
+/* empty */       { $$ = "" }
+| FROM Identifier { $$ = $2 }
+
+trigger_timing:
+  AFTER      { $$ = "AFTER" }
+| BEFORE     { $$ = "BEFORE" }
+| INSTEAD OF { $$ = "INSTEAD OF"}
 
 /*****************************************************************************
  *

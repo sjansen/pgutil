@@ -1,0 +1,14 @@
+{
+  "type": "schema.Trigger",
+  "value": {
+    "Table": "table5",
+    "Name": "trigger5",
+    "Function": "proc5",
+    "Timing": "AFTER",
+    "Constraint": true,
+    "ForEachRow": true,
+    "Delete": true,
+    "Insert": true,
+    "Update": true
+  }
+}

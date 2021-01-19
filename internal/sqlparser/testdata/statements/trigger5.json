@@ -1,0 +1,12 @@
+{
+  "type": "schema.Trigger",
+  "value": {
+    "Table": "table4",
+    "Name": "trigger4",
+    "Function": "func4",
+    "Timing": "AFTER",
+    "Constraint": true,
+    "ForEachRow": true,
+    "Columns": ["col1", "col2"]
+  }
+}
