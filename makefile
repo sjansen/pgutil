@@ -22,6 +22,11 @@ test-docker:
 	docker-compose --version
 	docker-compose build --pull go
 	docker-compose up --abort-on-container-exit --exit-code-from=go --force-recreate
+	@echo ' ____'
+	@echo '|  _ \ __ _ ___ ___ '
+	@echo '| |_) / _` / __/ __|'
+	@echo '|  __/ (_| \__ \__ \'
+	@echo '|_|   \__,_|___/___/'
 
 test-release:
 	git stash -u -k

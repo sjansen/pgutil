@@ -7,12 +7,12 @@
 # Files
 /.envrc
 /pgutil
-/TODO
 .DS_Store
 actual.hcl
 actual.sql
 coverage.txt
 debug.test
+TODO
 y.output
 
 # Patterns
