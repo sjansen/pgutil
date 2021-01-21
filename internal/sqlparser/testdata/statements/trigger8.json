@@ -1,0 +1,12 @@
+{
+  "type": "schema.Trigger",
+  "value": {
+    "Table": "accounts",
+    "Name": "log_update",
+    "Function": "log_account_update",
+    "Timing": "AFTER",
+    "ForEachRow": true,
+    "Update": true,
+    "When": "OLD.* IS DISTINCT FROM NEW.*"
+  }
+}

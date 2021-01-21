@@ -11,6 +11,7 @@ type Trigger struct {
 	From     string `hcl:"from,optional"`
 	Function string `hcl:"function,attr"`
 	Timing   string `hcl:"timing,attr"`
+	When     string `hcl:"when,optional"`
 
 	Constraint        bool `hcl:"constraint,optional"`
 	Deferrable        bool `hcl:"deferrable,optional"`

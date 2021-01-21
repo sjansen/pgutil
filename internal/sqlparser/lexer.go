@@ -15,11 +15,14 @@ type Lexer struct {
 	err     string
 	buf     []byte
 	mode    int
+	offset  int
+	prev    int
+	mark    int
 	decoded rune
 }
 
 // Lex returns the next token for the parser.
-func (l *Lexer) Lex(lval *yySymType) int {
+func (l *Lexer) Lex(lval *yySymType) int { // nolint: gocyclo
 	if l.mode != 0 {
 		tmp := l.mode
 		l.mode = 0
@@ -32,7 +35,13 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	switch {
 	case ch == eof:
 		return eof
-	case ch == '(' || ch == ',' || ch == ')' || ch == ';':
+	case ch == '(' || ch == ')' || ch == '=' || ch == '.' || ch == ',' || ch == ';':
+		l.decode()
+		return int(ch)
+	case ch == '<' || ch == '>' || ch == '+' || ch == '-' || ch == '*' || ch == '/':
+		l.decode()
+		return int(ch)
+	case ch == '[' || ch == ']' || ch == ':' || ch == '%' || ch == '^':
 		l.decode()
 		return int(ch)
 	case isWordStart(ch):
@@ -48,13 +57,14 @@ func (l *Lexer) Error(s string) {
 }
 
 func (l *Lexer) decode() rune {
-	r, size := utf8.DecodeRune(l.buf)
+	r, size := utf8.DecodeRune(l.buf[l.offset:])
 	if size == 0 {
 		l.decoded = eof
 		return eof
 	}
 	l.decoded = r
-	l.buf = l.buf[size:]
+	l.prev = l.offset
+	l.offset += size
 	if yyDebug > 6 {
 		fmt.Printf("decoded: %q\n", r)
 	}
@@ -83,6 +93,16 @@ func (l *Lexer) scanWord(lval *yySymType) int {
 	}
 	lval.str = lower
 	return Identifier
+}
+
+func (l *Lexer) setMark() {
+	l.mark = l.prev
+}
+
+func (l *Lexer) sinceMark() []byte {
+	// TODO: eliminate this hack
+	_, size := utf8.DecodeLastRune(l.buf[:l.prev])
+	return l.buf[l.mark : l.prev-size]
 }
 
 func (l *Lexer) skipWS() {

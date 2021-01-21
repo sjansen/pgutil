@@ -7,6 +7,8 @@
 package sqlparser
 
 import (
+  "bytes"
+
   "github.com/sjansen/pgutil/internal/sql"
 )
 
@@ -223,6 +225,7 @@ func newOptionList(opts ...*option) []*option {
 %left		JOIN CROSS LEFT FULL RIGHT INNER NATURAL
 
 %type<ast>  ast
+%type<str>  a_expr_str
 %type<strs> column_list column_list_or_empty
 %type<bool> deferrable
 %type<ast>  create_trigger_stmt
@@ -239,7 +242,7 @@ func newOptionList(opts ...*option) []*option {
 %type<opt>  trigger_event_item
 %type<opts> trigger_event_list
 %type<bool> trigger_for
-%type<str>  trigger_from trigger_timing
+%type<str>  trigger_from trigger_timing trigger_when
 
 %start ast
 
@@ -255,6 +258,18 @@ ast:
 semicolon_opt:
 /* empty */
 | ';'
+
+a_expr_begin:
+/* empty */ {
+  yylex.(*Lexer).setMark()
+}
+
+a_expr_str:
+  a_expr_begin a_expr {
+    $$ = string(
+      bytes.TrimSpace(yylex.(*Lexer).sinceMark()),
+    )
+  }
 
 column_list:
   Identifier {
@@ -308,6 +323,7 @@ create_trigger_stmt:
     t.Timing = $4
     t.Table = $7
     t.ForEachRow = $8
+    t.When = $9
     t.Function = $12
     $$ = t
   }
@@ -356,8 +372,8 @@ trigger_timing:
 | INSTEAD OF { $$ = "INSTEAD OF"}
 
 trigger_when:
-/* empty */           { }
-| WHEN '(' a_expr ')' { }
+/* empty */               { $$ ="" }
+| WHEN '(' a_expr_str ')' { $$ = $3 }
 
 /*****************************************************************************
  *
