@@ -114,6 +114,7 @@ trigger "public" "foo" "update_foo_modified" {
   from               = ""
   function           = "update_modified_column"
   timing             = "before"
+  when               = ""
   constraint         = false
   deferrable         = false
   initially_deferred = false

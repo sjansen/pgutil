@@ -200,6 +200,7 @@ trigger "public" "measurement" "update_modified_column" {
   from               = ""
   function           = "update_modified_column"
   timing             = "BEFORE"
+  when               = ""
   constraint         = false
   deferrable         = false
   initially_deferred = false
@@ -214,6 +215,7 @@ trigger "public" "observation" "update_modified_column" {
   from               = ""
   function           = "update_modified_column"
   timing             = "BEFORE"
+  when               = ""
   constraint         = false
   deferrable         = false
   initially_deferred = false
