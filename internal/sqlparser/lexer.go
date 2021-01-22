@@ -9,8 +9,7 @@ import (
 
 const eof = 0
 
-// Lexer tokenizes SQL statments for the parser.
-type Lexer struct {
+type lexer struct {
 	result  interface{}
 	err     string
 	buf     []byte
@@ -21,8 +20,7 @@ type Lexer struct {
 	decoded rune
 }
 
-// Lex returns the next token for the parser.
-func (l *Lexer) Lex(lval *yySymType) int { // nolint: gocyclo
+func (l *lexer) Lex(lval *yySymType) int { // nolint: gocyclo
 	if l.mode != 0 {
 		tmp := l.mode
 		l.mode = 0
@@ -52,11 +50,11 @@ func (l *Lexer) Lex(lval *yySymType) int { // nolint: gocyclo
 }
 
 // Error is called by the parser when there's a syntax error.
-func (l *Lexer) Error(s string) {
+func (l *lexer) Error(s string) {
 	l.err = s
 }
 
-func (l *Lexer) decode() rune {
+func (l *lexer) decode() rune {
 	r, size := utf8.DecodeRune(l.buf[l.offset:])
 	if size == 0 {
 		l.decoded = eof
@@ -80,7 +78,7 @@ func isWordStart(ch rune) bool {
 }
 
 // a word is a keyword or an identifier
-func (l *Lexer) scanWord(lval *yySymType) int {
+func (l *lexer) scanWord(lval *yySymType) int {
 	buffer := bytes.Buffer{}
 	ch := l.decoded
 	for isWordStart(ch) || ch == '$' || isDigit(ch) {
@@ -95,17 +93,17 @@ func (l *Lexer) scanWord(lval *yySymType) int {
 	return Identifier
 }
 
-func (l *Lexer) setMark() {
+func (l *lexer) setMark() {
 	l.mark = l.prev
 }
 
-func (l *Lexer) sinceMark() []byte {
+func (l *lexer) sinceMark() []byte {
 	// TODO: eliminate this hack
 	_, size := utf8.DecodeLastRune(l.buf[:l.prev])
 	return l.buf[l.mark : l.prev-size]
 }
 
-func (l *Lexer) skipWS() {
+func (l *lexer) skipWS() {
 	ch := l.decoded
 	if ch == 0 {
 		ch = l.decode()

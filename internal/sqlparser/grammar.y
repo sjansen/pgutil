@@ -249,11 +249,11 @@ func newOptionList(opts ...*option) []*option {
 %%
 
 ast:
-  MODE_FOREIGN_KEY foreign_key_decl { yylex.(*Lexer).result = $2 }
+  MODE_FOREIGN_KEY foreign_key_decl { yylex.(*lexer).result = $2 }
 | MODE_NOT_IMPLEMENTED select_stmt  { /* not implemented */ }
-| MODE_TRIGGER create_trigger_stmt  { yylex.(*Lexer).result = $2 }
-| create_trigger_stmt semicolon_opt { yylex.(*Lexer).result = $1 }
-| transaction_stmt semicolon_opt    { yylex.(*Lexer).result = $1 }
+| MODE_TRIGGER create_trigger_stmt  { yylex.(*lexer).result = $2 }
+| create_trigger_stmt semicolon_opt { yylex.(*lexer).result = $1 }
+| transaction_stmt semicolon_opt    { yylex.(*lexer).result = $1 }
 
 semicolon_opt:
 /* empty */
@@ -261,13 +261,13 @@ semicolon_opt:
 
 a_expr_begin:
 /* empty */ {
-  yylex.(*Lexer).setMark()
+  yylex.(*lexer).setMark()
 }
 
 a_expr_str:
   a_expr_begin a_expr {
     $$ = string(
-      bytes.TrimSpace(yylex.(*Lexer).sinceMark()),
+      bytes.TrimSpace(yylex.(*lexer).sinceMark()),
     )
   }
 

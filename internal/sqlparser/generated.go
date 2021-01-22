@@ -4135,7 +4135,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 //line grammar.y:252
 		{
-			yylex.(*Lexer).result = yyDollar[2].ast
+			yylex.(*lexer).result = yyDollar[2].ast
 		}
 	case 2:
 		yyDollar = yyS[yypt-2 : yypt+1]
@@ -4146,32 +4146,32 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 //line grammar.y:254
 		{
-			yylex.(*Lexer).result = yyDollar[2].ast
+			yylex.(*lexer).result = yyDollar[2].ast
 		}
 	case 4:
 		yyDollar = yyS[yypt-2 : yypt+1]
 //line grammar.y:255
 		{
-			yylex.(*Lexer).result = yyDollar[1].ast
+			yylex.(*lexer).result = yyDollar[1].ast
 		}
 	case 5:
 		yyDollar = yyS[yypt-2 : yypt+1]
 //line grammar.y:256
 		{
-			yylex.(*Lexer).result = yyDollar[1].ast
+			yylex.(*lexer).result = yyDollar[1].ast
 		}
 	case 8:
 		yyDollar = yyS[yypt-0 : yypt+1]
 //line grammar.y:263
 		{
-			yylex.(*Lexer).setMark()
+			yylex.(*lexer).setMark()
 		}
 	case 9:
 		yyDollar = yyS[yypt-2 : yypt+1]
 //line grammar.y:268
 		{
 			yyVAL.str = string(
-				bytes.TrimSpace(yylex.(*Lexer).sinceMark()),
+				bytes.TrimSpace(yylex.(*lexer).sinceMark()),
 			)
 		}
 	case 10:

@@ -44,7 +44,7 @@ func ParseTrigger(buf []byte) (*schema.Trigger, error) {
 }
 
 func parse(buf []byte, mode int) (interface{}, error) {
-	lexer := &Lexer{
+	lexer := &lexer{
 		buf:  buf,
 		mode: mode,
 	}
