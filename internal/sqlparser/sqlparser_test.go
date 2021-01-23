@@ -22,28 +22,28 @@ type Result struct {
 func TestParse(t *testing.T) {
 	t.Parallel()
 	// sqlparser.EnableDebugLogging()
-	parseAndCompare(t, "testdata/statements/*.sql", func(buf []byte) (interface{}, error) {
-		return sqlparser.Parse(buf)
+	parseAndCompare(t, "testdata/statements/*.sql", func(str string) (interface{}, error) {
+		return sqlparser.Parse(str)
 	})
 }
 
 func TestParseForeignKey(t *testing.T) {
 	t.Parallel()
 	// sqlparser.EnableDebugLogging()
-	parseAndCompare(t, "testdata/fragments/foreign_key*.sql", func(buf []byte) (interface{}, error) {
-		return sqlparser.ParseForeignKey(buf)
+	parseAndCompare(t, "testdata/fragments/foreign_key*.sql", func(str string) (interface{}, error) {
+		return sqlparser.ParseForeignKey(str)
 	})
 }
 
 func TestTrigger(t *testing.T) {
 	t.Parallel()
 	// sqlparser.EnableDebugLogging()
-	parseAndCompare(t, "testdata/statements/trigger*.sql", func(buf []byte) (interface{}, error) {
-		return sqlparser.ParseTrigger(buf)
+	parseAndCompare(t, "testdata/statements/trigger*.sql", func(str string) (interface{}, error) {
+		return sqlparser.ParseTrigger(str)
 	})
 }
 
-func parseAndCompare(t *testing.T, pattern string, fn func([]byte) (interface{}, error)) {
+func parseAndCompare(t *testing.T, pattern string, fn func(string) (interface{}, error)) {
 	testcases, err := filepath.Glob(pattern)
 	if err != nil {
 		t.Log(err)
@@ -61,7 +61,7 @@ func parseAndCompare(t *testing.T, pattern string, fn func([]byte) (interface{},
 			require.NoError(err)
 
 			var actual interface{}
-			actual, err = fn(sql)
+			actual, err = fn(string(sql))
 			require.NoError(err)
 			require.NotNil(actual)
 

@@ -44,7 +44,7 @@ func (c *Conn) ListForeignKeys(schema, table string) ([]*schemapkg.ForeignKey, e
 		c.log.Debugw("row scanned", "name", name, "fkdef", fkdef)
 
 		var fk *schemapkg.ForeignKey
-		fk, err = sqlparser.ParseForeignKey([]byte(fkdef))
+		fk, err = sqlparser.ParseForeignKey(fkdef)
 		if err != nil {
 			break
 		}

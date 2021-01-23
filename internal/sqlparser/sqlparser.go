@@ -21,13 +21,13 @@ func EnableDebugLogging() {
 }
 
 // Parse parses a SQL statement.
-func Parse(buf []byte) (Statement, error) {
-	return parse(buf, 0)
+func Parse(str string) (Statement, error) {
+	return parse(str, 0)
 }
 
 // ParseForeignKey parses a foreign key declaration.
-func ParseForeignKey(buf []byte) (*schema.ForeignKey, error) {
-	tmp, err := parse(buf, MODE_FOREIGN_KEY)
+func ParseForeignKey(str string) (*schema.ForeignKey, error) {
+	tmp, err := parse(str, MODE_FOREIGN_KEY)
 	if err != nil {
 		return nil, err
 	}
@@ -35,17 +35,17 @@ func ParseForeignKey(buf []byte) (*schema.ForeignKey, error) {
 }
 
 // ParseTrigger parses a trigger declaration.
-func ParseTrigger(buf []byte) (*schema.Trigger, error) {
-	tmp, err := parse(buf, MODE_TRIGGER)
+func ParseTrigger(str string) (*schema.Trigger, error) {
+	tmp, err := parse(str, MODE_TRIGGER)
 	if err != nil {
 		return nil, err
 	}
 	return tmp.(*schema.Trigger), err
 }
 
-func parse(buf []byte, mode int) (interface{}, error) {
+func parse(str string, mode int) (interface{}, error) {
 	lexer := &lexer{
-		buf:  buf,
+		str:  str,
 		mode: mode,
 	}
 	rc := yyParse(lexer)

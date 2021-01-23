@@ -7,7 +7,7 @@
 package sqlparser
 
 import (
-  "bytes"
+  "strings"
 
   "github.com/sjansen/pgutil/internal/sql"
 )
@@ -266,8 +266,8 @@ a_expr_begin:
 
 a_expr_str:
   a_expr_begin a_expr {
-    $$ = string(
-      bytes.TrimSpace(yylex.(*lexer).sinceMark()),
+    $$ = strings.TrimSpace(
+      yylex.(*lexer).sinceMark(),
     )
   }
 

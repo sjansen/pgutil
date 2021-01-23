@@ -8,7 +8,7 @@ import __yyfmt__ "fmt"
 //line grammar.y:7
 
 import (
-	"bytes"
+	"strings"
 
 	"github.com/sjansen/pgutil/internal/sql"
 )
@@ -4170,8 +4170,8 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 //line grammar.y:268
 		{
-			yyVAL.str = string(
-				bytes.TrimSpace(yylex.(*lexer).sinceMark()),
+			yyVAL.str = strings.TrimSpace(
+				yylex.(*lexer).sinceMark(),
 			)
 		}
 	case 10:

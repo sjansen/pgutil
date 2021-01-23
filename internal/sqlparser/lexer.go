@@ -12,7 +12,7 @@ const eof = 0
 type lexer struct {
 	result  interface{}
 	err     string
-	buf     []byte
+	str     string
 	mode    int
 	offset  int
 	prev    int
@@ -55,7 +55,7 @@ func (l *lexer) Error(s string) {
 }
 
 func (l *lexer) decode() rune {
-	r, size := utf8.DecodeRune(l.buf[l.offset:])
+	r, size := utf8.DecodeRuneInString(l.str[l.offset:])
 	if size == 0 {
 		l.decoded = eof
 		return eof
@@ -97,10 +97,10 @@ func (l *lexer) setMark() {
 	l.mark = l.prev
 }
 
-func (l *lexer) sinceMark() []byte {
+func (l *lexer) sinceMark() string {
 	// TODO: eliminate this hack
-	_, size := utf8.DecodeLastRune(l.buf[:l.prev])
-	return l.buf[l.mark : l.prev-size]
+	_, size := utf8.DecodeLastRuneInString(l.str[:l.prev])
+	return l.str[l.mark : l.prev-size]
 }
 
 func (l *lexer) skipWS() {
