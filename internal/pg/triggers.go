@@ -53,7 +53,7 @@ func (c *Conn) DescribeTrigger(schema, table, name string) (*schemapkg.Trigger, 
 	c.log.Debugw("scanned", "triggerdef", triggerdef)
 
 	var trigger *schemapkg.Trigger
-	trigger, err = sqlparser.ParseTrigger(triggerdef)
+	trigger, err = sqlparser.ParseCreateTrigger(triggerdef)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (c *Conn) ListTriggers(schema, table string) ([]*schema.Trigger, error) {
 		c.log.Debugw("scanned", "trigger", name, "triggerdef", triggerdef)
 
 		var trigger *schemapkg.Trigger
-		trigger, err = sqlparser.ParseTrigger(triggerdef)
+		trigger, err = sqlparser.ParseCreateTrigger(triggerdef)
 		if err != nil {
 			break
 		}

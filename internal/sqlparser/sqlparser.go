@@ -34,6 +34,15 @@ func ParseCheck(str string) (*schema.Check, error) {
 	return tmp.(*schema.Check), err
 }
 
+// ParseCreateTrigger parses a CREATE TRIGGER statement.
+func ParseCreateTrigger(str string) (*schema.Trigger, error) {
+	tmp, err := parse(str, MODE_CREATE_TRIGGER)
+	if err != nil {
+		return nil, err
+	}
+	return tmp.(*schema.Trigger), err
+}
+
 // ParseForeignKey parses a FOREIGN KEY declaration.
 func ParseForeignKey(str string) (*schema.ForeignKey, error) {
 	tmp, err := parse(str, MODE_FOREIGN_KEY)
@@ -41,15 +50,6 @@ func ParseForeignKey(str string) (*schema.ForeignKey, error) {
 		return nil, err
 	}
 	return tmp.(*schema.ForeignKey), err
-}
-
-// ParseTrigger parses a CREATE TRIGGER statement.
-func ParseTrigger(str string) (*schema.Trigger, error) {
-	tmp, err := parse(str, MODE_CREATE_TRIGGER)
-	if err != nil {
-		return nil, err
-	}
-	return tmp.(*schema.Trigger), err
 }
 
 func parse(str string, mode int) (interface{}, error) {

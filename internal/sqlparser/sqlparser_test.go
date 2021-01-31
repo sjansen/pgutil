@@ -44,11 +44,11 @@ func TestParseForeignKey(t *testing.T) {
 	})
 }
 
-func TestTrigger(t *testing.T) {
+func TestParseCreateTrigger(t *testing.T) {
 	t.Parallel()
 	// sqlparser.EnableDebugLogging()
-	parseAndCompare(t, "testdata/statements/trigger*.sql", func(str string) (interface{}, error) {
-		return sqlparser.ParseTrigger(str)
+	parseAndCompare(t, "testdata/statements/create_trigger*.sql", func(str string) (interface{}, error) {
+		return sqlparser.ParseCreateTrigger(str)
 	})
 }
 
