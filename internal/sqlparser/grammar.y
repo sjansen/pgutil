@@ -9,6 +9,7 @@ package sqlparser
 import (
   "strings"
 
+  "github.com/sjansen/pgutil/internal/schema"
   "github.com/sjansen/pgutil/internal/sql"
 )
 
@@ -158,9 +159,10 @@ func newOptionList(opts ...*option) []*option {
  */
 %token NOT_LA NULLS_LA WITH_LA
 
+%token MODE_CHECK
+%token MODE_CREATE_TRIGGER
 %token MODE_FOREIGN_KEY
 %token MODE_NOT_IMPLEMENTED
-%token MODE_TRIGGER
 
 %token UNEXPECTED_SYMBOL
 %token<str> Identifier Name
@@ -177,11 +179,11 @@ func newOptionList(opts ...*option) []*option {
 %nonassoc	BETWEEN IN LIKE ILIKE SIMILAR NOT_LA
 %nonassoc	ESCAPE			/* ESCAPE must be just above LIKE/ILIKE/SIMILAR */
 /*
- * To support target_el without AS, it used to be necessary to assign IDENT an
+ * To support target_el without AS, it used to be necessary to assign Identifier an
  * explicit precedence just less than Op.  While that's not really necessary
  * since we removed postfix operators, it's still helpful to do so because
  * there are some other unreserved keywords that need precedence assignments.
- * If those keywords have the same precedence as IDENT then they clearly act
+ * If those keywords have the same precedence as Identifier then they clearly act
  * the same as non-keywords, reducing the risk of unwanted precedence effects.
  *
  * We need to do this for PARTITION, RANGE, ROWS, and GROUPS to support
@@ -199,10 +201,10 @@ func newOptionList(opts ...*option) []*option {
  * To support CUBE and ROLLUP in GROUP BY without reserving them, we give them
  * an explicit priority lower than '(', so that a rule with CUBE '(' will shift
  * rather than reducing a conflicting rule that takes CUBE as a function name.
- * Using the same precedence as IDENT seems right for the reasons given above.
+ * Using the same precedence as Identifier seems right for the reasons given above.
  */
-%nonassoc	UNBOUNDED		/* ideally would have same precedence as IDENT */
-%nonassoc	IDENT PARTITION RANGE ROWS GROUPS PRECEDING FOLLOWING CUBE ROLLUP
+%nonassoc	UNBOUNDED		/* ideally would have same precedence as Identifier */
+%nonassoc	Identifier PARTITION RANGE ROWS GROUPS PRECEDING FOLLOWING CUBE ROLLUP
 %left		Op OPERATOR		/* multi-character ops and user-defined operators */
 %left		'+' '-'
 %left		'*' '/' '%'
@@ -228,6 +230,7 @@ func newOptionList(opts ...*option) []*option {
 %type<str>  a_expr_str
 %type<strs> column_list column_list_or_empty
 %type<bool> deferrable
+%type<ast>  check_decl
 %type<ast>  create_trigger_stmt
 %type<ast>  foreign_key_decl
 %type<str>  foreign_key_action foreign_key_match
@@ -249,11 +252,12 @@ func newOptionList(opts ...*option) []*option {
 %%
 
 ast:
-  MODE_FOREIGN_KEY foreign_key_decl { yylex.(*lexer).result = $2 }
-| MODE_NOT_IMPLEMENTED select_stmt  { /* not implemented */ }
-| MODE_TRIGGER create_trigger_stmt  { yylex.(*lexer).result = $2 }
-| create_trigger_stmt semicolon_opt { yylex.(*lexer).result = $1 }
-| transaction_stmt semicolon_opt    { yylex.(*lexer).result = $1 }
+  MODE_CHECK check_decl                    { yylex.(*lexer).result = $2 }
+| MODE_CREATE_TRIGGER create_trigger_stmt  { yylex.(*lexer).result = $2 }
+| MODE_FOREIGN_KEY foreign_key_decl        { yylex.(*lexer).result = $2 }
+| MODE_NOT_IMPLEMENTED select_stmt         { /* not implemented */ }
+| create_trigger_stmt semicolon_opt        { yylex.(*lexer).result = $1 }
+| transaction_stmt semicolon_opt           { yylex.(*lexer).result = $1 }
 
 semicolon_opt:
 /* empty */
@@ -299,6 +303,22 @@ initially_deferred:
 /* empty */           { $$ = false }
 | INITIALLY DEFERRED  { $$ = true }
 | INITIALLY IMMEDIATE { $$ = false }
+
+/*****************************************************************************
+ *
+ *	CHECK declaration
+ *
+ *****************************************************************************/
+
+check_decl:
+  CHECK '(' a_expr_str ')' deferrable initially_deferred
+  {
+    chk := &schema.Check{}
+    chk.Expression = $3
+    chk.Deferrable = $5
+    chk.InitiallyDeferred = $6
+    $$ = chk
+  }
 
 /*****************************************************************************
  *
@@ -377,7 +397,7 @@ trigger_when:
 
 /*****************************************************************************
  *
- *	foreign key declaration
+ *	FOREIGN KEY declaration
  *
  *****************************************************************************/
 
@@ -1025,7 +1045,7 @@ explicit_row:
 | ROW '(' ')'
 
 extract_arg:
-  IDENT
+  Identifier
 | YEAR
 | MONTH
 | DAY
@@ -1109,7 +1129,7 @@ opt_asymmetric:
  * If we see PARTITION, RANGE, ROWS or GROUPS as the first token after the '('
  * of a window_specification, we want the assumption to be that there is
  * no existing_window_name; but those keywords are unreserved and so could
- * be ColIds.  We fix this by making them have the same precedence as IDENT
+ * be ColIds.  We fix this by making them have the same precedence as Identifier
  * and giving the empty production here a slightly higher precedence, so
  * that the shift/reduce conflict is resolved in favor of reducing the rule.
  * These keywords are thus precluded from being an existing_window_name but
@@ -1147,7 +1167,8 @@ opt_slice_bound:
 | a_expr
 
 opt_sort_clause:
-  sort_clause
+/* empty */
+| sort_clause
 
 opt_window_exclusion_clause:
 /* empty */
@@ -1288,12 +1309,12 @@ attr_name:
   ColLabel
 
 ColId:
-  IDENT
+  Identifier
 | unreserved_keyword
 | col_name_keyword
 
 ColLabel:
-  IDENT
+  Identifier
 | unreserved_keyword
 | col_name_keyword
 | type_func_name_keyword
@@ -1312,7 +1333,7 @@ func_name:
 | ColId indirection
 
 type_function_name:
-  IDENT
+  Identifier
 | unreserved_keyword
 | type_func_name_keyword
 
@@ -1378,9 +1399,9 @@ Typename:
 | SETOF SimpleTypename ARRAY
 
 opt_array_bounds:
-  opt_array_bounds '[' ']'
+  /* empty */
+| opt_array_bounds '[' ']'
 | opt_array_bounds '[' ICONST ']'
-| /*EMPTY*/
 
 SimpleTypename:
   GenericType

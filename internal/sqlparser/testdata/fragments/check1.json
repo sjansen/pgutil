@@ -1,0 +1,9 @@
+{
+  "type": "schema.Check",
+  "value": {
+    "Name": "",
+    "Expression": "0 \u003c= value",
+    "Deferrable": false,
+    "InitiallyDeferred": false
+  }
+}

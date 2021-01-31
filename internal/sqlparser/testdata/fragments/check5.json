@@ -1,0 +1,9 @@
+{
+  "type": "schema.Check",
+  "value": {
+    "Name": "",
+    "Expression": "key::text ~ '^\\d{4}-\\d{4}-\\d{4}(:[a-z]+)?$'::text",
+    "Deferrable": false,
+    "InitiallyDeferred": false
+  }
+}

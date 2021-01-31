@@ -10,14 +10,15 @@ import (
 const eof = 0
 
 type lexer struct {
-	result  interface{}
-	err     string
-	str     string
-	mode    int
-	offset  int
-	prev    int
-	mark    int
-	decoded rune
+	result     interface{}
+	err        string
+	str        string
+	mode       int
+	currOffset int
+	prevOffset int
+	markHead   int
+	markTail   int
+	decoded    rune
 }
 
 func (l *lexer) Lex(lval *yySymType) int { // nolint: gocyclo
@@ -27,21 +28,76 @@ func (l *lexer) Lex(lval *yySymType) int { // nolint: gocyclo
 		return tmp
 	}
 
+	l.markTail = l.prevOffset
 	l.skipWS()
 
 	ch := l.decoded
 	switch {
 	case ch == eof:
 		return eof
+	case ch >= '0' && ch <= '9':
+		for l.decoded >= '0' && l.decoded <= '9' {
+			l.decode()
+		}
+		return ICONST
+	case ch == '\'':
+		l.decode()
+		for l.decoded != '\'' {
+			l.decode()
+		}
+		l.decode()
+		return SCONST
 	case ch == '(' || ch == ')' || ch == '=' || ch == '.' || ch == ',' || ch == ';':
 		l.decode()
 		return int(ch)
-	case ch == '<' || ch == '>' || ch == '+' || ch == '-' || ch == '*' || ch == '/':
+	case ch == '+' || ch == '-' || ch == '*' || ch == '/':
 		l.decode()
 		return int(ch)
-	case ch == '[' || ch == ']' || ch == ':' || ch == '%' || ch == '^':
+	case ch == '[' || ch == ']' || ch == '%' || ch == '^':
 		l.decode()
 		return int(ch)
+	case ch == '~':
+		l.decode()
+		return Op
+	case ch == '<':
+		l.decode()
+		switch l.decoded {
+		case '=':
+			l.decode()
+			return LESS_EQUALS
+		case '>':
+			l.decode()
+			return NOT_EQUALS
+		default:
+			return int(ch)
+		}
+	case ch == '>':
+		l.decode()
+		switch l.decoded {
+		case '=':
+			l.decode()
+			return GREATER_EQUALS
+		default:
+			return int(ch)
+		}
+	case ch == '!':
+		l.decode()
+		switch l.decoded {
+		case '=':
+			l.decode()
+			return NOT_EQUALS
+		default:
+			return int(ch)
+		}
+	case ch == ':':
+		l.decode()
+		switch l.decoded {
+		case ':':
+			l.decode()
+			return TYPECAST
+		default:
+			return int(ch)
+		}
 	case isWordStart(ch):
 		return l.scanWord(lval)
 	}
@@ -55,14 +111,14 @@ func (l *lexer) Error(s string) {
 }
 
 func (l *lexer) decode() rune {
-	r, size := utf8.DecodeRuneInString(l.str[l.offset:])
+	r, size := utf8.DecodeRuneInString(l.str[l.currOffset:])
 	if size == 0 {
 		l.decoded = eof
 		return eof
 	}
 	l.decoded = r
-	l.prev = l.offset
-	l.offset += size
+	l.prevOffset = l.currOffset
+	l.currOffset += size
 	if yyDebug > 6 {
 		fmt.Printf("decoded: %q\n", r)
 	}
@@ -94,13 +150,11 @@ func (l *lexer) scanWord(lval *yySymType) int {
 }
 
 func (l *lexer) setMark() {
-	l.mark = l.prev
+	l.markHead = l.prevOffset
 }
 
 func (l *lexer) sinceMark() string {
-	// TODO: eliminate this hack
-	_, size := utf8.DecodeLastRuneInString(l.str[:l.prev])
-	return l.str[l.mark : l.prev-size]
+	return l.str[l.markHead:l.markTail]
 }
 
 func (l *lexer) skipWS() {

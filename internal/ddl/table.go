@@ -14,7 +14,7 @@ type Table struct {
 	Comment string `hcl:"comment,optional"`
 
 	Columns     []*Column            `hcl:"column,block"`
-	Checks      []*Check             `hcl:"check,block"`
+	Checks      []*schema.Check      `hcl:"check,block"`
 	ForeignKeys []*schema.ForeignKey `hcl:"foreign_key,block"`
 
 	StorageParameters *TableStorageParameters `hcl:"storage_parameters,block"`

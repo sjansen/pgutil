@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -24,6 +25,14 @@ func TestParse(t *testing.T) {
 	// sqlparser.EnableDebugLogging()
 	parseAndCompare(t, "testdata/statements/*.sql", func(str string) (interface{}, error) {
 		return sqlparser.Parse(str)
+	})
+}
+
+func TestParseCheck(t *testing.T) {
+	t.Parallel()
+	// sqlparser.EnableDebugLogging()
+	parseAndCompare(t, "testdata/fragments/check*.sql", func(str string) (interface{}, error) {
+		return sqlparser.ParseCheck(str)
 	})
 }
 
@@ -57,21 +66,22 @@ func parseAndCompare(t *testing.T, pattern string, fn func(string) (interface{},
 			assert := assert.New(t)
 			require := require.New(t)
 
-			sql, err := ioutil.ReadFile(path)
+			data, err := ioutil.ReadFile(path)
 			require.NoError(err)
 
 			var actual interface{}
-			actual, err = fn(string(sql))
+			sql := strings.TrimSpace(string(data))
+			actual, err = fn(sql)
 			require.NoError(err)
 			require.NotNil(actual)
 
-			buf, err := ioutil.ReadFile(
+			data, err = ioutil.ReadFile(
 				replaceExtension(path, "json"),
 			)
 			require.NoError(err)
 
 			expectedResult := &Result{}
-			err = json.Unmarshal(buf, expectedResult)
+			err = json.Unmarshal(data, expectedResult)
 			require.NoError(err)
 
 			typ := reflect.TypeOf(actual)

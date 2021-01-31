@@ -1,0 +1,9 @@
+{
+  "type": "schema.Check",
+  "value": {
+    "Name": "",
+    "Expression": "jsonb_typeof(data) = 'object'::text",
+    "Deferrable": false,
+    "InitiallyDeferred": false
+  }
+}

@@ -25,7 +25,16 @@ func Parse(str string) (Statement, error) {
 	return parse(str, 0)
 }
 
-// ParseForeignKey parses a foreign key declaration.
+// ParseCheck parses a CHECK declaration.
+func ParseCheck(str string) (*schema.Check, error) {
+	tmp, err := parse(str, MODE_CHECK)
+	if err != nil {
+		return nil, err
+	}
+	return tmp.(*schema.Check), err
+}
+
+// ParseForeignKey parses a FOREIGN KEY declaration.
 func ParseForeignKey(str string) (*schema.ForeignKey, error) {
 	tmp, err := parse(str, MODE_FOREIGN_KEY)
 	if err != nil {
@@ -34,9 +43,9 @@ func ParseForeignKey(str string) (*schema.ForeignKey, error) {
 	return tmp.(*schema.ForeignKey), err
 }
 
-// ParseTrigger parses a trigger declaration.
+// ParseTrigger parses a CREATE TRIGGER statement.
 func ParseTrigger(str string) (*schema.Trigger, error) {
-	tmp, err := parse(str, MODE_TRIGGER)
+	tmp, err := parse(str, MODE_CREATE_TRIGGER)
 	if err != nil {
 		return nil, err
 	}
