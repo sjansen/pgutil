@@ -1,0 +1,20 @@
+{
+  "type": "schema.Index",
+  "value": {
+    "Schema": "",
+    "Table": "foo",
+    "Name": "foo__uniq__key__null_value",
+    "Primary": false,
+    "Unique": false,
+    "Using": "",
+    "Where": "value IS NUL",
+    "Keys": [
+      {
+        "Column": "key",
+        "Expression": "",
+        "OpClass": "",
+        "Descending": false
+      }
+    ]
+  }
+}

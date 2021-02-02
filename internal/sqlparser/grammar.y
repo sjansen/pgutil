@@ -40,6 +40,7 @@ func newOptionList(opts ...*option) []*option {
 
 %union {
   ast   interface{}
+  asts  interface{}
   bool  bool
   opt   *option
   opts  []*option
@@ -53,7 +54,8 @@ func newOptionList(opts ...*option) []*option {
 %token COLON_EQUALS EQUALS_GREATER
 
 /* keywords */
-%token ABORT ABSOLUTE ACCESS ACTION ADD ADMIN AFTER AGGREGATE ALL
+%token<str>
+  ABORT ABSOLUTE ACCESS ACTION ADD ADMIN AFTER AGGREGATE ALL
   ALSO ALTER ALWAYS ANALYSE ANALYZE AND ANY ARRAY AS ASC
 	ASSERTION ASSIGNMENT ASYMMETRIC AT ATTACH ATTRIBUTE
 	AUTHORIZATION
@@ -160,6 +162,7 @@ func newOptionList(opts ...*option) []*option {
 %token NOT_LA NULLS_LA WITH_LA
 
 %token MODE_CHECK
+%token MODE_CREATE_INDEX
 %token MODE_CREATE_TRIGGER
 %token MODE_FOREIGN_KEY
 %token MODE_NOT_IMPLEMENTED
@@ -231,12 +234,18 @@ func newOptionList(opts ...*option) []*option {
 %type<strs> column_list column_list_or_empty
 %type<bool> deferrable
 %type<ast>  check_decl
-%type<ast>  create_trigger_stmt
+%type<bool> concurrently_opt
+%type<ast>  create_index_stmt create_trigger_stmt
+%type<bool> desc_opt
 %type<ast>  foreign_key_decl
 %type<str>  foreign_key_action foreign_key_match
 %type<opts> foreign_key_actions
 %type<opt>  foreign_key_delete foreign_key_update
 %type<bool> initially_deferred
+%type<ast>  index_key
+%type<asts> index_keys
+%type<str>  index_opclass_opt index_using
+%type<str>  name name_opt
 %type<bool> transaction_chain
 %type<str>  transaction_isolation_level
 %type<opt>  transaction_mode_item
@@ -246,6 +255,12 @@ func newOptionList(opts ...*option) []*option {
 %type<opts> trigger_event_list
 %type<bool> trigger_for
 %type<str>  trigger_from trigger_timing trigger_when
+%type<bool> unique_opt
+%type<str>  where_expr_opt
+
+%type<str> col_name_keyword
+%type<str> reserved_keyword
+%type<str> unreserved_keyword
 
 %start ast
 
@@ -253,12 +268,15 @@ func newOptionList(opts ...*option) []*option {
 
 ast:
   MODE_CHECK check_decl                    { yylex.(*lexer).result = $2 }
+| MODE_CREATE_INDEX create_index_stmt      { yylex.(*lexer).result = $2 }
 | MODE_CREATE_TRIGGER create_trigger_stmt  { yylex.(*lexer).result = $2 }
 | MODE_FOREIGN_KEY foreign_key_decl        { yylex.(*lexer).result = $2 }
 | MODE_NOT_IMPLEMENTED select_stmt         { /* not implemented */ }
+| create_index_stmt semicolon_opt          { yylex.(*lexer).result = $1 }
 | create_trigger_stmt semicolon_opt        { yylex.(*lexer).result = $1 }
 | transaction_stmt semicolon_opt           { yylex.(*lexer).result = $1 }
 
+/* TODO: require end of input */
 semicolon_opt:
 /* empty */
 | ';'
@@ -289,20 +307,46 @@ column_list_or_empty:
 /* empty */           { $$ = nil }
 | '(' column_list ')' { $$ = $2 }
 
+concurrently_opt:
+/* empty */    { $$ = false }
+| CONCURRENTLY { $$ = true }
+
 /* TODO: combine with initially_deferred */
 deferrable:
 /* empty */      { $$ = false }
 | DEFERRABLE     { $$ = true }
 | NOT DEFERRABLE { $$ = false }
 
+desc_opt:
+/* empty */ { $$ = false }
+| ASC       { $$ = false }
+| DESC      { $$ = true }
+
 function_or_procedure:
   FUNCTION
 |	PROCEDURE
+
+name_opt:
+/* empty */ { $$ = "" }
+| name      { $$ = $1 }
 
 initially_deferred:
 /* empty */           { $$ = false }
 | INITIALLY DEFERRED  { $$ = true }
 | INITIALLY IMMEDIATE { $$ = false }
+
+name:
+  Identifier         { $$ = $1 }
+| unreserved_keyword { $$ = $1 }
+| col_name_keyword   { $$ = $1 }
+
+unique_opt:
+/* empty */ { $$ = false }
+| UNIQUE    { $$ = true }
+
+where_expr_opt:
+/* empty */        { $$ = "" }
+| WHERE a_expr_str { $$ = $2 }
 
 /*****************************************************************************
  *
@@ -319,6 +363,76 @@ check_decl:
     chk.InitiallyDeferred = $6
     $$ = chk
   }
+
+/*****************************************************************************
+ *
+ *	CREATE INDEX
+ *
+ *****************************************************************************/
+
+/* TODO
+ * - table name -> qualified_name
+ * - full grammar
+ */
+create_index_stmt:
+  CREATE unique_opt INDEX concurrently_opt name_opt
+  ON name index_using '(' index_keys ')' where_expr_opt {
+    idx := &schema.Index{}
+    idx.Unique = $2
+    idx.Name = $5
+    idx.Table = $7
+    idx.Using = $8
+    idx.Keys = $10.([]*schema.IndexKey)
+    idx.Where = $12
+    $$ = idx
+  }
+| CREATE unique_opt INDEX concurrently_opt IF NOT EXISTS name
+  ON name index_using '(' index_keys ')' where_expr_opt {
+    idx := &schema.Index{}
+    idx.Unique = $2
+    idx.Name = $8
+    idx.Table = $10
+    idx.Using = $11
+    idx.Keys = $13.([]*schema.IndexKey)
+    idx.Where = $15
+    $$ = idx
+  }
+
+/* TODO: allow bare function calls (test case #6) */
+index_key:
+  name index_opclass_opt desc_opt {
+    k := &schema.IndexKey{}
+    k.Column = $1
+    k.OpClass = $2
+    k.Descending = $3
+    $$ = k
+  }
+| '(' a_expr_str ')' index_opclass_opt desc_opt {
+    k := &schema.IndexKey{}
+    k.Expression = $2
+    k.OpClass = $4
+    k.Descending = $5
+    $$ = k
+  }
+
+index_keys:
+  index_key {
+    slice := make([]*schema.IndexKey, 0, 4)
+    $$ = append(slice, $1.(*schema.IndexKey))
+  }
+| index_keys ',' index_key {
+    slice := $1.([]*schema.IndexKey)
+    $$ = append(slice, $3.(*schema.IndexKey))
+  }
+
+index_opclass_opt:
+/* empty */ { $$ = "" }
+| name      { $$ = $1 }
+
+/* TODO: s/Identifier/name/ */
+index_using:
+/* empty */        { $$ = "" }
+| USING Identifier { $$ = $2 }
 
 /*****************************************************************************
  *

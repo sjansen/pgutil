@@ -44,6 +44,14 @@ func TestParseForeignKey(t *testing.T) {
 	})
 }
 
+func TestParseCreateIndex(t *testing.T) {
+	t.Parallel()
+	// sqlparser.EnableDebugLogging()
+	parseAndCompare(t, "testdata/statements/create_index*.sql", func(str string) (interface{}, error) {
+		return sqlparser.ParseCreateIndex(str)
+	})
+}
+
 func TestParseCreateTrigger(t *testing.T) {
 	t.Parallel()
 	// sqlparser.EnableDebugLogging()

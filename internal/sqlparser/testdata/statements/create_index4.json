@@ -1,0 +1,20 @@
+{
+  "type": "schema.Index",
+  "value": {
+    "Schema": "",
+    "Table": "foo",
+    "Name": "foo__key__like",
+    "Primary": false,
+    "Unique": false,
+    "Using": "",
+    "Where": "",
+    "Keys": [
+      {
+        "Column": "key",
+        "Expression": "",
+        "OpClass": "varchar_pattern_ops",
+        "Descending": false
+      }
+    ]
+  }
+}

@@ -142,10 +142,10 @@ func (l *lexer) scanWord(lval *yySymType) int {
 		ch = l.decode()
 	}
 	lower := string(bytes.ToLower(buffer.Bytes()))
+	lval.str = lower
 	if keyword, ok := keywords[lower]; ok {
 		return keyword
 	}
-	lval.str = lower
 	return Identifier
 }
 

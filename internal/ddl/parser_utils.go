@@ -2,20 +2,8 @@ package ddl
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 )
-
-var whitespace = regexp.MustCompile(`\s+`)
-
-func collapseWhitespace(before string) string {
-	after := whitespace.ReplaceAllString(before, " ")
-	return after
-}
-
-func trim(s string) string {
-	return strings.TrimSpace(s)
-}
 
 type parseError struct {
 	cs   int

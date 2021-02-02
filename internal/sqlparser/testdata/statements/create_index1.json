@@ -1,0 +1,20 @@
+{
+  "type": "schema.Index",
+  "value": {
+    "Schema": "",
+    "Table": "foo",
+    "Name": "foo__key",
+    "Primary": false,
+    "Unique": true,
+    "Using": "btree",
+    "Where": "",
+    "Keys": [
+      {
+        "Column": "key",
+        "Expression": "",
+        "OpClass": "",
+        "Descending": false
+      }
+    ]
+  }
+}

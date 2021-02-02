@@ -34,6 +34,15 @@ func ParseCheck(str string) (*schema.Check, error) {
 	return tmp.(*schema.Check), err
 }
 
+// ParseCreateIndex parses a CREATE INDEX statement.
+func ParseCreateIndex(str string) (*schema.Index, error) {
+	tmp, err := parse(str, MODE_CREATE_INDEX)
+	if err != nil {
+		return nil, err
+	}
+	return tmp.(*schema.Index), err
+}
+
 // ParseCreateTrigger parses a CREATE TRIGGER statement.
 func ParseCreateTrigger(str string) (*schema.Trigger, error) {
 	tmp, err := parse(str, MODE_CREATE_TRIGGER)

@@ -1,4 +1,4 @@
-package ddl
+package schema
 
 import "strings"
 
@@ -22,37 +22,6 @@ type IndexKey struct {
 	Expression string `hcl:"expression,optional"`
 	OpClass    string `hcl:"opclass,optional"`
 	Descending bool   `hcl:"descending,optional"`
-}
-
-func (idx *Index) addColumn(s string) {
-	key := &IndexKey{Column: s}
-	idx.Keys = append(idx.Keys, key)
-}
-
-func (idx *Index) addExpression(s string) {
-	key := &IndexKey{Expression: s}
-	idx.Keys = append(idx.Keys, key)
-}
-
-func (idx *Index) setName(name string) {
-	idx.Name = name
-}
-
-func (idx *Index) setOpClass(opclass string) {
-	key := idx.Keys[len(idx.Keys)-1]
-	key.OpClass = opclass
-}
-
-func (idx *Index) setTable(table string) {
-	idx.Table = table
-}
-
-func (idx *Index) setUsing(s string) {
-	idx.Using = collapseWhitespace(s)
-}
-
-func (idx *Index) setWhere(s string) {
-	idx.Where = collapseWhitespace(trim(s))
 }
 
 func (idx *Index) ToSQL() (string, error) {
