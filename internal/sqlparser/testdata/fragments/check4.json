@@ -1,5 +1,5 @@
 {
-  "type": "schema.Check",
+  "type": "ddl.Check",
   "value": {
     "Name": "",
     "Expression": "CASE\n    WHEN key::text = 'begin'::text THEN 0 \u003c= value\n    ELSE 0 \u003c value\nEND",

@@ -9,7 +9,7 @@ package sqlparser
 import (
   "strings"
 
-  "github.com/sjansen/pgutil/internal/schema"
+  "github.com/sjansen/pgutil/internal/ddl"
   "github.com/sjansen/pgutil/internal/sql"
 )
 
@@ -357,7 +357,7 @@ where_expr_opt:
 check_decl:
   CHECK '(' a_expr_str ')' deferrable initially_deferred
   {
-    chk := &schema.Check{}
+    chk := &ddl.Check{}
     chk.Expression = $3
     chk.Deferrable = $5
     chk.InitiallyDeferred = $6
@@ -377,23 +377,23 @@ check_decl:
 create_index_stmt:
   CREATE unique_opt INDEX concurrently_opt name_opt
   ON name index_using '(' index_keys ')' where_expr_opt {
-    idx := &schema.Index{}
+    idx := &ddl.Index{}
     idx.Unique = $2
     idx.Name = $5
     idx.Table = $7
     idx.Using = $8
-    idx.Keys = $10.([]*schema.IndexKey)
+    idx.Keys = $10.([]*ddl.IndexKey)
     idx.Where = $12
     $$ = idx
   }
 | CREATE unique_opt INDEX concurrently_opt IF NOT EXISTS name
   ON name index_using '(' index_keys ')' where_expr_opt {
-    idx := &schema.Index{}
+    idx := &ddl.Index{}
     idx.Unique = $2
     idx.Name = $8
     idx.Table = $10
     idx.Using = $11
-    idx.Keys = $13.([]*schema.IndexKey)
+    idx.Keys = $13.([]*ddl.IndexKey)
     idx.Where = $15
     $$ = idx
   }
@@ -401,14 +401,14 @@ create_index_stmt:
 /* TODO: allow bare function calls (test case #6) */
 index_key:
   name index_opclass_opt desc_opt {
-    k := &schema.IndexKey{}
+    k := &ddl.IndexKey{}
     k.Column = $1
     k.OpClass = $2
     k.Descending = $3
     $$ = k
   }
 | '(' a_expr_str ')' index_opclass_opt desc_opt {
-    k := &schema.IndexKey{}
+    k := &ddl.IndexKey{}
     k.Expression = $2
     k.OpClass = $4
     k.Descending = $5
@@ -417,12 +417,12 @@ index_key:
 
 index_keys:
   index_key {
-    slice := make([]*schema.IndexKey, 0, 4)
-    $$ = append(slice, $1.(*schema.IndexKey))
+    slice := make([]*ddl.IndexKey, 0, 4)
+    $$ = append(slice, $1.(*ddl.IndexKey))
   }
 | index_keys ',' index_key {
-    slice := $1.([]*schema.IndexKey)
-    $$ = append(slice, $3.(*schema.IndexKey))
+    slice := $1.([]*ddl.IndexKey)
+    $$ = append(slice, $3.(*ddl.IndexKey))
   }
 
 index_opclass_opt:

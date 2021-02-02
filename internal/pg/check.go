@@ -1,7 +1,7 @@
 package pg
 
 import (
-	schemapkg "github.com/sjansen/pgutil/internal/schema"
+	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/sqlparser"
 )
 
@@ -21,7 +21,7 @@ ORDER BY 1;
 `
 
 // ListChecks describes the check constraints of a database table
-func (c *Conn) ListChecks(schema, table string) ([]*schemapkg.Check, error) {
+func (c *Conn) ListChecks(schema, table string) ([]*ddl.Check, error) {
 	c.log.Infow("listing checks", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listChecks)
@@ -32,7 +32,7 @@ func (c *Conn) ListChecks(schema, table string) ([]*schemapkg.Check, error) {
 	defer rows.Close()
 
 	c.log.Debugw("scanning rows")
-	var checks []*schemapkg.Check
+	var checks []*ddl.Check
 	for rows.Next() {
 		var name, checkdef string
 		err = rows.Scan(&name, &checkdef)
@@ -41,7 +41,7 @@ func (c *Conn) ListChecks(schema, table string) ([]*schemapkg.Check, error) {
 		}
 		c.log.Debugw("row scanned", "check", name, "checkdef", checkdef)
 
-		var check *schemapkg.Check
+		var check *ddl.Check
 		check, err = sqlparser.ParseCheck(checkdef)
 		if err != nil {
 			break

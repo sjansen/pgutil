@@ -1,4 +1,4 @@
-package schema
+package ddl
 
 // A Check constraint limits column values
 type Check struct {

@@ -1,5 +1,5 @@
 {
-  "type": "schema.Index",
+  "type": "ddl.Index",
   "value": {
     "Schema": "",
     "Table": "foo",

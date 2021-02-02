@@ -1,5 +1,5 @@
 {
-  "type": "schema.Trigger",
+  "type": "ddl.Trigger",
   "value": {
     "Table": "accounts",
     "Name": "log_update",

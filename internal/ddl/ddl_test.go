@@ -9,7 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/sjansen/pgutil/internal/ddl"
-	"github.com/sjansen/pgutil/internal/schema"
 )
 
 var updateModifiedColumn = `BEGIN
@@ -72,7 +71,7 @@ var expected = &ddl.Database{
 				},
 				{Name: "foo_id", Type: "integer", NotNull: true},
 			},
-			ForeignKeys: []*schema.ForeignKey{{
+			ForeignKeys: []*ddl.ForeignKey{{
 				Table:      "foo",
 				Columns:    []string{"foo_id"},
 				Referenced: []string{"id"},
@@ -93,7 +92,7 @@ var expected = &ddl.Database{
 			},
 		},
 	},
-	Triggers: []*schema.Trigger{
+	Triggers: []*ddl.Trigger{
 		{
 			Schema:     "public",
 			Table:      "foo",

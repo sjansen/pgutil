@@ -1,5 +1,5 @@
 {
-  "type": "schema.Check",
+  "type": "ddl.Check",
   "value": {
     "Name": "",
     "Expression": "jsonb_typeof(data) = 'object'::text",

@@ -1,7 +1,7 @@
 package pg
 
 import (
-	schemapkg "github.com/sjansen/pgutil/internal/schema"
+	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/sqlparser"
 )
 
@@ -26,7 +26,7 @@ ORDER BY
 `
 
 // ListIndexes describes the indexes of a database table
-func (c *Conn) ListIndexes(schema, table string) ([]*schemapkg.Index, error) {
+func (c *Conn) ListIndexes(schema, table string) ([]*ddl.Index, error) {
 	c.log.Infow("listing indexes", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listIndexes)
@@ -37,7 +37,7 @@ func (c *Conn) ListIndexes(schema, table string) ([]*schemapkg.Index, error) {
 	defer rows.Close()
 
 	c.log.Debugw("scanning rows")
-	var indexes []*schemapkg.Index
+	var indexes []*ddl.Index
 	for rows.Next() {
 		var name, indexdef string
 		var isPrimary bool
@@ -47,7 +47,7 @@ func (c *Conn) ListIndexes(schema, table string) ([]*schemapkg.Index, error) {
 		}
 		c.log.Debugw("row scanned", "index", name, "indexdef", indexdef)
 
-		var index *schemapkg.Index
+		var index *ddl.Index
 		index, err = sqlparser.ParseCreateIndex(indexdef)
 		if err != nil {
 			break

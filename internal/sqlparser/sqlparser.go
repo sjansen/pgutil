@@ -5,7 +5,7 @@ package sqlparser
 import (
 	"errors"
 
-	"github.com/sjansen/pgutil/internal/schema"
+	"github.com/sjansen/pgutil/internal/ddl"
 )
 
 func init() {
@@ -26,39 +26,39 @@ func Parse(str string) (Statement, error) {
 }
 
 // ParseCheck parses a CHECK declaration.
-func ParseCheck(str string) (*schema.Check, error) {
+func ParseCheck(str string) (*ddl.Check, error) {
 	tmp, err := parse(str, MODE_CHECK)
 	if err != nil {
 		return nil, err
 	}
-	return tmp.(*schema.Check), err
+	return tmp.(*ddl.Check), err
 }
 
 // ParseCreateIndex parses a CREATE INDEX statement.
-func ParseCreateIndex(str string) (*schema.Index, error) {
+func ParseCreateIndex(str string) (*ddl.Index, error) {
 	tmp, err := parse(str, MODE_CREATE_INDEX)
 	if err != nil {
 		return nil, err
 	}
-	return tmp.(*schema.Index), err
+	return tmp.(*ddl.Index), err
 }
 
 // ParseCreateTrigger parses a CREATE TRIGGER statement.
-func ParseCreateTrigger(str string) (*schema.Trigger, error) {
+func ParseCreateTrigger(str string) (*ddl.Trigger, error) {
 	tmp, err := parse(str, MODE_CREATE_TRIGGER)
 	if err != nil {
 		return nil, err
 	}
-	return tmp.(*schema.Trigger), err
+	return tmp.(*ddl.Trigger), err
 }
 
 // ParseForeignKey parses a FOREIGN KEY declaration.
-func ParseForeignKey(str string) (*schema.ForeignKey, error) {
+func ParseForeignKey(str string) (*ddl.ForeignKey, error) {
 	tmp, err := parse(str, MODE_FOREIGN_KEY)
 	if err != nil {
 		return nil, err
 	}
-	return tmp.(*schema.ForeignKey), err
+	return tmp.(*ddl.ForeignKey), err
 }
 
 func parse(str string, mode int) (interface{}, error) {

@@ -1,5 +1,5 @@
 {
-  "type": "schema.Trigger",
+  "type": "ddl.Trigger",
   "value": {
     "Table": "table2",
     "Name": "trigger2",

@@ -1,7 +1,7 @@
 package pg
 
 import (
-	schemapkg "github.com/sjansen/pgutil/internal/schema"
+	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/sqlparser"
 )
 
@@ -23,7 +23,7 @@ ORDER BY c2.relname, t.conkey;
 `
 
 // ListForeignKeys describes a database table's dependencies on other tables
-func (c *Conn) ListForeignKeys(schema, table string) ([]*schemapkg.ForeignKey, error) {
+func (c *Conn) ListForeignKeys(schema, table string) ([]*ddl.ForeignKey, error) {
 	c.log.Infow("listing foreign keys", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listForeignKeys)
@@ -34,7 +34,7 @@ func (c *Conn) ListForeignKeys(schema, table string) ([]*schemapkg.ForeignKey, e
 	defer rows.Close()
 
 	c.log.Debugw("scanning rows")
-	var fks []*schemapkg.ForeignKey
+	var fks []*ddl.ForeignKey
 	for rows.Next() {
 		var name, fkdef string
 		err = rows.Scan(&name, &fkdef)
@@ -43,7 +43,7 @@ func (c *Conn) ListForeignKeys(schema, table string) ([]*schemapkg.ForeignKey, e
 		}
 		c.log.Debugw("row scanned", "name", name, "fkdef", fkdef)
 
-		var fk *schemapkg.ForeignKey
+		var fk *ddl.ForeignKey
 		fk, err = sqlparser.ParseForeignKey(fkdef)
 		if err != nil {
 			break

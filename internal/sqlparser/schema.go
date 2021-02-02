@@ -1,11 +1,9 @@
 package sqlparser
 
-import (
-	"github.com/sjansen/pgutil/internal/schema"
-)
+import "github.com/sjansen/pgutil/internal/ddl"
 
-func newForeignKey(opts ...*option) *schema.ForeignKey {
-	fk := &schema.ForeignKey{}
+func newForeignKey(opts ...*option) *ddl.ForeignKey {
+	fk := &ddl.ForeignKey{}
 	for _, opt := range opts {
 		switch opt.Name {
 		case "columns":
@@ -29,8 +27,8 @@ func newForeignKey(opts ...*option) *schema.ForeignKey {
 	return fk
 }
 
-func newTrigger(opts ...*option) *schema.Trigger {
-	t := &schema.Trigger{}
+func newTrigger(opts ...*option) *ddl.Trigger {
+	t := &ddl.Trigger{}
 	for _, opt := range opts {
 		switch opt.Name {
 		case "delete":

@@ -10,7 +10,7 @@ import __yyfmt__ "fmt"
 import (
 	"strings"
 
-	"github.com/sjansen/pgutil/internal/schema"
+	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/sql"
 )
 
@@ -4544,7 +4544,7 @@ yydefault:
 		yyDollar = yyS[yypt-6 : yypt+1]
 //line grammar.y:359
 		{
-			chk := &schema.Check{}
+			chk := &ddl.Check{}
 			chk.Expression = yyDollar[3].str
 			chk.Deferrable = yyDollar[5].bool
 			chk.InitiallyDeferred = yyDollar[6].bool
@@ -4554,12 +4554,12 @@ yydefault:
 		yyDollar = yyS[yypt-12 : yypt+1]
 //line grammar.y:379
 		{
-			idx := &schema.Index{}
+			idx := &ddl.Index{}
 			idx.Unique = yyDollar[2].bool
 			idx.Name = yyDollar[5].str
 			idx.Table = yyDollar[7].str
 			idx.Using = yyDollar[8].str
-			idx.Keys = yyDollar[10].asts.([]*schema.IndexKey)
+			idx.Keys = yyDollar[10].asts.([]*ddl.IndexKey)
 			idx.Where = yyDollar[12].str
 			yyVAL.ast = idx
 		}
@@ -4567,12 +4567,12 @@ yydefault:
 		yyDollar = yyS[yypt-15 : yypt+1]
 //line grammar.y:390
 		{
-			idx := &schema.Index{}
+			idx := &ddl.Index{}
 			idx.Unique = yyDollar[2].bool
 			idx.Name = yyDollar[8].str
 			idx.Table = yyDollar[10].str
 			idx.Using = yyDollar[11].str
-			idx.Keys = yyDollar[13].asts.([]*schema.IndexKey)
+			idx.Keys = yyDollar[13].asts.([]*ddl.IndexKey)
 			idx.Where = yyDollar[15].str
 			yyVAL.ast = idx
 		}
@@ -4580,7 +4580,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 //line grammar.y:403
 		{
-			k := &schema.IndexKey{}
+			k := &ddl.IndexKey{}
 			k.Column = yyDollar[1].str
 			k.OpClass = yyDollar[2].str
 			k.Descending = yyDollar[3].bool
@@ -4590,7 +4590,7 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 //line grammar.y:410
 		{
-			k := &schema.IndexKey{}
+			k := &ddl.IndexKey{}
 			k.Expression = yyDollar[2].str
 			k.OpClass = yyDollar[4].str
 			k.Descending = yyDollar[5].bool
@@ -4600,15 +4600,15 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line grammar.y:419
 		{
-			slice := make([]*schema.IndexKey, 0, 4)
-			yyVAL.asts = append(slice, yyDollar[1].ast.(*schema.IndexKey))
+			slice := make([]*ddl.IndexKey, 0, 4)
+			yyVAL.asts = append(slice, yyDollar[1].ast.(*ddl.IndexKey))
 		}
 	case 45:
 		yyDollar = yyS[yypt-3 : yypt+1]
 //line grammar.y:423
 		{
-			slice := yyDollar[1].asts.([]*schema.IndexKey)
-			yyVAL.asts = append(slice, yyDollar[3].ast.(*schema.IndexKey))
+			slice := yyDollar[1].asts.([]*ddl.IndexKey)
+			yyVAL.asts = append(slice, yyDollar[3].ast.(*ddl.IndexKey))
 		}
 	case 46:
 		yyDollar = yyS[yypt-0 : yypt+1]

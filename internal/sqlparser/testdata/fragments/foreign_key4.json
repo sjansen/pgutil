@@ -1,5 +1,5 @@
 {
-  "type": "schema.ForeignKey",
+  "type": "ddl.ForeignKey",
   "value": {
     "Table": "tbl",
     "Columns": ["col"],

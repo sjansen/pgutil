@@ -1,4 +1,4 @@
-package schema
+package ddl
 
 // A ForeignKey ensures referential integrity.
 type ForeignKey struct {
