@@ -1,6 +1,6 @@
 package pg
 
-import "github.com/jackc/pgx"
+import "github.com/jackc/pgx/v4"
 
 // String converts nullable strings to standard strings
 func String(s *string) string {

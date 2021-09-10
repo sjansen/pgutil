@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"os"
 
 	"github.com/sjansen/pgutil/internal/pg"
@@ -22,7 +23,8 @@ type InspectCmd struct {
 
 // Run executes the command
 func (c *InspectCmd) Run(base *Base) error {
-	conn, err := pg.New(&pg.Options{
+	ctx := context.TODO()
+	conn, err := pg.New(ctx, &pg.Options{
 		Log: base.Log,
 
 		Host:     c.Host,
@@ -34,9 +36,9 @@ func (c *InspectCmd) Run(base *Base) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer conn.Close(ctx)
 
-	db, err := conn.InspectDatabase(&pg.InspectOptions{
+	db, err := conn.InspectDatabase(ctx, &pg.InspectOptions{
 		SortChecks:  c.SortChecks,
 		SortColumns: c.SortColumns,
 		SortIndexes: c.SortIndexes,

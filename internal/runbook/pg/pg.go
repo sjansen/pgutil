@@ -77,7 +77,8 @@ func (t *Target) NewTaskConfig(class string) (types.TaskConfig, error) {
 
 // Start should be called before the target starts handling tasks
 func (t *Target) Start() error {
-	conn, err := pg.New(&pg.Options{
+	ctx := context.TODO()
+	conn, err := pg.New(ctx, &pg.Options{
 		Log: t.log,
 
 		Host:     t.Host,
@@ -97,5 +98,6 @@ func (t *Target) Start() error {
 
 // Stop should be called when there are no tasks left for the target to handle
 func (t *Target) Stop() error {
-	return t.conn.Close()
+	ctx := context.TODO()
+	return t.conn.Close(ctx)
 }

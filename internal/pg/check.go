@@ -1,6 +1,8 @@
 package pg
 
 import (
+	"context"
+
 	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/sqlparser"
 )
@@ -21,11 +23,11 @@ ORDER BY 1;
 `
 
 // ListChecks describes the check constraints of a database table
-func (c *Conn) ListChecks(schema, table string) ([]*ddl.Check, error) {
+func (c *Conn) ListChecks(ctx context.Context, schema, table string) ([]*ddl.Check, error) {
 	c.log.Infow("listing checks", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listChecks)
-	rows, err := c.conn.Query(listChecks, schema, table)
+	rows, err := c.conn.Query(ctx, listChecks, schema, table)
 	if err != nil {
 		return nil, err
 	}

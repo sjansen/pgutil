@@ -1,12 +1,13 @@
 package pg
 
 import (
-	"crypto/tls"
-	"errors"
+	"context"
+	"strconv"
+	"strings"
 	"time"
 
-	"github.com/jackc/pgx"
-	"github.com/jackc/pgx/log/zapadapter"
+	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/log/zapadapter"
 	"go.uber.org/zap"
 )
 
@@ -24,6 +25,29 @@ type Options struct {
 	ConnectRetries int
 }
 
+func (o *Options) connstring() string {
+	parts := make([]string, 0, 6)
+	if o.Host != "" {
+		parts = append(parts, "host="+o.Host)
+	}
+	if o.Port != 0 {
+		parts = append(parts, "port="+strconv.Itoa(int(o.Port)))
+	}
+	if o.SSLMode != "" {
+		parts = append(parts, "sslmode="+o.SSLMode)
+	}
+	if o.Username != "" {
+		parts = append(parts, "user="+o.Username)
+	}
+	if o.Password != "" {
+		parts = append(parts, "password="+o.Password)
+	}
+	if o.Database != "" {
+		parts = append(parts, "dbname="+o.Database)
+	}
+	return strings.Join(parts, " ")
+}
+
 // Conn is a connection to a PostgreSQL database
 type Conn struct {
 	conn *pgx.Conn
@@ -31,27 +55,10 @@ type Conn struct {
 }
 
 // New connects to a PostgreSQL database
-func New(o *Options) (*Conn, error) {
-	cfg, err := pgx.ParseEnvLibpq()
+func New(ctx context.Context, o *Options) (*Conn, error) {
+	cfg, err := pgx.ParseConfig(o.connstring())
 	if err != nil {
 		return nil, err
-	}
-
-	cfg.Host = firstOfString(o.Host, cfg.Host)
-	cfg.Port = firstOfUint16(o.Port, cfg.Port)
-	cfg.User = firstOfString(o.Username, cfg.User)
-	cfg.Password = firstOfString(o.Password, cfg.Password)
-	cfg.Database = firstOfString(o.Database, cfg.Database)
-
-	sslmode := o.SSLMode
-	if sslmode == "" && cfg.Password != "" {
-		sslmode = "verify-full"
-	}
-	if sslmode != "" {
-		err = applySSLMode(&cfg, sslmode)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	cfg.Logger = zapadapter.NewLogger(
@@ -61,7 +68,7 @@ func New(o *Options) (*Conn, error) {
 	delay := 100 * time.Millisecond
 	var conn *pgx.Conn
 	for retries := 0; retries <= o.ConnectRetries; retries++ {
-		conn, err = pgx.Connect(cfg)
+		conn, err = pgx.ConnectConfig(ctx, cfg)
 		if err != nil {
 			if retries < o.ConnectRetries {
 				time.Sleep(delay)
@@ -80,58 +87,16 @@ func New(o *Options) (*Conn, error) {
 }
 
 // Close closes a connection
-func (c *Conn) Close() error {
-	return c.conn.Close()
+func (c *Conn) Close(ctx context.Context) error {
+	return c.conn.Close(ctx)
 }
 
 // Exec executes SQL statements
-func (c *Conn) Exec(sql string) error {
+func (c *Conn) Exec(ctx context.Context, sql string) error {
 	c.log.Debugw("executing sql", "sql", sql)
-	tag, err := c.conn.Exec(sql)
+	tag, err := c.conn.Exec(ctx, sql)
 	if err != nil {
 		c.log.Debugf("rows affected = %d", tag.RowsAffected())
 	}
 	return err
-}
-
-func applySSLMode(cfg *pgx.ConnConfig, sslmode string) error {
-	switch sslmode {
-	case "disable":
-		cfg.UseFallbackTLS = false
-		cfg.TLSConfig = nil
-		cfg.FallbackTLSConfig = nil
-	case "allow":
-		cfg.UseFallbackTLS = true
-		cfg.TLSConfig = nil
-		cfg.FallbackTLSConfig = &tls.Config{InsecureSkipVerify: true}
-	case "prefer":
-		cfg.UseFallbackTLS = true
-		cfg.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-		cfg.FallbackTLSConfig = nil
-	case "require":
-		cfg.UseFallbackTLS = false
-		cfg.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-		cfg.FallbackTLSConfig = nil
-	case "verify-full":
-		cfg.UseFallbackTLS = false
-		cfg.TLSConfig = &tls.Config{ServerName: cfg.Host}
-		cfg.FallbackTLSConfig = nil
-	default:
-		return errors.New("invalid sslmode")
-	}
-	return nil
-}
-
-func firstOfString(a, b string) string {
-	if a != "" {
-		return a
-	}
-	return b
-}
-
-func firstOfUint16(a, b uint16) uint16 {
-	if a != 0 {
-		return a
-	}
-	return b
 }

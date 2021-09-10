@@ -14,7 +14,7 @@ type Exec struct {
 }
 
 func (x *Exec) exec(ctx context.Context, t *Target) error {
-	return t.conn.Exec(x.SQL)
+	return t.conn.Exec(ctx, x.SQL)
 }
 
 // Check validates the task's settings

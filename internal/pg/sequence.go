@@ -1,6 +1,10 @@
 package pg
 
-import "github.com/sjansen/pgutil/internal/ddl"
+import (
+	"context"
+
+	"github.com/sjansen/pgutil/internal/ddl"
+)
 
 var hasSequencesView = `
 SELECT EXISTS (
@@ -85,26 +89,26 @@ ORDER BY "Schema", "Name"
 `
 
 // ListSequences describes the sequences in the database
-func (c *Conn) ListSequences() ([]*ddl.Sequence, error) {
+func (c *Conn) ListSequences(ctx context.Context) ([]*ddl.Sequence, error) {
 	c.log.Infow("ListSequences")
 
 	var hasView bool
 
 	c.log.Debugw("executing query", "query", hasSequencesView)
-	err := c.conn.QueryRow(hasSequencesView).Scan(&hasView)
+	err := c.conn.QueryRow(ctx, hasSequencesView).Scan(&hasView)
 	if err != nil {
 		return nil, err
 	}
 	if hasView {
-		return c.listSequences()
+		return c.listSequences(ctx)
 	}
-	return c.listSequencesLegacy()
+	return c.listSequencesLegacy(ctx)
 
 }
 
-func (c *Conn) listSequences() ([]*ddl.Sequence, error) {
+func (c *Conn) listSequences(ctx context.Context) ([]*ddl.Sequence, error) {
 	c.log.Debugw("executing query", "query", listSequences)
-	rows, err := c.conn.Query(listSequences)
+	rows, err := c.conn.Query(ctx, listSequences)
 	if err != nil {
 		return nil, err
 	}
@@ -159,9 +163,9 @@ func (c *Conn) listSequences() ([]*ddl.Sequence, error) {
 	return sequences, nil
 }
 
-func (c *Conn) listSequencesLegacy() ([]*ddl.Sequence, error) {
+func (c *Conn) listSequencesLegacy(ctx context.Context) ([]*ddl.Sequence, error) {
 	c.log.Debugw("executing query", "query", listSequencesPre10)
-	rows, err := c.conn.Query(listSequencesPre10)
+	rows, err := c.conn.Query(ctx, listSequencesPre10)
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +221,7 @@ FROM ` + Identifier(seq.Schema, seq.Name)
 			start, minimum, maximum, increment, cache int64
 			cycle                                     bool
 		)
-		err := c.conn.QueryRow(query).Scan(
+		err := c.conn.QueryRow(ctx, query).Scan(
 			&start, &minimum, &maximum, &increment, &cache,
 			&cycle,
 		)

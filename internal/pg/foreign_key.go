@@ -1,6 +1,8 @@
 package pg
 
 import (
+	"context"
+
 	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/sqlparser"
 )
@@ -23,11 +25,11 @@ ORDER BY c2.relname, t.conkey;
 `
 
 // ListForeignKeys describes a database table's dependencies on other tables
-func (c *Conn) ListForeignKeys(schema, table string) ([]*ddl.ForeignKey, error) {
+func (c *Conn) ListForeignKeys(ctx context.Context, schema, table string) ([]*ddl.ForeignKey, error) {
 	c.log.Infow("listing foreign keys", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listForeignKeys)
-	rows, err := c.conn.Query(listForeignKeys, schema, table)
+	rows, err := c.conn.Query(ctx, listForeignKeys, schema, table)
 	if err != nil {
 		return nil, err
 	}

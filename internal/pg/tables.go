@@ -1,6 +1,10 @@
 package pg
 
-import "github.com/sjansen/pgutil/internal/ddl"
+import (
+	"context"
+
+	"github.com/sjansen/pgutil/internal/ddl"
+)
 
 var listTables = `
 SELECT
@@ -20,11 +24,11 @@ ORDER BY "Schema", "Name"
 `
 
 // ListTables describes the tables in the database
-func (c *Conn) ListTables() ([]*ddl.Table, error) {
+func (c *Conn) ListTables(ctx context.Context) ([]*ddl.Table, error) {
 	c.log.Infow("ListTables")
 
 	c.log.Debugw("executing query", "query", listTables)
-	rows, err := c.conn.Query(listTables)
+	rows, err := c.conn.Query(ctx, listTables)
 	if err != nil {
 		return nil, err
 	}

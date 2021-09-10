@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/sjansen/pgutil/internal/pg"
@@ -17,7 +18,8 @@ type PingCmd struct {
 
 // Run executes the command
 func (c *PingCmd) Run(base *Base) error {
-	conn, err := pg.New(&pg.Options{
+	ctx := context.TODO()
+	conn, err := pg.New(ctx, &pg.Options{
 		Log: base.Log,
 
 		Host:     c.Host,
@@ -29,9 +31,9 @@ func (c *PingCmd) Run(base *Base) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer conn.Close(ctx)
 
-	version, err := conn.ServerVersion()
+	version, err := conn.ServerVersion(ctx)
 	if err == nil {
 		fmt.Fprintln(base.Stdout, version)
 	}

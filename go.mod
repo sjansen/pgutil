@@ -12,9 +12,7 @@ require (
 	github.com/google/go-jsonnet v0.17.0
 	github.com/hashicorp/hcl2 v0.0.0-20191002203319-fb75b3253c80
 	github.com/hokaccha/go-prettyjson v0.0.0-20210113012101-fb4e108d2519
-	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgconn v1.10.0
-	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/lib/pq v1.10.3 // indirect

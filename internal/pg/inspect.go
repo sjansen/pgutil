@@ -1,6 +1,7 @@
 package pg
 
 import (
+	"context"
 	"sort"
 
 	"github.com/sjansen/pgutil/internal/ddl"
@@ -13,47 +14,47 @@ type InspectOptions struct {
 }
 
 // InspectDatabase describes the database
-func (c *Conn) InspectDatabase(o *InspectOptions) (db *ddl.Database, err error) {
+func (c *Conn) InspectDatabase(ctx context.Context, o *InspectOptions) (db *ddl.Database, err error) {
 	db = &ddl.Database{}
 	if o == nil {
 		o = &InspectOptions{}
 	}
 
-	db.Parameters, err = c.ListParameters()
+	db.Parameters, err = c.ListParameters(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	db.Schemas, err = c.ListSchemas()
+	db.Schemas, err = c.ListSchemas(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	db.Functions, err = c.ListFunctions()
+	db.Functions, err = c.ListFunctions(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	db.Sequences, err = c.ListSequences()
+	db.Sequences, err = c.ListSequences(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := c.inspectTables(o, db); err != nil {
+	if err := c.inspectTables(ctx, o, db); err != nil {
 		return nil, err
 	}
 
 	return db, nil
 }
 
-func (c *Conn) inspectTables(o *InspectOptions, db *ddl.Database) (err error) {
-	db.Tables, err = c.ListTables()
+func (c *Conn) inspectTables(ctx context.Context, o *InspectOptions, db *ddl.Database) (err error) {
+	db.Tables, err = c.ListTables(ctx)
 	if err != nil {
 		return err
 	}
 
 	for _, table := range db.Tables {
-		if err := c.inspectTable(o, db, table); err != nil {
+		if err := c.inspectTable(ctx, o, db, table); err != nil {
 			return err
 		}
 	}
@@ -71,8 +72,8 @@ func (c *Conn) inspectTables(o *InspectOptions, db *ddl.Database) (err error) {
 	return
 }
 
-func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Table) (err error) {
-	table.Columns, err = c.ListColumns(table.Schema, table.Name)
+func (c *Conn) inspectTable(ctx context.Context, o *InspectOptions, db *ddl.Database, table *ddl.Table) (err error) {
+	table.Columns, err = c.ListColumns(ctx, table.Schema, table.Name)
 	if err != nil {
 		return err
 	}
@@ -83,7 +84,7 @@ func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Tabl
 		})
 	}
 
-	checks, err := c.ListChecks(table.Schema, table.Name)
+	checks, err := c.ListChecks(ctx, table.Schema, table.Name)
 	if err != nil {
 		return err
 	}
@@ -96,7 +97,7 @@ func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Tabl
 		})
 	}
 
-	fks, err := c.ListForeignKeys(table.Schema, table.Name)
+	fks, err := c.ListForeignKeys(ctx, table.Schema, table.Name)
 	if err != nil {
 		return err
 	}
@@ -104,13 +105,13 @@ func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Tabl
 		table.ForeignKeys = append(table.ForeignKeys, fks...)
 	}
 
-	params, err := c.ListTableStorageParameters(table.Schema, table.Name)
+	params, err := c.ListTableStorageParameters(ctx, table.Schema, table.Name)
 	if err != nil {
 		return err
 	}
 	table.StorageParameters = params
 
-	indexes, err := c.ListIndexes(table.Schema, table.Name)
+	indexes, err := c.ListIndexes(ctx, table.Schema, table.Name)
 	if err != nil {
 		return err
 	}
@@ -118,7 +119,7 @@ func (c *Conn) inspectTable(o *InspectOptions, db *ddl.Database, table *ddl.Tabl
 		db.Indexes = append(db.Indexes, indexes...)
 	}
 
-	triggers, err := c.ListTriggers(table.Schema, table.Name)
+	triggers, err := c.ListTriggers(ctx, table.Schema, table.Name)
 	if err != nil {
 		return err
 	}

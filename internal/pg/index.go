@@ -1,6 +1,8 @@
 package pg
 
 import (
+	"context"
+
 	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/sqlparser"
 )
@@ -26,11 +28,11 @@ ORDER BY
 `
 
 // ListIndexes describes the indexes of a database table
-func (c *Conn) ListIndexes(schema, table string) ([]*ddl.Index, error) {
+func (c *Conn) ListIndexes(ctx context.Context, schema, table string) ([]*ddl.Index, error) {
 	c.log.Infow("listing indexes", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listIndexes)
-	rows, err := c.conn.Query(listIndexes, schema, table)
+	rows, err := c.conn.Query(ctx, listIndexes, schema, table)
 	if err != nil {
 		return nil, err
 	}

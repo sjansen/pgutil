@@ -1,7 +1,9 @@
 package pg
 
 import (
-	"github.com/jackc/pgx"
+	"context"
+
+	"github.com/jackc/pgx/v4"
 
 	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/sqlparser"
@@ -36,13 +38,13 @@ ORDER BY 1;
 `
 
 // DescribeTrigger describes a specific database table trigger
-func (c *Conn) DescribeTrigger(schema, table, name string) (*ddl.Trigger, error) {
+func (c *Conn) DescribeTrigger(ctx context.Context, schema, table, name string) (*ddl.Trigger, error) {
 	c.log.Infow("DescribeTrigger", "schema", schema, "table", table, "name", name)
 
 	var triggerdef string
 
 	c.log.Debugw("executing query", "query", listTriggers)
-	err := c.conn.QueryRow(describeTrigger, schema, table, name).Scan(&triggerdef)
+	err := c.conn.QueryRow(ctx, describeTrigger, schema, table, name).Scan(&triggerdef)
 	switch {
 	case err == pgx.ErrNoRows:
 		return nil, ErrNotFound
@@ -63,11 +65,11 @@ func (c *Conn) DescribeTrigger(schema, table, name string) (*ddl.Trigger, error)
 }
 
 // ListTriggers describes the triggers of a database table
-func (c *Conn) ListTriggers(schema, table string) ([]*ddl.Trigger, error) {
+func (c *Conn) ListTriggers(ctx context.Context, schema, table string) ([]*ddl.Trigger, error) {
 	c.log.Infow("ListTriggers", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listTriggers)
-	rows, err := c.conn.Query(listTriggers, schema, table)
+	rows, err := c.conn.Query(ctx, listTriggers, schema, table)
 	if err != nil {
 		return nil, err
 	}

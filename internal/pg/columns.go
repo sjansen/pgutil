@@ -1,6 +1,10 @@
 package pg
 
-import "github.com/sjansen/pgutil/internal/ddl"
+import (
+	"context"
+
+	"github.com/sjansen/pgutil/internal/ddl"
+)
 
 var listColumns = `
 SELECT
@@ -26,11 +30,11 @@ ORDER BY a.attnum
 `
 
 // ListColumns describes the columns of a database table
-func (c *Conn) ListColumns(schema, table string) ([]*ddl.Column, error) {
+func (c *Conn) ListColumns(ctx context.Context, schema, table string) ([]*ddl.Column, error) {
 	c.log.Infow("listing columns", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listColumns)
-	rows, err := c.conn.Query(listColumns, schema, table)
+	rows, err := c.conn.Query(ctx, listColumns, schema, table)
 	if err != nil {
 		return nil, err
 	}

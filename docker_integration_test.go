@@ -1,9 +1,11 @@
+//go:build docker && integration
 // +build docker,integration
 
 package main_test
 
 import (
 	"bytes"
+	"context"
 	"io/ioutil"
 	"testing"
 
@@ -14,7 +16,7 @@ import (
 	"github.com/sjansen/pgutil/internal/pg"
 )
 
-func connect() (c *pg.Conn, err error) {
+func connect(ctx context.Context) (c *pg.Conn, err error) {
 	options := &pg.Options{
 		Log: logger.Discard(),
 
@@ -22,7 +24,7 @@ func connect() (c *pg.Conn, err error) {
 		ConnectRetries: 3,
 		SSLMode:        "prefer",
 	}
-	return pg.New(options)
+	return pg.New(ctx, options)
 }
 
 const actualPath = "testdata/actual.hcl"
@@ -35,11 +37,12 @@ func TestConnectAndQuery(t *testing.T) {
 	expected, err := ioutil.ReadFile(expectedPath)
 	require.NoError(err)
 
-	c, err := connect()
+	ctx := context.TODO()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	db, err := c.InspectDatabase(&pg.InspectOptions{
+	db, err := c.InspectDatabase(ctx, &pg.InspectOptions{
 		SortColumns: true,
 		SortIndexes: true,
 	})

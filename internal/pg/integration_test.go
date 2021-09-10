@@ -1,8 +1,10 @@
+//go:build integration
 // +build integration
 
 package pg_test
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -12,7 +14,7 @@ import (
 	"github.com/sjansen/pgutil/internal/pg"
 )
 
-func connect() (c *pg.Conn, err error) {
+func connect(ctx context.Context) (*pg.Conn, error) {
 	options := &pg.Options{
 		Log: logger.Discard(),
 
@@ -20,17 +22,18 @@ func connect() (c *pg.Conn, err error) {
 		ConnectRetries: 3,
 		SSLMode:        "prefer",
 	}
-	return pg.New(options)
+	return pg.New(ctx, options)
 }
 
 func TestConnectAndQuery(t *testing.T) {
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	version, err := c.ServerVersion()
+	version, err := c.ServerVersion(ctx)
 	require.NoError(err)
 	require.NotEmpty(version)
 }
@@ -38,15 +41,16 @@ func TestConnectAndQuery(t *testing.T) {
 func TestDescribeFunction(t *testing.T) {
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	function, err := c.DescribeFunction("pg_catalog", "current_database")
+	function, err := c.DescribeFunction(ctx, "pg_catalog", "current_database")
 	require.NoError(err)
 	require.NotNil(function)
 
-	function, err = c.DescribeFunction("public", "no_such_function")
+	function, err = c.DescribeFunction(ctx, "public", "no_such_function")
 	require.Equal(pg.ErrNotFound, err)
 	require.Nil(function)
 }
@@ -57,15 +61,16 @@ func TestDescribeTrigger(t *testing.T) {
 	}
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	trigger, err := c.DescribeTrigger("public", "measurement", "update_modified_column")
+	trigger, err := c.DescribeTrigger(ctx, "public", "measurement", "update_modified_column")
 	require.NoError(err)
 	require.NotNil(trigger)
 
-	trigger, err = c.DescribeTrigger("public", "no_such_table", "no_such_trigger")
+	trigger, err = c.DescribeTrigger(ctx, "public", "no_such_table", "no_such_trigger")
 	require.Equal(pg.ErrNotFound, err)
 	require.Nil(trigger)
 }
@@ -73,9 +78,10 @@ func TestDescribeTrigger(t *testing.T) {
 func TestExec(t *testing.T) {
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
 	query := `
 BEGIN
@@ -102,18 +108,19 @@ VALUES
 ROLLBACK
 ;
 `
-	err = c.Exec(query)
+	err = c.Exec(ctx, query)
 	require.NoError(err)
 }
 
 func TestListColumns(t *testing.T) {
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	columns, err := c.ListColumns("pg_catalog", "pg_class")
+	columns, err := c.ListColumns(ctx, "pg_catalog", "pg_class")
 	require.NoError(err)
 	require.NotEmpty(columns)
 }
@@ -121,11 +128,12 @@ func TestListColumns(t *testing.T) {
 func TestListFunctions(t *testing.T) {
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	functions, err := c.ListFunctions()
+	functions, err := c.ListFunctions(ctx)
 	require.NoError(err)
 	require.NotEmpty(functions)
 }
@@ -133,11 +141,12 @@ func TestListFunctions(t *testing.T) {
 func TestListSchemas(t *testing.T) {
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	schemas, err := c.ListSchemas()
+	schemas, err := c.ListSchemas(ctx)
 	require.NoError(err)
 	require.NotEmpty(schemas)
 }
@@ -145,11 +154,12 @@ func TestListSchemas(t *testing.T) {
 func TestListSequences(t *testing.T) {
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	sequences, err := c.ListSequences()
+	sequences, err := c.ListSequences(ctx)
 	require.NoError(err)
 	require.NotEmpty(sequences)
 }
@@ -157,11 +167,12 @@ func TestListSequences(t *testing.T) {
 func TestListTables(t *testing.T) {
 	require := require.New(t)
 
-	c, err := connect()
+	ctx := context.Background()
+	c, err := connect(ctx)
 	require.NoError(err)
-	defer c.Close()
+	defer c.Close(ctx)
 
-	tables, err := c.ListTables()
+	tables, err := c.ListTables(ctx)
 	require.NoError(err)
 	require.NotEmpty(tables)
 }

@@ -1,6 +1,7 @@
 package pg
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sjansen/pgutil/internal/ddl"
@@ -17,11 +18,13 @@ ORDER BY 1;
 `
 
 // ListTableStorageParameters describes table storage parameters
-func (c *Conn) ListTableStorageParameters(schema, table string) (*ddl.TableStorageParameters, error) {
+func (c *Conn) ListTableStorageParameters(
+	ctx context.Context, schema, table string,
+) (*ddl.TableStorageParameters, error) {
 	c.log.Infow("listing table storage parameters", "schema", schema, "table", table)
 
 	c.log.Debugw("executing query", "query", listTableStorageParameters)
-	rows, err := c.conn.Query(listTableStorageParameters, schema, table)
+	rows, err := c.conn.Query(ctx, listTableStorageParameters, schema, table)
 	if err != nil {
 		return nil, err
 	}

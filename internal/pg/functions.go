@@ -1,7 +1,9 @@
 package pg
 
 import (
-	"github.com/jackc/pgx"
+	"context"
+
+	"github.com/jackc/pgx/v4"
 	"github.com/sjansen/pgutil/internal/ddl"
 )
 
@@ -42,13 +44,13 @@ ORDER BY "Schema", "Name"
 `
 
 // DescribeFunction describes a custom function in the database
-func (c *Conn) DescribeFunction(schema, name string) (*ddl.Function, error) {
+func (c *Conn) DescribeFunction(ctx context.Context, schema, name string) (*ddl.Function, error) {
 	c.log.Infow("DescribeFunction", "schema", schema, "name", name)
 
 	var owner, comment, returns, language, definition *string
 
 	c.log.Debugw("executing query", "query", describeFunction)
-	err := c.conn.QueryRow(describeFunction, schema, name).Scan(
+	err := c.conn.QueryRow(ctx, describeFunction, schema, name).Scan(
 		&owner, &comment, &returns, &language, &definition,
 	)
 	switch {
@@ -74,11 +76,11 @@ func (c *Conn) DescribeFunction(schema, name string) (*ddl.Function, error) {
 }
 
 // ListFunctions describes the custom functions in the database
-func (c *Conn) ListFunctions() ([]*ddl.Function, error) {
+func (c *Conn) ListFunctions(ctx context.Context) ([]*ddl.Function, error) {
 	c.log.Infow("ListFunctions")
 
 	c.log.Debugw("executing query", "query", listFunctions)
-	rows, err := c.conn.Query(listFunctions)
+	rows, err := c.conn.Query(ctx, listFunctions)
 	if err != nil {
 		return nil, err
 	}
