@@ -17,7 +17,7 @@ require (
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/lib/pq v1.1.1 // indirect
-	github.com/mattn/go-isatty v0.0.13
+	github.com/mattn/go-isatty v0.0.14
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
@@ -27,7 +27,6 @@ require (
 	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
 	golang.org/x/lint v0.0.0-20201208152925-83fdc39ff7b5 // indirect
-	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78 // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/tools v0.0.0-20210114065538-d78b04bdf963 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
