@@ -1,0 +1,100 @@
+version: 1
+packages:
+  - path: "internal/catalog/pg10"
+    schema: "internal/catalog/pg10/"
+    queries: "internal/catalog/pg10/"
+    emit_exact_table_names: true
+    engine: "postgresql"
+    sql_package: "pgx/v4"
+
+# TODO anyarray pg_node_tree
+overrides:
+  - db_type: "aclitem"
+    go_type: "github.com/jackc/pgtype.ACLItem"
+  - db_type: "aclitem"
+    go_type: "github.com/jackc/pgtype.ACLItem"
+    nullable: true
+
+  - db_type: "boolean"
+    go_type: "github.com/jackc/pgtype.Bool"
+  - db_type: "boolean"
+    go_type: "github.com/jackc/pgtype.Bool"
+    nullable: true
+
+  - db_type: "bytea"
+    go_type: "github.com/jackc/pgtype.Bytea"
+  - db_type: "bytea"
+    go_type: "github.com/jackc/pgtype.Bytea"
+    nullable: true
+
+  - db_type: "char"
+    go_type: "github.com/jackc/pgtype.QChar"
+  - db_type: "char"
+    go_type: "github.com/jackc/pgtype.QChar"
+    nullable: true
+
+  - db_type: "double precision"
+    go_type: "github.com/jackc/pgtype.Float8"
+  - db_type: "double precision"
+    go_type: "github.com/jackc/pgtype.Float8"
+    nullable: true
+
+  - db_type: "integer"
+    go_type: "github.com/jackc/pgtype.Int4"
+  - db_type: "integer"
+    go_type: "github.com/jackc/pgtype.Int4"
+    nullable: true
+
+  - db_type: "name"
+    go_type: "github.com/jackc/pgtype.Name"
+  - db_type: "name"
+    go_type: "github.com/jackc/pgtype.Name"
+    nullable: true
+
+  - db_type: "oid"
+    go_type: "github.com/jackc/pgtype.OID"
+  - db_type: "oid"
+    go_type: "github.com/jackc/pgtype.OIDValue"
+    nullable: true
+
+  - db_type: "real"
+    go_type: "github.com/jackc/pgtype.Float4"
+  - db_type: "real"
+    go_type: "github.com/jackc/pgtype.Float4"
+    nullable: true
+
+  - db_type: "regproc"
+    go_type: "github.com/jackc/pgtype.Text"
+  - db_type: "regproc"
+    go_type: "github.com/jackc/pgtype.Text"
+    nullable: true
+
+  - db_type: "regtype"
+    go_type: "github.com/jackc/pgtype.Text"
+  - db_type: "regtype"
+    go_type: "github.com/jackc/pgtype.Text"
+    nullable: true
+
+  - db_type: "smallint"
+    go_type: "github.com/jackc/pgtype.Int2"
+  - db_type: "smallint"
+    go_type: "github.com/jackc/pgtype.Int2"
+    nullable: true
+
+  - db_type: "text"
+    go_type: "github.com/jackc/pgtype.Text"
+  - db_type: "text"
+    go_type: "github.com/jackc/pgtype.Text"
+    nullable: true
+
+  - db_type: "timestamp with time zone"
+    go_type: "github.com/jackc/pgtype.Timestamptz"
+  - db_type: "timestamp with time zone"
+    go_type: "github.com/jackc/pgtype.Timestamptz"
+    nullable: true
+
+  - db_type: "xid"
+    go_type: "github.com/jackc/pgtype.XID"
+  - db_type: "xid"
+    go_type: "github.com/jackc/pgtype.XID"
+    nullable: true
