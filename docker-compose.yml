@@ -18,7 +18,7 @@ services:
      - "${GOPATH:-/tmp}/pkg/mod:/go/pkg/mod"
     working_dir: /go/src/github.com/sjansen/pgutil
   pg:
-    image: 'postgres:9.6.20-alpine'
+    image: 'postgres:10.18-alpine'
     environment:
       POSTGRES_DB:   "pgutil"
       POSTGRES_USER: "docker"

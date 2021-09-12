@@ -7,7 +7,7 @@ type Sequence struct {
 	Owner   string `hcl:"owner,optional"`
 	Comment string `hcl:"comment,optional"`
 
-	DataType  string         `hcl:"data_type,optional"`
+	Type      string         `hcl:"data_type,optional"`
 	Start     int64          `hcl:"start,optional"`
 	Minimum   int64          `hcl:"minimum,optional"`
 	Maximum   int64          `hcl:"maximum,optional"`

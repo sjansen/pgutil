@@ -17,8 +17,6 @@ overrides:
 
   - db_type: "boolean"
     go_type: "github.com/jackc/pgtype.Bool"
-  - db_type: "boolean"
-    go_type: "github.com/jackc/pgtype.Bool"
     nullable: true
 
   - db_type: "bytea"
@@ -35,18 +33,14 @@ overrides:
 
   - db_type: "double precision"
     go_type: "github.com/jackc/pgtype.Float8"
-  - db_type: "double precision"
-    go_type: "github.com/jackc/pgtype.Float8"
     nullable: true
 
-  - db_type: "integer"
-    go_type: "github.com/jackc/pgtype.Int4"
   - db_type: "integer"
     go_type: "github.com/jackc/pgtype.Int4"
     nullable: true
 
   - db_type: "name"
-    go_type: "github.com/jackc/pgtype.Name"
+    go_type: "string"
   - db_type: "name"
     go_type: "github.com/jackc/pgtype.Name"
     nullable: true
@@ -59,8 +53,6 @@ overrides:
 
   - db_type: "real"
     go_type: "github.com/jackc/pgtype.Float4"
-  - db_type: "real"
-    go_type: "github.com/jackc/pgtype.Float4"
     nullable: true
 
   - db_type: "regproc"
@@ -77,8 +69,6 @@ overrides:
 
   - db_type: "smallint"
     go_type: "github.com/jackc/pgtype.Int2"
-  - db_type: "smallint"
-    go_type: "github.com/jackc/pgtype.Int2"
     nullable: true
 
   - db_type: "text"
@@ -87,8 +77,6 @@ overrides:
     go_type: "github.com/jackc/pgtype.Text"
     nullable: true
 
-  - db_type: "timestamp with time zone"
-    go_type: "github.com/jackc/pgtype.Timestamptz"
   - db_type: "timestamp with time zone"
     go_type: "github.com/jackc/pgtype.Timestamptz"
     nullable: true
