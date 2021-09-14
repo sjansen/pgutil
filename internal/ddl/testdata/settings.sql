@@ -21,5 +21,5 @@ ALTER TABLE "settings"
 CREATE TRIGGER "update_settings_mtime"
   BEFORE UPDATE ON "settings"
   FOR EACH ROW
-  EXECUTE PROCEDURE update_mtime_column()
+  EXECUTE FUNCTION update_mtime_column()
 ;

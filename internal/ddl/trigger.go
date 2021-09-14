@@ -28,19 +28,38 @@ type Trigger struct {
 // ToSQL produces a CREATE TRIGGER statement.
 func (t *Trigger) ToSQL() (string, error) {
 	var sb strings.Builder
-	sb.WriteString("CREATE TRIGGER ")
+	sb.WriteString("CREATE ")
+	if t.Constraint {
+		sb.WriteString("CONSTRAINT ")
+	}
+	sb.WriteString("TRIGGER ")
 	sb.WriteString(quoteName(t.Name))
 	sb.WriteString("\n  ")
 	sb.WriteString(t.Timing)
-	if t.Update {
+	switch {
+	case t.Delete:
+		sb.WriteString(" DELETE")
+	case t.Insert:
+		sb.WriteString(" INSERT")
+	case t.Truncate:
+		sb.WriteString(" TRUNCATE")
+	case t.Update:
 		sb.WriteString(" UPDATE")
 	}
 	sb.WriteString(" ON ")
 	sb.WriteString(quoteName(t.Table))
+	if t.Deferrable {
+		sb.WriteString("\n  DEFERRABLE")
+		if t.InitiallyDeferred {
+			sb.WriteString(" INITIALLY DEFERRED")
+		}
+	}
 	if t.ForEachRow {
 		sb.WriteString("\n  FOR EACH ROW")
+	} else {
+		sb.WriteString("\n  FOR EACH STATEMENT")
 	}
-	sb.WriteString("\n  EXECUTE PROCEDURE ")
+	sb.WriteString("\n  EXECUTE FUNCTION ")
 	sb.WriteString(t.Function)
 	sb.WriteString("()\n;\n")
 	return sb.String(), nil
