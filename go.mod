@@ -19,7 +19,7 @@ require (
 	github.com/lib/pq v1.10.3 // indirect
 	github.com/mattn/go-isatty v0.0.14
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
-	github.com/pganalyze/pg_query_go/v2 v2.0.5
+	github.com/pganalyze/pg_query_go/v2 v2.1.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/zclconf/go-cty v1.9.1 // indirect
