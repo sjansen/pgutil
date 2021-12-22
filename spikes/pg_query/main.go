@@ -41,16 +41,20 @@ func main() {
 
 		fmt.Println(stmt)
 		for _, result := range results.Stmts {
-			// fmt.Println(result.String())
-			stmt := result.Stmt.Node.(*pg_query.Node_CreateTrigStmt).CreateTrigStmt
+			fmt.Println(result.String())
+			stmt := result.Stmt.GetCreateTrigStmt()
 			// fmt.Printf("%#v\n", stmt)
 
+			if stmt.WhenClause != nil {
+				fmt.Printf("%#v\n", stmt.WhenClause.GetAExpr())
+				fmt.Println(stmt.WhenClause.GetAExpr())
+			}
 			trigger := &ddl.Trigger{
 				Schema: stmt.Relation.Schemaname,
 				Table:  stmt.Relation.Relname,
 				Name:   stmt.Trigname,
 
-				Function: stmt.Funcname[0].Node.(*pg_query.Node_String_).String_.Str,
+				Function: stmt.Funcname[0].GetString_().GetStr(),
 
 				Constraint:        stmt.Isconstraint,
 				Deferrable:        stmt.Deferrable,
