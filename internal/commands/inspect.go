@@ -4,6 +4,8 @@ import (
 	"context"
 	"os"
 
+	"github.com/chzyer/readline"
+
 	"github.com/sjansen/pgutil/internal/pg"
 )
 
@@ -14,6 +16,7 @@ type InspectCmd struct {
 	SSLMode  string
 	DBName   string
 	Username string
+	Password bool
 
 	Output      string
 	SortChecks  bool
@@ -23,6 +26,15 @@ type InspectCmd struct {
 
 // Run executes the command
 func (c *InspectCmd) Run(base *Base) error {
+	var password string
+	if c.Password {
+		response, err := readline.Password("Enter password for " + c.Username + ": ")
+		if err != nil {
+			return err
+		}
+		password = string(response)
+	}
+
 	ctx := context.TODO()
 	conn, err := pg.New(ctx, &pg.Options{
 		Log: base.Log,
@@ -31,6 +43,7 @@ func (c *InspectCmd) Run(base *Base) error {
 		Port:     c.Port,
 		SSLMode:  c.SSLMode,
 		Username: c.Username,
+		Password: password,
 		Database: c.DBName,
 	})
 	if err != nil {

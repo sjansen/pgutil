@@ -6,6 +6,9 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20210208195552-ff826a37aa15 // indirect
 	github.com/awalterschulze/gographviz v2.0.3+incompatible
+	github.com/chzyer/logex v1.1.10 // indirect
+	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
+	github.com/chzyer/test v0.0.0-20210722231415-061457976a23 // indirect
 	github.com/fatih/color v1.12.0 // indirect
 	github.com/fortytw2/leaktest v1.3.0
 	github.com/google/go-cmp v0.5.6 // indirect
