@@ -1,5 +1,11 @@
 version: 1
 packages:
+  - path: "internal/catalog/pg96"
+    schema: "internal/catalog/pg96/"
+    queries: "internal/catalog/pg96/"
+    emit_exact_table_names: true
+    engine: "postgresql"
+    sql_package: "pgx/v4"
   - path: "internal/catalog/pg10"
     schema: "internal/catalog/pg10/"
     queries: "internal/catalog/pg10/"

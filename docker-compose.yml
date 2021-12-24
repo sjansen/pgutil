@@ -6,19 +6,29 @@ services:
     command: ./scripts/run-all-tests
     environment:
       GO111MODULE: "on"
-      PGHOST:     "pg"
       PGDATABASE: "pgutil"
       PGUSER:     "docker"
       PGPASSWORD: ""
+      PGUTIL_TEST_HOSTS: "pg9.6 pg10"
       PGUTIL_TEST_TAGS: "docker integration"
     links:
-     - pg
+     - pg9.6
+     - pg10
     volumes:
      - .:/go/src/github.com/sjansen/pgutil
      - "${GOPATH:-/tmp}/pkg/mod:/go/pkg/mod"
     working_dir: /go/src/github.com/sjansen/pgutil
-  pg:
-    image: 'postgres:10.18-alpine'
+  pg9.6:
+    image: 'postgres:9.6-alpine'
+    environment:
+      POSTGRES_DB:   "pgutil"
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+     - ./scripts/initdb.d:/docker-entrypoint-initdb.d
+  pg10:
+    image: 'postgres:10-alpine'
     environment:
       POSTGRES_DB:   "pgutil"
       POSTGRES_USER: "docker"

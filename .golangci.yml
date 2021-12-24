@@ -11,7 +11,6 @@ issues:
     linters:
      - gocritic
      - gocyclo
-     - golint
 
 linters:
     enable:
@@ -20,13 +19,13 @@ linters:
     - gocyclo
     - gofmt
     - goimports
-    - golint
     - gosimple
     - govet
     - ineffassign
     - lll
     - megacheck
     - misspell
+    - revive
     - structcheck
     - typecheck
     - varcheck
