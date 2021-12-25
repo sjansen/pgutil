@@ -7,6 +7,7 @@ generate:
 
 test:
 	docker-compose --version
+	docker-compose pull --include-deps
 	docker-compose build --pull go
 	docker-compose up \
 		--abort-on-container-exit \

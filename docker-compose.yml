@@ -9,7 +9,7 @@ services:
       PGDATABASE: "pgutil"
       PGUSER:     "docker"
       PGPASSWORD: ""
-      PGUTIL_TEST_HOSTS: "pg9.6 pg10"
+      PGUTIL_TEST_HOSTS: "pg9.6 pg10 pg11 pg12 pg13 pg14"
       PGUTIL_TEST_TAGS: "docker integration"
     links:
      - pg9.6
@@ -29,6 +29,42 @@ services:
      - ./scripts/initdb.d:/docker-entrypoint-initdb.d
   pg10:
     image: 'postgres:10-alpine'
+    environment:
+      POSTGRES_DB:   "pgutil"
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+     - ./scripts/initdb.d:/docker-entrypoint-initdb.d
+  pg11:
+    image: 'postgres:11-alpine'
+    environment:
+      POSTGRES_DB:   "pgutil"
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+     - ./scripts/initdb.d:/docker-entrypoint-initdb.d
+  pg12:
+    image: 'postgres:12-alpine'
+    environment:
+      POSTGRES_DB:   "pgutil"
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+     - ./scripts/initdb.d:/docker-entrypoint-initdb.d
+  pg13:
+    image: 'postgres:13-alpine'
+    environment:
+      POSTGRES_DB:   "pgutil"
+      POSTGRES_USER: "docker"
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+     - ./scripts/initdb.d:/docker-entrypoint-initdb.d
+  pg14:
+    image: 'postgres:14-alpine'
     environment:
       POSTGRES_DB:   "pgutil"
       POSTGRES_USER: "docker"
