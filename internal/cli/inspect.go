@@ -10,7 +10,7 @@ func registerInspect(p *ArgParser) {
 
 	cmd.Flag("host", "server hostname or socket directory").Short('h').StringVar(&c.Host)
 	cmd.Flag("port", "server port number").Short('p').Uint16Var(&c.Port)
-	cmd.Flag("dbname", "database name").Short('d').StringVar(&c.DBName)
+	cmd.Flag("dbname", "database name").Short('d').StringVar(&c.Database)
 	cmd.Flag("username", "connect as username").Short('U').StringVar(&c.Username)
 	cmd.Flag("password", "force password prompt").Short('W').BoolVar(&c.Password)
 	cmd.Flag("sslmode", "connection security level").EnumVar(&c.SSLMode,

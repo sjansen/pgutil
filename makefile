@@ -15,6 +15,7 @@ test:
 		--force-recreate \
 		--remove-orphans \
 		--renew-anon-volumes
+	docker-compose rm -f
 	@echo ' ____'
 	@echo '|  _ \ __ _ ___ ___ '
 	@echo '| |_) / _` / __/ __|'

@@ -6,6 +6,7 @@ import (
 
 	"github.com/chzyer/readline"
 
+	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/pg"
 )
 
@@ -14,7 +15,7 @@ type InspectCmd struct {
 	Host     string
 	Port     uint16
 	SSLMode  string
-	DBName   string
+	Database string
 	Username string
 	Password bool
 
@@ -44,12 +45,17 @@ func (c *InspectCmd) Run(base *Base) error {
 		SSLMode:  c.SSLMode,
 		Username: c.Username,
 		Password: password,
-		Database: c.DBName,
+		Database: c.Database,
 	})
 	if err != nil {
 		return err
 	}
 	defer conn.Close(ctx)
+
+	m, err := getMetadata(ctx, conn)
+	if err != nil {
+		return err
+	}
 
 	db, err := conn.InspectDatabase(ctx, &pg.InspectOptions{
 		SortChecks:  c.SortChecks,
@@ -68,5 +74,20 @@ func (c *InspectCmd) Run(base *Base) error {
 		}
 	}
 
-	return db.Write(w)
+	return db.WriteHCL(w, m)
+}
+
+func getMetadata(ctx context.Context, conn *pg.Conn) (*ddl.DatabaseMetadata, error) {
+	version, err := conn.ServerVersion(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	m := &ddl.DatabaseMetadata{
+		Host:          conn.Host,
+		Database:      conn.Database,
+		ServerVersion: version,
+	}
+
+	return m, nil
 }

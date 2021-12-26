@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -50,6 +51,9 @@ func (o *Options) connstring() string {
 
 // Conn is a connection to a PostgreSQL database
 type Conn struct {
+	Host     string
+	Database string
+
 	conn *pgx.Conn
 	log  *zap.SugaredLogger
 }
@@ -79,9 +83,23 @@ func New(ctx context.Context, o *Options) (*Conn, error) {
 		}
 	}
 
+	host := cfg.Host
+	if strings.Contains(host, string(os.PathSeparator)) {
+		if host, err = os.Hostname(); err != nil {
+			return nil, err
+		}
+	}
+
+	database := cfg.Database
+	if database == "" {
+		database = cfg.User
+	}
+
 	c := &Conn{
-		conn: conn,
-		log:  o.Log,
+		Host:     host,
+		Database: database,
+		conn:     conn,
+		log:      o.Log,
 	}
 	return c, nil
 }

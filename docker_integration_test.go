@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/sjansen/pgutil/internal/ddl"
 	"github.com/sjansen/pgutil/internal/pg"
 	"github.com/sjansen/pgutil/internal/testutil"
 )
@@ -41,8 +42,14 @@ func TestConnectAndQuery(t *testing.T) {
 			})
 			require.NoError(err)
 
+			m := &ddl.DatabaseMetadata{
+				Host:          "db.example.com",
+				Database:      "example",
+				ServerVersion: "42",
+			}
+
 			buf := &bytes.Buffer{}
-			err = db.Write(buf)
+			err = db.WriteHCL(buf, m)
 			require.NoError(err)
 
 			actual := buf.Bytes()

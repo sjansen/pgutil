@@ -1,3 +1,6 @@
+# Database: example
+# Hostname: db.example.com
+# Version: 42
 
 parameters {
   search_path = ["$user", "public"]

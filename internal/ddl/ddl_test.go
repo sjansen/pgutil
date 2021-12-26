@@ -166,6 +166,12 @@ func TestWrite(t *testing.T) {
 	assert := assert.New(t)
 	require := require.New(t)
 
+	m := &ddl.DatabaseMetadata{
+		Host:          "db.example.com",
+		Database:      "example",
+		ServerVersion: "42",
+	}
+
 	db, err := ddl.ParseFile("testdata/example.hcl")
 	require.NoError(err)
 
@@ -173,7 +179,7 @@ func TestWrite(t *testing.T) {
 	require.NoError(err)
 
 	buf := &bytes.Buffer{}
-	err = db.Write(buf)
+	err = db.WriteHCL(buf, m)
 	require.NoError(err)
 
 	actual := buf.Bytes()
