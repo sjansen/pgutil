@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io/ioutil"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -170,6 +171,7 @@ func TestWrite(t *testing.T) {
 		Host:          "db.example.com",
 		Database:      "example",
 		ServerVersion: "42",
+		Timestamp:     time.Date(2021, time.December, 25, 0, 0, 0, 0, time.UTC),
 	}
 
 	db, err := ddl.ParseFile("testdata/example.hcl")

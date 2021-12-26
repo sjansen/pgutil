@@ -3,6 +3,7 @@ package commands
 import (
 	"context"
 	"os"
+	"time"
 
 	"github.com/chzyer/readline"
 
@@ -87,6 +88,7 @@ func getMetadata(ctx context.Context, conn *pg.Conn) (*ddl.DatabaseMetadata, err
 		Host:          conn.Host,
 		Database:      conn.Database,
 		ServerVersion: version,
+		Timestamp:     time.Now(),
 	}
 
 	return m, nil

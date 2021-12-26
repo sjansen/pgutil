@@ -3,6 +3,7 @@ package ddl
 import (
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/hashicorp/hcl2/gohcl"
 	"github.com/hashicorp/hcl2/hclwrite"
@@ -25,24 +26,13 @@ type DatabaseMetadata struct {
 	Host          string
 	Database      string
 	ServerVersion string
-}
-
-// Parameters describes database-level configuration options
-type Parameters struct {
-	SearchPath []string `hcl:"search_path,optional"`
-	Timezone   string   `hcl:"timezone,optional"`
-}
-
-// A Schema is a database namespace
-type Schema struct {
-	Name    string `hcl:"name,label"`
-	Owner   string `hcl:"owner,optional"`
-	Comment string `hcl:"comment,optional"`
+	Timestamp     time.Time
 }
 
 // WriteHCL converts structs describing a database to an an HCL configuration file.
 func (db *Database) WriteHCL(w io.Writer, m *DatabaseMetadata) error {
 	fmt.Fprint(w,
+		"# Created: ", m.Timestamp.Local().Format(time.RFC822), "\n",
 		"# Database: ", m.Database, "\n",
 		"# Hostname: ", m.Host, "\n",
 		"# Version: ", m.ServerVersion, "\n",
