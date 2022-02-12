@@ -17,7 +17,7 @@ require (
 	github.com/hashicorp/hcl2 v0.0.0-20191002203319-fb75b3253c80
 	github.com/hokaccha/go-prettyjson v0.0.0-20210113012101-fb4e108d2519
 	github.com/jackc/pgconn v1.10.1
-	github.com/jackc/pgtype v1.9.1
+	github.com/jackc/pgtype v1.10.0
 	github.com/jackc/pgx/v4 v4.14.1
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/lib/pq v1.10.3 // indirect
